@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<project>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>edu.uw.apl.commons</groupId>
+    <artifactId>tsk4j-parent</artifactId>
+    <version>413.0.0</version>
+    <packaging>pom</packaging>
+
+    <name>TSK4J: Java/JNI Bindings to Sleuthkit</name>
+    <description>
+      TSK4J is a Java binding to Sleuthkit, a C-based file system
+      forensics toolset. See www.sleuthkit.org
+    </description>
+
+    <organization>
+      <name>Applied Physics Laboratory, University of Washington.</name>
+      <url>http://www.apl.uw.edu</url>
+    </organization>
+
+    <developers>
+      <developer>
+	<id>stuart</id>
+	<name>Stuart Maclean</name>
+	<email>stuart@apl.uw.edu</email>
+      </developer>
+    </developers>
+    
+
+    <modules>
+      <module>core</module>
+      <module>cli</module>
+    </modules>
+
+    <build>
+      <defaultGoal>compile</defaultGoal>
+
+<!--
+
+      <pluginManagement>
+	<plugins>
+	  <plugin>
+	    <artifactId>maven-source-plugin</artifactId>
+	    <version>2.2.1</version>
+	    <configuration>
+	      <excludes>
+		<exclude>**/paste</exclude>
+	      </excludes>
+	    </configuration>
+	    <executions>
+	      <execution>
+		<goals>
+		  <goal>jar</goal>
+		</goals>
+	      </execution>
+	    </executions>
+	  </plugin>
+	</plugins>
+      </pluginManagement>
+-->
+
+      <plugins>
+	<plugin>
+	  <artifactId>maven-compiler-plugin</artifactId>
+	  <version>2.3.2</version>
+	  <configuration>
+	    <source>1.6</source>
+	    <target>1.6</target>
+	  </configuration>
+	</plugin>
+
+
+	<plugin>
+	  <groupId>org.apache.maven.plugins</groupId>
+	  <artifactId>maven-surefire-plugin</artifactId>
+	  <version>2.12.4</version> 
+	  <!--	  <version>2.4.3</version> -->
+	</plugin>     
+
+
+      </plugins>
+    </build>
+
+</project>
