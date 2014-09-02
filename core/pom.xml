@@ -134,7 +134,9 @@
 		<goal>exec</goal>
 	      </goals>
 	      <configuration>
-		<workingDirectory>native/${os.name}</workingDirectory>
+		<workingDirectory>
+		  src/main/native/${os.name}/${os.arch}
+		</workingDirectory>
 		<executable>make</executable>
 		<commandlineArgs>clean</commandlineArgs>
 	      </configuration>
