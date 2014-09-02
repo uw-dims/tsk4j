@@ -49,7 +49,7 @@ install: $(LIB)
 	cp $(LIB) $(TARGET_DIR)
 
 clean:
-	rm *.o
+	rm $(LIB) *.o
 
 ############################## Test/debug targets #######################
 
