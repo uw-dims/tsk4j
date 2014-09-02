@@ -4,15 +4,15 @@
 
 /*
  * Class:     edu_uw_apl_commons_sleuthkit_base_Version
- * Method:    getString
+ * Method:    getVersion
  * Signature: ()Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_base_Version_getString
+Java_edu_uw_apl_commons_sleuthkit_base_Version_getVersion
 (JNIEnv *env, jclass clazz ) {
   
   const char* v = tsk_version_get_str();
-  jstring result = (*env)->NewStringUTF( env, v);
+  jstring result = (*env)->NewStringUTF( env, v );
   return result;
 }
 
