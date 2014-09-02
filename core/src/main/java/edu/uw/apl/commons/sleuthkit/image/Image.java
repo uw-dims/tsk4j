@@ -14,18 +14,19 @@ import edu.uw.apl.commons.sleuthkit.base.HeapBuffer;
  *
  * We implement the following subset of the TSK_IMG_INFO api:
  *
- * tsk_img_open_sing_utf8 -> new Image( path )
+ * tsk_img_open_utf8 -> new Image( String[] paths )
+ * tsk_img_open_sing_utf8 -> new Image( String path )
  * tsk_img_close -> Image.close
  * tsk_img_read -> Image.read
  * tsk_img_type_supported -> Image.typeSupported (static)
  *
- * We also provide an InputStream interface to the Image's data:
+ * We also provide a java.io.InputStream interface to the Image's data:
  *
- * InputStream is = img.getInputStream();
+ * java.io.InputStream is = img.getInputStream();
  *
- * The HeapBuffer member allows us to avoid repeated heap mallocs
- * if/when we want to use the Image.read function here.  The
- * HeapBuffer simple manages a handle to a native C void*.  Then we
+ * The HeapBuffer member allows us to avoid repeated heap
+ * mallocs if/when we want to use the Image.read function here.  The
+ * HeapBuffer simply manages a handle to a native C void*.  Then we
  * can pass the SAME byte[] to a read and use the SAME C buffer, by
  * way of the HeapBuffer.
  *
@@ -52,6 +53,33 @@ public class Image extends Closeable {
 			// mimic mmls's error message...
 			throw new IOException( "Image open: No such file or directory" );
 		this.path = path;
+		heapBuffer = new HeapBuffer();
+	}
+
+	/**
+	 * @param paths - paths of UTF-8 encoded image file, must be in order.
+	 */
+	public Image( String[] paths ) throws IOException {
+		if( paths == null )
+			throw new IllegalArgumentException( "Null paths" );
+		for( String path : paths ) {
+			if( path == null )
+				throw new IllegalArgumentException( "Paths contains a null" );
+			// fail early with IOException if file read issue, before jni...
+			File f = new File( path );
+			if( !f.canRead() )
+				throw new IOException( "Unreadable: " + path );
+		}
+		
+		nativePtr = open( paths );
+		if( nativePtr == 0 )
+			// mimic mmls's error message...
+			throw new IOException
+				( "Split image open: No such file or directory" );
+
+		// LOOK: why any particular path?
+		this.path = paths[0];
+
 		heapBuffer = new HeapBuffer();
 	}
 
@@ -190,6 +218,7 @@ public class Image extends Closeable {
 	}
 
 	private native long openSingle( String path );
+	private native long open( String[] paths );
 	private native void close( long nativePtr );
 
 	// access to members of TSK_IMG_INFO

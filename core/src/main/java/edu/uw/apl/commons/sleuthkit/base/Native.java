@@ -20,20 +20,6 @@ import com.wapmx.nativeutils.jniloader.NativeLoader;
 public class Native {
 
 	static {
-		/*
-		  The library name composition matches that done by the Make
-		  build which produces the libs, see src/main/native/Makefile
-		  We prefer e.g. 'MacOSX' over 'Mac OS X' so strip any
-		  whitespace
-		*/
-		String arch = System.getProperty( "os.arch" );
-		arch = arch.replaceAll( " ", "" );
-		String os = System.getProperty( "os.name" );
-		os = os.replaceAll( " ", "" );
-		/*
-		  String libName = "tsk4j-" + arch + "-" + os;
-		  libName = libName.toLowerCase();
-		*/
 		String libName = "tsk4j";
 		//		System.out.println( libName );
 		try {

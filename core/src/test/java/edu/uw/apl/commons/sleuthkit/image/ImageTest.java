@@ -6,6 +6,9 @@ import java.io.IOException;
 
 import edu.uw.apl.commons.sleuthkit.base.Utils;
 
+/**
+ * Tests on Image objects.  Opening, closing and reading data from an image
+ */
 public class ImageTest extends junit.framework.TestCase {
 
 	public void testTypeSupported() {
@@ -68,10 +71,22 @@ public class ImageTest extends junit.framework.TestCase {
 		String path = "/dev/sda";
 		Image i1 = new Image( path );
 		byte[] bs = new byte[1024];
-		i1.read( 0, bs );
-		System.out.println( path + ": read " + bs.length );
+		int n = i1.read( 0, bs );
+		System.out.println( path + ": read " + bs.length + " = " + n );
+		assertEquals( n, bs.length );
 		String md5 = Utils.md5sum( bs );
 		System.out.println( md5 );
+		i1.close();
+	}
+
+	public void testReadPastEnd() throws Exception {
+
+		String path = "/dev/sda";
+		Image i1 = new Image( path );
+		byte[] bs = new byte[1024];
+		int n = i1.read( i1.size(), bs );
+		System.out.println( path + ": read " + n );
+		assertEquals( n, -1 );
 		i1.close();
 	}
 
@@ -90,12 +105,24 @@ public class ImageTest extends junit.framework.TestCase {
 		if( !f.exists() )
 			return;
 		Image img = new Image( f.getPath() );
-		byte[] ba = new byte[1 << 20];
+		//byte[] ba = new byte[1 << 20];
 		InputStream is = img.getInputStream();
 		String hash = Utils.md5sum( is );
 		is.close();
 		System.out.println( f + " md5: " + hash );
 	}
+
+	public void testSplitImage() throws Exception {
+		String[] paths = { "data/nuga2.dd.split1",
+						   "data/nuga2.dd.split2" };
+		Image img = new Image( paths );
+		InputStream is = img.getInputStream();
+		String hash = Utils.md5sum( is );
+		is.close();
+		System.out.println( "md5: " + hash );
+		
+	}
+						   
 }
 
 // eof

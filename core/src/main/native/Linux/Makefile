@@ -13,7 +13,7 @@ endif
 
 BASEDIR = $(abspath $(NATIVEHOME)/../../..)
 
-CFLAGS += -Wall -Werror -fPIC
+CFLAGS += -Wall -Werror -fPIC -std=c99
 
 CPPFLAGS += -I$(BASEDIR)/target/native/javah
 

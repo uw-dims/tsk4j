@@ -10,14 +10,44 @@
 JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_sleuthkit_image_Image_openSingle
 ( JNIEnv * env, jobject thiz, jstring path ) {
   
-  jboolean isCopy;
-  const char* pathC = (*env)->GetStringUTFChars( env, path, &isCopy );
-  TSK_IMG_INFO* info = tsk_img_open_sing( (const TSK_TCHAR*)pathC, 
-										  TSK_IMG_TYPE_DETECT, 0 );
+  const char* pathC = (*env)->GetStringUTFChars( env, path, NULL );
+  unsigned a_ssize = 0;
+  TSK_IMG_INFO* info = tsk_img_open_utf8_sing( (const TSK_TCHAR*)pathC, 
+											   TSK_IMG_TYPE_DETECT, a_ssize );
   // even if info returned NULL, still OK to clean up the string...
   (*env)->ReleaseStringUTFChars( env, path, pathC );
 
   // could be null/zero
+  return (jlong)info;
+}
+
+/*
+ * Class:     edu_uw_apl_commons_sleuthkit_image_Image
+ * Method:    open
+ * Signature: ([Ljava/lang/String;)J
+ */
+JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_sleuthkit_image_Image_open
+( JNIEnv *env, jobject thiz, jobjectArray paths ) {
+
+  jsize len = (*env)->GetArrayLength( env, paths );
+  char** cpp = (char**)malloc( len * sizeof( char* ) );
+  if( !cpp )
+	return (jlong)0;
+
+  for( jsize i = 0; i < len; i++ ) {
+	jstring path = (jstring)(*env)->GetObjectArrayElement( env, paths, i );
+	const char* pathC = (*env)->GetStringUTFChars( env, path, NULL );
+	cpp[i] = (char*)pathC;
+  }
+  unsigned a_ssize = 0;
+  TSK_IMG_INFO* info = tsk_img_open_utf8( len, (const char* const*)cpp, 
+										  TSK_IMG_TYPE_DETECT, a_ssize );
+  for( jsize i = 0; i < len; i++ ) {
+	jstring path = (jstring)(*env)->GetObjectArrayElement( env, paths, i );
+	char* pathC = cpp[i];
+	(*env)->ReleaseStringUTFChars( env, path, pathC );
+  }
+  free( cpp );
   return (jlong)info;
 }
 
