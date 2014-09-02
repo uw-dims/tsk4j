@@ -1,0 +1,8 @@
+.svn
+*.class
+*~
+paste
+*.so
+*.a
+*.o
+
