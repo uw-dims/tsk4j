@@ -11,8 +11,11 @@ PWD = $(shell pwd)
 ifndef JAVA_HOME
     $(error JAVA_HOME make variable missing.  Copy $(PWD)/Makefile.env.sample to $(PWD)/Makefile.env and edit)
 endif
-ifndef TSK_INSTALL
-    $(error TSK_INSTALL make variable missing.  Copy $(PWD)/Makefile.env.sample to $(PWD)/Makefile.env and edit)
+ifndef TSK_CPPFLAGS
+    $(error TSK_CPPFLAGS make variable missing.  Copy $(PWD)/Makefile.env.sample to $(PWD)/Makefile.env and edit)
+endif
+ifndef TSK_LDLIBS
+    $(error TSK_LDLIBS make variable missing.  Copy $(PWD)/Makefile.env.sample to $(PWD)/Makefile.env and edit)
 endif
 
 BASEDIR = $(abspath $(NATIVEHOME)/../../..)
