@@ -10,8 +10,18 @@
     
     <properties>
       <aol>${os.arch}-${os.name}</aol>
+      <skipTests>true</skipTests>
     </properties>
-    
+
+    <profiles>
+      <profile>
+	<id>tester</id>
+	<properties>
+	  <skipTests>false</skipTests>
+	</properties>
+      </profile>
+    </profiles>
+
     <artifactId>tsk4j-core-${aol}</artifactId>
     <packaging>jar</packaging>
     <name>TSK4J: Core</name>
@@ -49,13 +59,7 @@
 
     <build>
       <defaultGoal>compile</defaultGoal>
-<!--
-      <finalName>
-	${project.artifactId}-${aol}-${project.version}
-      </finalName>
--->
       <plugins>
-
 	<plugin>
 	  <groupId>org.codehaus.mojo</groupId>
 	  <artifactId>native-maven-plugin</artifactId>
@@ -148,6 +152,13 @@
 	      </configuration>
 	    </execution>
 	  </executions>
+	</plugin>
+
+	<plugin>
+	  <artifactId>maven-surefire-plugin</artifactId>
+	  <configuration>
+	    <skipTests>${skipTests}</skipTests>
+	  </configuration>
 	</plugin>
 
 	<plugin>
