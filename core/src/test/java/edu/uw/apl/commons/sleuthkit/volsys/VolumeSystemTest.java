@@ -68,6 +68,7 @@ public class VolumeSystemTest extends junit.framework.TestCase {
 	
 							
 	private void report( VolumeSystem vs ) {
+		System.out.println();
 		System.out.println( "BlockSize: " + vs.getBlockSize() );
 		System.out.println( "Endianness: " + vs.getEndianness() );
 		System.out.println( "Offset: " + vs.getOffset() );
@@ -76,6 +77,7 @@ public class VolumeSystemTest extends junit.framework.TestCase {
 	}
 	
 	private void report( Partition p ) {
+		System.out.println();
 		System.out.println( "Address: " + p.address() );
 		System.out.println( "Description: " + p.description() );
 		System.out.println( "Flags: " + p.flags() );

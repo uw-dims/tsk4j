@@ -2,30 +2,65 @@ package edu.uw.apl.commons.sleuthkit.filesys;
 
 import java.io.IOException;
 
-import edu.uw.apl.commons.sleuthkit.image.Image;
 import edu.uw.apl.commons.sleuthkit.base.Closeable;
 import edu.uw.apl.commons.sleuthkit.base.Native;
+import edu.uw.apl.commons.sleuthkit.base.HeapBuffer;
+import edu.uw.apl.commons.sleuthkit.image.Image;
+import edu.uw.apl.commons.sleuthkit.volsys.Partition;
 
 /**
  * Java wrapper around the Sleuthkit TSK_FS_INFO struct and api.
  *
  * {@link http://www.sleuthkit.org/sleuthkit/docs/api-docs/fspage.html}
+ *
+ * Impl note: ANY use of the nativePtr requires that we first check
+ * that the file system is not 'closed'.  In other words, any use of
+ * nativePtr, and this operation that uses it, is invalid after
+ * FileSystem.close().
  */
 
 public class FileSystem extends Closeable {
 
-	public FileSystem( String path, long sectorOffset ) throws IOException {
-		image = new Image( path );
+	public FileSystem( Image image, boolean ownsImage,
+					   long sectorOffset ) throws IOException {
+		this.image = image;
+		this.ownsImage = ownsImage;
 		this.sectorOffset = sectorOffset;
-		nativePtr = open( image.nativePtr(),
-						  sectorOffset * image.sectorSize() );
+		this.partition = null;
+		heapBuffer = new HeapBuffer();
+		nativePtr = openImage( image.nativePtr(),
+							   sectorOffset * image.sectorSize() );
 		if( nativePtr == 0 )
 			// mimic fls's error message...
 			throw new IOException( "Cannot determine file system type" );
 	}
+	
+	public FileSystem( Image image, long sectorOffset ) throws IOException {
+		this( image, false, sectorOffset );
+	}
+	
+	public FileSystem( Image image ) throws IOException {
+		this( image, false, 0L );
+	}
+
+	public FileSystem( String path, long sectorOffset ) throws IOException {
+		this( new Image( path ), true, sectorOffset );
+	}
 
 	public FileSystem( String path ) throws IOException {
 		this( path, 0L );
+	}
+
+	public FileSystem( Partition p ) throws IOException {
+		image = null;
+		ownsImage = false;
+		sectorOffset = -1;
+		partition = p;
+		heapBuffer = new HeapBuffer();
+		nativePtr = openPartition( p.nativePtr() );
+		if( nativePtr == 0 )
+			// mimic fls's error message...
+			throw new IOException( "Cannot determine file system type" );
 	}
 	
 	public Image getImage() {
@@ -36,20 +71,29 @@ public class FileSystem extends Closeable {
 	public long sectorOffset() {
 		return sectorOffset;
 	}
+
+	/**
+	 * @return Partition from which this FileSystem created, which can be null
+	 * if created via an Image
+	 */
+	public Partition getPartition() {
+		return partition;
+	}
 	
 	@Override
 	protected void closeImpl() {
+		heapBuffer.free();
 		close( nativePtr );
-		/*
-		  LOOK: if we were to allow Image objects passed in to constructor,
-		  we would NOT want to close such a ref.
-		*/
-		image.close();
+		if( ownsImage )
+			image.close();
 	}
 
+	/**
+	 * @return image.getPath or null if filesystem constructed from a Partition
+	 */
 	public String getPath() {
 		// see note in Image.getPath
-		return image.getPath();
+		return image == null ? null : image.getPath();
 	}
 
 	public long nativePtr() {
@@ -98,6 +142,7 @@ public class FileSystem extends Closeable {
 	}
 
 	public int type() {
+		checkClosed();
 		return type( nativePtr );
 	}
 	
@@ -123,7 +168,8 @@ public class FileSystem extends Closeable {
 	 */
 	public int read( long offset, byte[] buf, int len ) {
 		checkClosed();
-		return read( nativePtr, offset, buf, len );
+		heapBuffer.extendSize( len );
+		return read( nativePtr, offset, buf, len, heapBuffer.nativePtr() );
 	}
 
 	// *************** Opening and Reading File System Blocks ****************
@@ -151,10 +197,13 @@ public class FileSystem extends Closeable {
 
 	/**
 	 * Corresponds to tsk_fs_read_block
+	 * @param buf - a byte buffer whose length should be a multiple
+	 * of the Filesystem block size
 	 */
 	public int readBlock( long addr, byte[] buf ) {
 		checkClosed();
-		return readBlock( nativePtr, addr, buf );
+		heapBuffer.extendSize( buf.length );
+		return readBlock( nativePtr, addr, buf, heapBuffer.nativePtr() );
 	}
 
 	
@@ -235,7 +284,8 @@ public class FileSystem extends Closeable {
 
 	private static native void initNative();
 	
-	private native long open( long imgNativePtr, long offset );
+	private native long openImage( long imgNativePtr, long offset );
+	private native long openPartition( long partitionNativePtr );
 	private native void close( long nativePtr );
 
 	private native long blockCount( long nativePtr );
@@ -251,11 +301,12 @@ public class FileSystem extends Closeable {
 	private native int flags( long nativePtr );
 	private native int type( long nativePtr );
 	
-	private native int read( long nativePtr, long offset, byte[] buf, int size);
+	private native int read( long nativePtr, long offset, byte[] buf, int len,
+							 long nativeHeapPtr );
 
 	private native Block getBlock( long nativePtr, long addr );
 	private native int readBlock( long nativePtr, long addr,
-								  byte[] buf );
+								  byte[] buf, long nativeHeapPtr );
 	private native int blockWalk( long nativePtr, long startBlk, long endBlk,
 								  int flags, BlockWalk.Callback cb );
 
@@ -271,9 +322,12 @@ public class FileSystem extends Closeable {
 	private native int metaWalk( long nativePtr, long metaStart, long metaEnd,
 								 int flags, MetaWalk.Callback cb );
 
-	final Image image;
-	final long sectorOffset;
-	final long nativePtr;
+	private final Image image;
+	private final boolean ownsImage;
+	private final long sectorOffset;
+	private final Partition partition;
+	private final long nativePtr;
+	final HeapBuffer heapBuffer;
 
 	static {
 		/*

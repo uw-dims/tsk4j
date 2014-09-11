@@ -3,9 +3,11 @@ package edu.uw.apl.commons.sleuthkit.filesys;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
+import java.io.InputStream;
 
 import edu.uw.apl.commons.sleuthkit.base.Closeable;
 import edu.uw.apl.commons.sleuthkit.base.HeapBuffer;
+import edu.uw.apl.commons.sleuthkit.base.TSKInputStream;
 
 /**
  * Java wrapper around the Sleuthkit TSK_FS_FILE struct and api.
@@ -44,7 +46,7 @@ public class File extends Closeable {
 		this.fs = fs;
 		this.meta = meta;
 		this.name = name;
-		heapBuffer = new HeapBuffer();
+		//		heapBuffer = new HeapBuffer();
 	}
 
 	/**
@@ -59,7 +61,7 @@ public class File extends Closeable {
 
 	@Override
 	protected void closeImpl() {
-		heapBuffer.free();
+		//heapBuffer.free();
 		close( nativePtr );
 	}
 
@@ -73,12 +75,12 @@ public class File extends Closeable {
 		return walk( nativePtr, flags, w );
 	}
 
-	public java.io.InputStream getInputStream() {
+	public InputStream getInputStream() {
 		checkClosed();
 		return getInputStream( false );
 	}
 
-	public java.io.InputStream getInputStream( boolean includeSlackSpace ) {
+	public InputStream getInputStream( boolean includeSlackSpace ) {
 		checkClosed();
 		return new FileInputStream( includeSlackSpace );
 	}
@@ -91,74 +93,31 @@ public class File extends Closeable {
 	public int read( long fileOffset, int flags,
 					 byte[] buf, int bufOffset, int len ) {
 		checkClosed();
-		heapBuffer.extendSize( len );
-		//		System.out.println( "File.read : " + fileOffset );
+		fs.heapBuffer.extendSize( len );
+
+		//		System.err.println( "File.read : " + fileOffset );
+
 		return read( nativePtr, fileOffset, flags, buf, bufOffset, len,
-					 heapBuffer.nativePtr() );
+					 fs.heapBuffer.nativePtr() );
 	}
 
 	/**
 	 * Don't confuse with java.io.FileInputStream, this is
 	 * an InputStream for this File class.
 	 */
-	class FileInputStream extends java.io.InputStream {
+	class FileInputStream extends TSKInputStream {
 		FileInputStream( boolean includeSlackSpace ) {
-			Meta m = meta();
-			if( m == null )
-				throw new IllegalStateException( "No meta, so no size" );
-			size = m.size();
-			posn = 0;
+			// wah, we really want to throw exception if no meta!
+			super( meta() == null ? -1 : meta().size() );
 			flags = includeSlackSpace ? READ_FLAG_SLACK : READ_FLAG_NONE;
 		}
 
 		@Override
-		public int available() throws IOException {
-			return (int)(size-posn);
+		public int readImpl( byte[] b, int off, int len ) throws IOException {
+			return File.this.read( posn, flags, b, off, len );
 		}
 
-		@Override
-		public int read() throws IOException {
-			byte[] ba = new byte[1];
-			int n = File.this.read( posn, flags, ba );
-			if( n == -1 )
-				return -1;
-			posn += n;
-			return ba[0] & 0xff;
-		}
-			
-		@Override
-		public int read( byte[] b, int off, int len ) throws IOException {
-
-			// checks from the contract for InputStream...
-			if( b == null )
-				throw new NullPointerException();
-			if( off < 0 || len < 0 || off + len > b.length ) {
-				throw new IndexOutOfBoundsException();
-			}
-			if( len == 0 )
-				return 0;
-
-			if( posn >= size )
-				return -1;
-
-			int n = File.this.read( posn, flags, b, off, len );
-			posn += n;
-			return n;
-		}
-
-		@Override
-	    public long skip( long n ) throws IOException {
-			if( n < 0 )
-				return 0;
-			long min = Math.min( n, size-posn );
-			posn += min;
-			return min;
-	    }
-
-		private final long size;
-		private long posn;
 		private final int flags;
-		
 	}
 
 	/*
@@ -263,7 +222,7 @@ public class File extends Closeable {
 	final FileSystem fs;
 	final Meta meta;
 	final Name name;
-	final HeapBuffer heapBuffer;
+	//	final HeapBuffer heapBuffer;
 }
 
 // eof

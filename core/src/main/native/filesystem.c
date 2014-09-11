@@ -61,17 +61,32 @@ static jobject createWalkFile( JNIEnv* env, TSK_FS_FILE* fsFile,
 
 /*
  * Class:     edu_uw_apl_commons_sleuthkit_filesys_FileSystem
- * Method:    open
+ * Method:    openImage
  * Signature: (JJ)J
  */
 JNIEXPORT jlong JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_open
+Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_openImage
 (JNIEnv *env, jobject thiz, jlong imgNativePtr, jlong offset ) {
 
   TSK_IMG_INFO* imgInfo = (TSK_IMG_INFO*)imgNativePtr;
   TSK_FS_INFO* fsInfo = tsk_fs_open_img( imgInfo, offset, TSK_FS_TYPE_DETECT );
   return (jlong)fsInfo;
 }
+
+/*
+ * Class:     edu_uw_apl_commons_sleuthkit_filesys_FileSystem
+ * Method:    openPartition
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL 
+Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_openPartition
+( JNIEnv *env, jobject thiz, jlong partitionNativePtr ) {
+
+  TSK_VS_PART_INFO* partInfo = (TSK_VS_PART_INFO*)partitionNativePtr;
+  TSK_FS_INFO* fsInfo = tsk_fs_open_vol( partInfo, TSK_FS_TYPE_DETECT );
+  return (jlong)fsInfo;
+}
+
 
 /*
  * Class:     edu_uw_apl_commons_sleuthkit_filesys_FileSystem
@@ -223,32 +238,20 @@ JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_type
 /*
  * Class:     edu_uw_apl_commons_sleuthkit_filesys_FileSystem
  * Method:    read
- * Signature: (JJ[BI)I
+ * Signature: (JJ[BIJ)I
  */
 JNIEXPORT jint JNICALL 
 Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_read
 (JNIEnv *env, jobject thiz, jlong nativePtr, jlong offset, 
- jbyteArray buf, jint len ) {
-
-  // LOOK: we malloc,free a C buf every time. Use a HeapBuffer ??
+ jbyteArray buf, jint len, jlong nativeHeapPtr ) {
 
   TSK_FS_INFO* info = (TSK_FS_INFO*)nativePtr;
-  char* bufC = (char*)malloc( len );
-  if( bufC == NULL ) {
-	jclass cls = (*env)->FindClass( env, "java/lang/OutOfMemoryError" );
-	if( cls == NULL )
-	  // unable to find the exception class, give up...
-	  return -1;
-	(*env)->ThrowNew( env, cls, "malloc failure" );
-	return -1;
-  }
+  char* bufC = (char*)nativeHeapPtr;
   ssize_t result = tsk_fs_read( info, offset, bufC, len );
   if( result == -1 ) {
-	free( bufC );
 	return -1;
   }
   (*env)->SetByteArrayRegion( env, buf, 0, result, (jbyte*)bufC );
-  free( bufC );
   return result;
 }
 
@@ -275,20 +278,19 @@ Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_getBlock
 /*
  * Class:     edu_uw_apl_commons_sleuthkit_filesys_FileSystem
  * Method:    readBlock
- * Signature: (JJ[B)I
+ * Signature: (JJ[BJ)I
  */
 JNIEXPORT jint JNICALL 
 Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_readBlock
-(JNIEnv * env, jobject thiz, jlong id, jlong addr, jbyteArray buf ) {
+(JNIEnv * env, jobject thiz, jlong nativePtr, jlong addr, jbyteArray buf,
+ jlong nativeHeapPtr ) {
 
-  // LOOK: we malloc,free a C buf every time. Any alternative ??
-  TSK_FS_INFO* info = (TSK_FS_INFO*)id;
+  TSK_FS_INFO* info = (TSK_FS_INFO*)nativePtr;
   jsize len = (*env)->GetArrayLength( env, buf );
-  char* bufC = (char*)malloc( len );
+  char* bufC = (char*)nativeHeapPtr;
   ssize_t result = tsk_fs_read_block( info, addr, bufC, len ); 
   if( result != -1 )
 	(*env)->SetByteArrayRegion( env, buf, 0, len, (const jbyte*)bufC );
-  free( bufC );
   return (jint)result;
 }
 

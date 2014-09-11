@@ -29,22 +29,23 @@ JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_File_read
  jbyteArray buf, jint bufOffset, jint len, jlong nativeHeapPtr ) {
   
   TSK_FS_FILE* fsFile = (TSK_FS_FILE*)nativePtr;
-  void* bufC;
-  if( nativeHeapPtr == 0 ) {
-	//	fprintf( stderr, "malloc %u\n", len );
-	bufC = malloc( len );
-	// LOOK: oom
-  } else {
-	bufC = (void*)nativeHeapPtr;
-  }
+  char* bufC = (char*)nativeHeapPtr;
 
-  //  printf( "%p %u %u %u\n", fsFile, fileOffset, len, flags );
+  //  printf( "%p %lu %u %u\n", fsFile, fileOffset, len, flags );
 
   ssize_t read = tsk_fs_file_read( fsFile, fileOffset, (char*)bufC, len,flags );
   if( read != -1 ) 
 	(*env)->SetByteArrayRegion( env, buf, bufOffset, read, (const jbyte*)bufC );
-  if( nativeHeapPtr == 0 )
-	free( bufC );
+
+  /*
+	workaround a (possible?) bug in tsk_fs_file_read where a sparse
+	file which SHOULD populate our buffer with N zeros and return N 
+	actually returns 0.  Best we can do at this point is assert this
+	is eof, so return -1. Same logic is in attribute.c, tracking
+	tsk_fs_attr_read.
+  */
+  if( read == 0 )
+	read = -1;
   return (jint)read;
 }
 

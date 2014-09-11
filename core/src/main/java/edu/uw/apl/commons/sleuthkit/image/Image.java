@@ -1,11 +1,13 @@
 package edu.uw.apl.commons.sleuthkit.image;
 
 import java.io.File;
+import java.io.InputStream;
 import java.io.IOException;
 
 import edu.uw.apl.commons.sleuthkit.base.Closeable;
 import edu.uw.apl.commons.sleuthkit.base.Native;
 import edu.uw.apl.commons.sleuthkit.base.HeapBuffer;
+import edu.uw.apl.commons.sleuthkit.base.TSKInputStream;
 
 /**
  * Java wrapper around the Sleuthkit TSK_IMG_INFO struct and api.
@@ -39,6 +41,10 @@ import edu.uw.apl.commons.sleuthkit.base.HeapBuffer;
 
 public class Image extends Closeable {
 
+	public Image( File f ) throws IOException {
+		this( f.getPath() );
+	}
+	
 	public Image( String path ) throws IOException {
 		if( path == null )
 			throw new IllegalArgumentException( "Null path" );
@@ -159,62 +165,20 @@ public class Image extends Closeable {
 	 */
 	static public native int typeSupported();
 	
-	public java.io.InputStream getInputStream() {
+	public InputStream getInputStream() {
 		checkClosed();
 		return new ImageInputStream();
 	}
 
-	class ImageInputStream extends java.io.InputStream {
+	class ImageInputStream extends TSKInputStream {
 		ImageInputStream() {
-			size = Image.this.size();
-			posn = 0;
+			super( Image.this.size() );
 		}
 
 		@Override
-		public int available() throws IOException {
-			return (int)(size-posn);
+		public int readImpl( byte[] b, int off, int len ) throws IOException {
+			return Image.this.read( posn, b, off, len );
 		}
-
-		@Override
-		public int read() throws IOException {
-			byte[] ba = new byte[1];
-			int n = read( ba, 0, 1 );
-			if( n == -1 )
-				return -1;
-			return ba[0] & 0xff;
-		}
-			
-		@Override
-		public int read( byte[] b, int off, int len ) throws IOException {
-
-			// checks from the contract for InputStream...
-			if( b == null )
-				throw new NullPointerException();
-			if( off < 0 || len < 0 || off + len > b.length ) {
-				throw new IndexOutOfBoundsException();
-			}
-			if( len == 0 )
-				return 0;
-
-			if( posn >= size )
-				return -1;
-
-			int n = Image.this.read( posn, b, off, len );
-			posn += n;
-			return n;
-		}
-
-		@Override
-	    public long skip( long n ) throws IOException {
-			if( n < 0 )
-				return 0;
-			long min = Math.min( n, size-posn );
-			posn += min;
-			return min;
-	    }
-
-		private final long size;
-		private long posn;
 	}
 
 	private native long openSingle( String path );

@@ -9,6 +9,14 @@ import edu.uw.apl.commons.sleuthkit.base.Closeable;
  * Java wrapper around the Sleuthkit TSK_FS_BLOCK struct and api.
  *
  * {@link http://www.sleuthkit.org/sleuthkit/docs/api-docs/fspage.html}
+ *
+ * A block is the unit of storage within a filesystem, usually 4K or
+ * similar. The actual value is a property of the parent FileSystem.
+
+ * A block has an address, contents and flags (allocated,
+ * unallocated, etc)
+ *
+ * @see FileSystem
  */
 
 public class Block extends Closeable {
@@ -115,16 +123,16 @@ public class Block extends Closeable {
 		return result;
 	}
 	
-	public static final int FLAG_UNUSED = 0x0;
-	public static final int FLAG_ALLOC = 0x1;
-	public static final int FLAG_UNALLOC = 0x2;
-	public static final int FLAG_CONT = 0x4;
-	public static final int FLAG_META = 0x8;
-	public static final int FLAG_BAD = 0x10;
-	public static final int FLAG_RAW = 0x20;
+	public static final int FLAG_UNUSED	= 0x0;
+	public static final int FLAG_ALLOC	= 0x1;
+	public static final int FLAG_UNALLOC= 0x2;
+	public static final int FLAG_CONT	= 0x4;
+	public static final int FLAG_META	= 0x8;
+	public static final int FLAG_BAD	= 0x10;
+	public static final int FLAG_RAW	= 0x20;
 	public static final int FLAG_SPARSE = 0x40;
-	public static final int FLAG_COMP = 0x80;
-	public static final int FLAG_RES = 0x100;
+	public static final int FLAG_COMP	= 0x80;
+	public static final int FLAG_RES	= 0x100;
 }
 
 // eof

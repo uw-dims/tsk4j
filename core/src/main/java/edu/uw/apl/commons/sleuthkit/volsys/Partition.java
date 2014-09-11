@@ -3,6 +3,8 @@ package edu.uw.apl.commons.sleuthkit.volsys;
 import java.io.File;
 import java.io.IOException;
 
+import edu.uw.apl.commons.sleuthkit.base.TSKInputStream;
+
 /**
  * Mimic the TSK_VS_PART_INFO struct and API
  *
@@ -10,6 +12,11 @@ import java.io.IOException;
  *
  * A Partition is not directly 'Closeable', but the closed status can be
  * 'revealed' by tracking the closed status of the parent VolumeSystem.
+
+ * We provide a java.io.InputStream interface to the Partition's data:
+ *
+ * List<Partition> ps = vs.getPartitions();
+ * java.io.InputStream is = ps.get(0).getInputStream();
  */
 
 public class Partition {
@@ -23,7 +30,13 @@ public class Partition {
 		this.parent = parent;
 	}
 
-	
+	/**
+	 * Only filesys.FileSystem needs this. Friends anyone?
+	 */
+	public long nativePtr() {
+		return nativePtr;
+	}
+
 	public VolumeSystem getVolumeSystem() {
 		return parent;
 	}
@@ -102,7 +115,14 @@ public class Partition {
 		checkClosed();
 		return flags() == VS_PART_FLAG_UNALLOC;
 	}
-	
+
+	/**
+	 * Java wrapper around tsk_vs_part_read
+	 *
+	 * @param volumeOffset - byte offset to read from, relative to
+	 * Partition's own position in parent VolumeSystem
+	 * @return number of bytes read or -1 on error
+	 */
 	public int read( long volumeOffset,
 					 byte[] buf, int bufOffset, int len ) {
 		checkClosed();
@@ -119,64 +139,15 @@ public class Partition {
 		return new PartitionInputStream();
 	}
 	
-	class PartitionInputStream extends java.io.InputStream {
+	class PartitionInputStream extends TSKInputStream {
 		PartitionInputStream() {
-			VolumeSystem vs = getVolumeSystem();
-			size = Partition.this.length() * vs.getBlockSize();
-			posn = 0;
-
-			//			System.out.println( description() + " " + size );
+			super( getVolumeSystem().getBlockSize() * Partition.this.length() );
 		}
 
 		@Override
-		public int available() throws IOException {
-			return (int)(size-posn);
+		public int readImpl( byte[] b, int off, int len ) throws IOException {
+			return Partition.this.read( posn, b, off, len );
 		}
-
-		@Override
-		public int read() throws IOException {
-			byte[] ba = new byte[1];
-			int n = read( ba, 0, 1 );
-			if( n == -1 )
-				return -1;
-			return ba[0] & 0xff;
-		}
-			
-		@Override
-		public int read( byte[] b, int off, int len ) throws IOException {
-
-			//			System.err.println( posn + " " + off + " " + len );
-			// checks from the contract for InputStream...
-			if( b == null )
-				throw new NullPointerException();
-			if( off < 0 || len < 0 || off + len > b.length ) {
-				throw new IndexOutOfBoundsException();
-			}
-			if( len == 0 )
-				return 0;
-
-			if( posn >= size )
-				return -1;
-
-			int n = Partition.this.read( posn, b, off, len );
-			if( n == -1 ) {
-				throw new IOException();
-			}
-			posn += n;
-			return n;
-		}
-
-		@Override
-	    public long skip( long n ) throws IOException {
-			if( n < 0 )
-				return 0;
-			long min = Math.min( n, size-posn );
-			posn += min;
-			return min;
-	    }
-
-		private final long size;
-		private long posn;
 	}
 
 	private native long address( long nativePtr );
@@ -211,7 +182,6 @@ public class Partition {
 	static final int VS_PART_FLAG_ALLOC = 0x01;
 	static final int VS_PART_FLAG_UNALLOC = 0x02;
 	static final int VS_PART_FLAG_META = 0x04;
-
 }
 
 // eof

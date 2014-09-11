@@ -100,26 +100,11 @@ JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_image_Image_read
 
   TSK_IMG_INFO* info = (TSK_IMG_INFO*)nativePtr;
 
-  void* bufC;
-  if( nativeHeapPtr == 0 ) {
-	bufC = malloc( bufLen );
-	if( bufC == NULL ) {
-	  jclass cls = (*env)->FindClass( env, "java/lang/OutOfMemoryError" );
-	  if( cls == NULL )
-		// unable to find the exception class, give up...
-		return -1;
-	  (*env)->ThrowNew( env, cls, "malloc failure" );
-	  return -1;
-	}
-  } else {
-	bufC = (void*)nativeHeapPtr;
-  }
+  char* bufC = (char*)nativeHeapPtr;
 
   ssize_t read = tsk_img_read( info, fileOffset, (char*)bufC, bufLen );
   if( read != -1 ) 
 	(*env)->SetByteArrayRegion( env, buf, bufOffset, read, (const jbyte*)bufC );
-  if( nativeHeapPtr == 0 )
-	free( bufC );
   return (jint)read;
 }
 

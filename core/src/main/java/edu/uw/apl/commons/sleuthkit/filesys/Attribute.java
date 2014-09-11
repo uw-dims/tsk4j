@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import edu.uw.apl.commons.sleuthkit.base.TSKInputStream;
+
 /**
  * Model the TSK_FS_ATTR struct.  Provide an API for reading attribute
  * content using a java.io.InputStream.  Also provide access to all Runs
@@ -46,7 +48,7 @@ public class Attribute {
 	}
 
 	/**
-	   extract nativePtr->nrd.allocsize
+	   Extract nativePtr->nrd.allocsize.  nrd == 'non-resident'
 	*/
 	public long nrdAllocSize() {
 		return nrdAllocSize( nativePtr );
@@ -113,7 +115,18 @@ public class Attribute {
 	 */
 	public int read( long fileOffset, int flags,
 					 byte[] buf, int bufOffset, int len ) {
-		return read( nativePtr, fileOffset, flags, buf, bufOffset, len );
+
+		//System.err.println( fileOffset + " " + flags );
+
+		/*
+		  We'll use (hijack?) the enclosing File object's own native
+		  HeapBuffer, saving on the need to manage another one for
+		  each individual Attribute.  The goal of course is to
+		  minimize the number of C mallocs.
+		*/
+		file.fs.heapBuffer.extendSize( len );
+		return read( nativePtr, fileOffset, flags, buf, bufOffset, len,
+					 file.fs.heapBuffer.nativePtr() );
 	}
 
 	public java.io.InputStream getInputStream() {
@@ -126,60 +139,19 @@ public class Attribute {
 		return new AttributeInputStream( includeSlackSpace );
 	}
 
-	class AttributeInputStream extends java.io.InputStream {
+	class AttributeInputStream extends TSKInputStream {
 		AttributeInputStream( boolean includeSlackSpace ) {
-			size = Attribute.this.size();
-			posn = 0;
+			super( Attribute.this.size() );
 			flags = includeSlackSpace ? File.READ_FLAG_SLACK :
 				File.READ_FLAG_NONE;
 		}
 
 		@Override
-		public int available() throws IOException {
-			return (int)(size-posn);
+		public int readImpl( byte[] b, int off, int len ) throws IOException {
+			return Attribute.this.read( posn, flags, b, off, len );
 		}
 
-		@Override
-		public int read() throws IOException {
-			byte[] ba = new byte[1];
-			int n = read( ba, 0, 1 );
-			if( n == -1 )
-				return -1;
-			return ba[0] & 0xff;
-		}
-			
-		@Override
-		public int read( byte[] b, int off, int len ) throws IOException {
-
-			// checks from the contract for InputStream...
-			if( b == null )
-				throw new NullPointerException();
-			if( off < 0 || len < 0 || off + len > b.length ) {
-				throw new IndexOutOfBoundsException();
-			}
-			if( len == 0 )
-				return 0;
-
-			if( posn >= size )
-				return -1;
-
-			int n = Attribute.this.read( posn, flags, b, off, len );
-			posn += n;
-			return n;
-		}
-
-		@Override
-	    public long skip( long n ) throws IOException {
-			if( n < 0 )
-				return 0;
-			long min = Math.min( n, size-posn );
-			posn += min;
-			return min;
-	    }
-
-		private final long size;
 		private final int flags;
-		private long posn;
 	}
 
 
@@ -231,7 +203,8 @@ public class Attribute {
 	
 
 	private native int read( long nativePtr, long fileOffset, int flags,
-							 byte[] buf, int bufOffset, int len );
+							 byte[] buf, int bufOffset, int len,
+							 long nativeHeapPtr );
 	
 	private native long runNative( long nativePtr, long prevRunPtr );
 	private native long runEndNative( long nativePtr );

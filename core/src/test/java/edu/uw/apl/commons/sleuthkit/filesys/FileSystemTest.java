@@ -1,14 +1,17 @@
 package edu.uw.apl.commons.sleuthkit.filesys;
 
+import java.util.List;
+
 import edu.uw.apl.commons.sleuthkit.base.Utils;
 import edu.uw.apl.commons.sleuthkit.image.Image;
+import edu.uw.apl.commons.sleuthkit.volsys.*;
 
 public class FileSystemTest extends junit.framework.TestCase {
 
 	public void testSz1() throws Exception {
 
 		String path = "/dev/sda";
-		FileSystem fs1 = new FileSystem( path, 2048 * 512L );
+		FileSystem fs1 = new FileSystem( path, 2048L );
 		report( fs1 );
 		fs1.close();
 	}
@@ -28,6 +31,50 @@ public class FileSystemTest extends junit.framework.TestCase {
 		FileSystem fs1 = new FileSystem( path );
 		report( fs1 );
 		fs1.close();
+	}
+
+	public void testPartitionsLinux() throws Exception {
+		Image i = new Image( "/dev/sda" );
+		VolumeSystem vs = new VolumeSystem( i );
+		List<Partition> ps = vs.getPartitions();
+		for( Partition p : ps ) {
+			if( !p.isAllocated() )
+				continue;
+			if( p.description().contains( "Swap" ) )
+				continue;
+			report( p );
+			FileSystem fs = new FileSystem( p );
+			report( fs );
+		}
+	}
+
+	public void testPartitionsWindows() throws Exception {
+		java.io.File f = new java.io.File( "data/nuga2.dd" );
+		if( !f.exists() )
+			return;
+		Image i = new Image( f );
+		VolumeSystem vs = new VolumeSystem( i );
+		List<Partition> ps = vs.getPartitions();
+		for( Partition p : ps ) {
+			if( !p.isAllocated() )
+				continue;
+			if( p.description().contains( "Swap" ) )
+				continue;
+			report( p );
+			FileSystem fs = new FileSystem( p );
+			report( fs );
+		}
+	}
+
+	private void report( Partition p ) {
+		System.out.println();
+		System.out.println( "Address: " + p.address() );
+		System.out.println( "Description: " + p.description() );
+		System.out.println( "Flags: " + p.flags() );
+		System.out.println( "Start: " + p.start() );
+		System.out.println( "Length: " + p.length() );
+		System.out.println( "Table/Slot: " + p.table() + "/" + p.slot());
+		System.out.println( "IsAllocated?: " + p.isAllocated() );
 	}
 	
 	private void report( FileSystem fs ) throws Exception {

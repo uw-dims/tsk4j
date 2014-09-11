@@ -13,6 +13,19 @@ import edu.uw.apl.commons.sleuthkit.base.Closeable;
  *
  * {@link http://www.sleuthkit.org/sleuthkit/docs/api-docs/group__vslib.html}
  *
+ * We implement the following subset of the TSK_VS_INFO api:
+ *
+ * tsk_vs_open -> new VolumeSystem( Image i, long offset )
+ * tsk_vs_part_get -> VolumeSystem.getPartitions()
+ *
+ * Expected Usage:
+ *
+ * Image i = new Image( path );
+ * VolumeSystem vs = new VolumeSystem( i, offset );
+ * List<Partition> ps = vs.getPartitions();
+ *
+ * @see Partition
+ * @see Image
  */
 
 public class VolumeSystem extends Closeable {
@@ -38,38 +51,58 @@ public class VolumeSystem extends Closeable {
 		return image;
 	}
 
+	/**
+	 * @return The size of blocks in bytes.
+	 * From the TSK_VS_INFO.block_size member value.
+	 */
 	public int getBlockSize() {
 		checkClosed();
 		return blockSize( nativePtr );
 	}
 
+	/**
+	 * @return Endian ordering of data
+	 * From the TSK_VS_INFO.endian member value
+	 */
 	public long getEndianness() {
 		checkClosed();
 		return endianness( nativePtr );
 	}
 	
+	/**
+	 * @return Byte offset where VS starts in disk image
+	 * From the TSK_VS_INFO.offset member value
+	 */
 	public long getOffset() {
 		checkClosed();
 		return offset( nativePtr );
 	}
 	
+	/**
+	 * @return Type of volume system
+	 * From the TSK_VS_INFO.vstype member value
+	 */
 	public int getType() {
 		checkClosed();
 		return type( nativePtr );
 	}
 	
 	/**
-	 * @result number of partitions
+	 * @return TSK_VS_INFO.part_count member value, the number of partitions
 	 */
 	public int partitionCount() {
 		checkClosed();
 		return partitionCount( nativePtr );
 	}
 
+	/**
+	 * @return List of partitions
+	 * From the TSK_VS_INFO.part_list member
+	 */
 	public List<Partition> getPartitions() {
 		checkClosed();
-		List<Partition> result = new ArrayList<Partition>();
 		int N = partitionCount();
+		List<Partition> result = new ArrayList<Partition>( N );
 		for( int i = 0; i < N; i++ ) {
 			long np = partition( nativePtr, i );
 			Partition p = new Partition( np, this );
