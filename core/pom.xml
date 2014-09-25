@@ -20,6 +20,28 @@
 	  <skipTests>false</skipTests>
 	</properties>
       </profile>
+      <profile>
+	<id>windows-make</id>
+	<activation>
+	  <os>
+	    <family>Windows</family>
+	  </os>
+	</activation>
+	<properties>
+	  <make>nmake</make>
+	</properties>
+      </profile>
+      <profile>
+	<id>unix-make</id>
+	<activation>
+	  <os>
+	    <family>Linux</family>
+	  </os>
+	</activation>
+	<properties>
+	  <make>make</make>
+	</properties>
+      </profile>
     </profiles>
 
     <artifactId>tsk4j-core-${aol}</artifactId>
@@ -132,7 +154,7 @@
 		<workingDirectory>
 		  src/main/native/${os.name}/${os.arch}
 		</workingDirectory>
-		<executable>make</executable>
+		<executable>${make}</executable>
 		<commandlineArgs>install</commandlineArgs>
 	      </configuration>
 	    </execution>
@@ -147,7 +169,7 @@
 		<workingDirectory>
 		  src/main/native/${os.name}/${os.arch}
 		</workingDirectory>
-		<executable>make</executable>
+		<executable>${make}</executable>
 		<commandlineArgs>clean</commandlineArgs>
 	      </configuration>
 	    </execution>
