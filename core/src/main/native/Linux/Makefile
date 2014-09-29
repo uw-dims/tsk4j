@@ -9,7 +9,7 @@ OS = Linux
 PWD = $(shell pwd)
 
 ifndef JAVA_HOME
-    $(error JAVA_HOME make variable missing.  Copy $(PWD)/Makefile.env.sample to $(PWD)/Makefile.env and edit)
+$(error JAVA_HOME make variable missing.  Copy $(PWD)/Makefile.env.sample to $(PWD)/Makefile.env and edit)
 endif
 ifndef TSK_CPPFLAGS
     $(error TSK_CPPFLAGS make variable missing.  Copy $(PWD)/Makefile.env.sample to $(PWD)/Makefile.env and edit)
@@ -27,6 +27,8 @@ CPPFLAGS += -I$(BASEDIR)/target/native/javah
 CPPFLAGS += $(TSK_CPPFLAGS)
 
 CPPFLAGS += -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux
+
+LDLIBS = -lstdc++
 
 LDLIBS += $(TSK_LDLIBS)
 
