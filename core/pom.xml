@@ -2,16 +2,24 @@
 <project>
     <modelVersion>4.0.0</modelVersion>
 
+    <properties>
+      <aol>${os.arch}-${os.name}</aol>
+      <!-- override this by activating the 'tester' profile -->
+      <skipTests>true</skipTests>
+    </properties>
+
     <parent>
       <groupId>edu.uw.apl.commons</groupId>
       <artifactId>tsk4j-parent</artifactId>
       <version>413.0.0</version>
     </parent>
     
-    <properties>
-      <aol>${os.arch}-${os.name}</aol>
-      <skipTests>true</skipTests>
-    </properties>
+    <artifactId>tsk4j-core-${aol}</artifactId>
+    <packaging>jar</packaging>
+    <name>
+      TSK4J: Core - JNI Bindings to Sleuthkit C
+      structures/routines
+    </name>
 
     <profiles>
       <profile>
@@ -44,9 +52,6 @@
       </profile>
     </profiles>
 
-    <artifactId>tsk4j-core-${aol}</artifactId>
-    <packaging>jar</packaging>
-    <name>TSK4J: Core</name>
 
     <repositories>
       <repository>
