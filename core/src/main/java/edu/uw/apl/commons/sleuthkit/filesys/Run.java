@@ -33,21 +33,30 @@ import java.util.List;
  * Model the TSK_FS_ATTR_RUN struct
  *
  * {@link http://www.sleuthkit.org/sleuthkit/docs/api-docs/structTSK__FS__ATTR__RUN.html}
+ *
+ * See Attribute.java in this package for commentary on why we need to
+ * check on the closed status of the enclosing File.
  */
 
 public class Run {
 
 	/**
-	 * called only by native code: attribute.c
+	 * called only by Attribute.runs()
 	 */
-	Run( long nativePtr ) {
+	Run( long nativePtr, Attribute a ) {
 		this.nativePtr = nativePtr;
+		attribute = a;
 	}
 
+	void checkClosed() {
+		attribute.checkClosed();
+	}
+	
 	/**
 	 * @return Starting block address (in file system) of run
 	 */
 	public long addr() {
+		checkClosed();
 		return addr( nativePtr );
 	}
 
@@ -55,6 +64,7 @@ public class Run {
 	 * @return Flags for run
 	 */
 	public int flags() {
+		checkClosed();
 		return flags( nativePtr );
 	}
 
@@ -62,6 +72,7 @@ public class Run {
 	 * @return Number of blocks in run (0 when entry is not in use) ???
 	 */
 	public long length() {
+		checkClosed();
 		return length( nativePtr );
 	}
 
@@ -69,6 +80,7 @@ public class Run {
 	 * @return Offset (in blocks) of this run in the file
 	 */
 	public long offset() {
+		checkClosed();
 		return offset( nativePtr );
 	}
 
@@ -101,7 +113,8 @@ public class Run {
 	private native long offset( long nativePtr );
 	
 	final long nativePtr;
-
+	final Attribute attribute;
+	
 	static public final int FLAG_NONE = 0;
 	static public final int FLAG_FILLER = 1;
 	static public final int FLAG_SPARSE = 2;

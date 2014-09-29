@@ -91,6 +91,11 @@ public class File extends Closeable {
 		close( nativePtr );
 	}
 
+	// A helper for Attribute, Run
+	void checkClosedPackage() {
+		checkClosed();
+	}
+	
 	public int walk( Walk w ) {
 		checkClosed();
 		return walk( WALK_FLAG_NONE, w );

@@ -37,6 +37,11 @@ import edu.uw.apl.commons.sleuthkit.base.TSKInputStream;
  * Model the TSK_FS_ATTR struct.  Provide an API for reading attribute
  * content using a java.io.InputStream.  Also provide access to all Runs
  * in the attribute.
+ *
+ * Though an Attribute is not directly 'closeable', its nativePtr is
+ * only valid while the parent File's own nativePtr is also valid.  So
+ * we use the same 'checkClosed' idea, delegating the actual check to
+ * File.
  */
 
 public class Attribute {
@@ -49,7 +54,16 @@ public class Attribute {
 		this.file = f;
 	}
 
+	void checkClosed() {
+		try {
+			file.checkClosedPackage();
+		} catch( IllegalStateException ise ) {
+			throw new IllegalStateException( "File.Closed: " + getClass() );
+		}
+	}
+	
 	public int flags() {
+		checkClosed();
 		return flags( nativePtr );
 	}
 
@@ -58,18 +72,22 @@ public class Attribute {
 	}
 
 	public int type() {
+		checkClosed();
 		return type( nativePtr );
 	}
 
 	public int id() {
+		checkClosed();
 		return id( nativePtr );
 	}
 
 	public String name() {
+		checkClosed();
 		return name( nativePtr );
 	}
 	
 	public long size() {
+		checkClosed();
 		return size( nativePtr );
 	}
 
@@ -77,6 +95,7 @@ public class Attribute {
 	   Extract nativePtr->nrd.allocsize.  nrd == 'non-resident'
 	*/
 	public long nrdAllocSize() {
+		checkClosed();
 		return nrdAllocSize( nativePtr );
 	}
 	
@@ -84,6 +103,7 @@ public class Attribute {
 	   extract nativePtr->nrd.initsize
 	*/
 	public long nrdInitSize() {
+		checkClosed();
 		return nrdInitSize( nativePtr );
 	}
 	
@@ -91,6 +111,7 @@ public class Attribute {
 	   extract nativePtr->nrd.skiplen
 	*/
 	public int nrdSkipLen() {
+		checkClosed();
 		return nrdSkipLen( nativePtr );
 	}
 
@@ -98,6 +119,7 @@ public class Attribute {
 	   extract nativePtr->rd.buf
 	*/
 	public byte[] rdBuf() {
+		checkClosed();
 		return rdBuf( nativePtr );
 	}
 	
@@ -106,23 +128,25 @@ public class Attribute {
 	   extract nativePtr->rd.buf_size
 	*/
 	public int rdBufSize() {
+		checkClosed();
 		return rdBufSize( nativePtr );
 	}
 	
 	public List<Run> runs() {
+		checkClosed();
 		long l = runNative( nativePtr, 0 );
 		if( l == 0 ) {
 			return Collections.emptyList();
 		}
 		List<Run> result = new ArrayList<Run>();
-		Run r0 = new Run( l );
+		Run r0 = new Run( l, this );
 		result.add( r0 );
 		Run prev = r0;
 		while( true ) {
 			l = runNative( nativePtr, prev.nativePtr );
 			if( l == 0 )
 				break;
-			Run r = new Run( l );
+			Run r = new Run( l, this );
 			result.add( r );
 			prev = r;
 		}
@@ -156,12 +180,11 @@ public class Attribute {
 	}
 
 	public java.io.InputStream getInputStream() {
-		//		checkClosed();
 		return getInputStream( false );
 	}
 
 	public java.io.InputStream getInputStream( boolean includeSlackSpace ) {
-		//checkClosed();
+		checkClosed();
 		return new AttributeInputStream( includeSlackSpace );
 	}
 
