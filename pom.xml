@@ -25,11 +25,14 @@
 	<email>stuart@apl.uw.edu</email>
       </developer>
     </developers>
-    
 
     <modules>
       <module>core</module>
-<!--      <module>cli</module> -->
+      <module>bodyfiles</module>
+      <module>samples</module> 
+<!--
+      <module>cli</module> 
+-->
     </modules>
 
     <build>

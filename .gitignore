@@ -2,6 +2,7 @@
 *.class
 *~
 paste
+target
 
 # eof
 
