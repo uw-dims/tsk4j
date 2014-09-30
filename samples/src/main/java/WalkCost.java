@@ -69,7 +69,8 @@ public class WalkCost {
 		os.addOption( "i", true, "starting inode" );
 		os.addOption( "v", false, "verbose" );
 
-		final String USAGE = "[-o offset] [-v] image";
+		final String USAGE =
+			"[-i root inode] [-o sector offset in larger image] [-v] image";
 		final String HEADER = "";
 		final String FOOTER = "";
 		
