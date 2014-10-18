@@ -1,5 +1,6 @@
 package edu.uw.apl.commons.sleuthkit.bodyfiles;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.InputStream;
@@ -14,8 +15,34 @@ import java.io.Reader;
 
 import org.apache.commons.codec.binary.Hex;
 
+/**
+ * Operations on BodyFile objects.  Mostly deals with parsing some
+ * external representation of BodyFiles, e.g. 'timeline' format as
+ * produced by 'fls -m' and 'fiwalk'.
+ */
+
 public class BodyFileCodec {
 
+	/**
+	 * Assert that the contents of the supplied file suggest that it
+	 * is or is not a BodyFile.  We do this by reading the first line
+	 * (which may be long if the file is binary!) and matching it
+	 * against the known regex for a BodyFile record
+	 */
+	static public boolean isBodyFile( File f ) throws IOException {
+		BufferedReader br = null;
+		try {
+			br = new BufferedReader( new FileReader( f ) );
+			String line = br.readLine();
+			if( line == null )
+				return false;
+			Matcher m = REGEX.matcher( line );
+			return m.matches();
+		} finally {
+			br.close();
+		}
+		
+	}
 	static public BodyFile parse( File f ) throws IOException {
 		Reader r = null;
 		try {

@@ -9,3 +9,4 @@ CLAZZ=WalkCost
 
 exec java -Xmx2g -cp target/$JAR $CLAZZ "$@"
 
+# eof

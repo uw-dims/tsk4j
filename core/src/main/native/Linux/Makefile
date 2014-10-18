@@ -60,12 +60,22 @@ install: $(LIB)
 clean:
 	-rm $(LIB) *.o
 
+init: Makefile.env
+
+Makefile.env : Makefile.env.sample
+	cp Makefile.env.sample Makefile.env
+
 ############################## Test/debug targets #######################
 
-srcs:
+show-env:
+	@echo JAVA_HOME $(JAVA_HOME)
+	@echo TSK_CPPFLAGS $(TSK_CPPFLAGS)
+	@echo TSK_LDLIBS  $(TSK_LDLIBS)
+
+show-srcs:
 	echo $(MAINSRCS)
 
-objs:
+show-objs:
 	echo $(MAINOBJS)
 
 # eof

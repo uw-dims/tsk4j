@@ -65,12 +65,12 @@ public class WalkCost {
 	
 	private void readArgs( String[] args ) throws Exception {
 		Options os = new Options();
-		os.addOption( "o", true, "offset (sectors)" );
-		os.addOption( "i", true, "starting inode" );
+		os.addOption( "o", true, "sector offset in larger image" );
+		os.addOption( "i", true, "root inode" );
 		os.addOption( "v", false, "verbose" );
 
 		final String USAGE =
-			"[-i root inode] [-o sector offset in larger image] [-v] image";
+			"[-i inode] [-o offset] [-v] image";
 		final String HEADER = "";
 		final String FOOTER = "";
 		
