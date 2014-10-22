@@ -2,7 +2,7 @@
 
 ARTIFACT=tsk4j-samples
 VERSION=413.0.0
-JAR=$ARTIFACT-$AOL-$VERSION.jar
+JAR=$ARTIFACT-$VERSION.jar
 
 CLAZZ=HiveFinder
 
