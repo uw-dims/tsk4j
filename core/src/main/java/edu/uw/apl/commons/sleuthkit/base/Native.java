@@ -28,7 +28,7 @@ package edu.uw.apl.commons.sleuthkit.base;
 
 import java.io.IOException;
 
-import com.wapmx.nativeutils.jniloader.NativeLoader;
+import edu.uw.apl.nativelibloader.NativeLoader;
 
 /**
    A dummy class used solely for the purposes on locating and loading
@@ -45,14 +45,31 @@ import com.wapmx.nativeutils.jniloader.NativeLoader;
    
 public class Native {
 
+	static final String GROUP_DEFAULT			= "edu.uw.apl.commons";
+
+	static final String ARTIFACT_DEFAULT		= "tsk4j-core";
+
+	static final String VERSION_DEFAULT			= "413.0.0";
+
 	static {
-		String libName = "tsk4j";
-		//		System.out.println( libName );
+		// Can we derive these from the pom and/or manifest (jar plugin) ???
+		String group = GROUP_DEFAULT;
+		String artifact = ARTIFACT_DEFAULT;
+		String version = VERSION_DEFAULT;
+		
 		try {
-			System.err.println( "Loading: " + libName );
-			NativeLoader.loadLibrary( libName );
-		} catch( IOException ioe ) {
-			throw new ExceptionInInitializerError( ioe );
+			Package p = Native.class.getPackage();
+
+			// try to derive version info from the manifest...
+			String s = p.getImplementationVersion();
+			if( s == null )
+				s = p.getSpecificationVersion();
+			if( s != null )
+				version = s;
+
+			NativeLoader.load( group, artifact, version );
+		} catch( Throwable t ) {
+			throw new ExceptionInInitializerError( t );
 		}
 	}
 }

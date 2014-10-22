@@ -6,4 +6,5 @@ paste
 *.so
 *.a
 *.o
+Makefile.env
 

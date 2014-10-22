@@ -51,7 +51,10 @@ abstract public class TSKInputStream extends InputStream {
 	
 	@Override
 	public int available() throws IOException {
-		return (int)(size-posn);
+		long l = size - posn;
+		if( l >= Integer.MAX_VALUE )
+			return Integer.MAX_VALUE;
+		return (int)l;
 	}
 
 	@Override
