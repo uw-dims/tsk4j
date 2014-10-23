@@ -66,7 +66,6 @@ public class Native {
 				s = p.getSpecificationVersion();
 			if( s != null )
 				version = s;
-
 			NativeLoader.load( group, artifact, version );
 		} catch( Throwable t ) {
 			throw new ExceptionInInitializerError( t );

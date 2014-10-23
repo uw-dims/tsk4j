@@ -30,6 +30,26 @@
     structures/routines
   </name>
 
+
+  <dependencies>
+    <dependency>
+      <groupId>edu.uw.apl.commons</groupId>
+      <artifactId>native-lib-loader</artifactId>
+      <version>1.0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+      <version>1.5</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
   <profiles>
     <profile>
       <id>tester</id>
@@ -177,30 +197,6 @@
 	</build>
       </profile>
     </profiles>
-
-    <dependencies>
-      <dependency>
-	<groupId>edu.uw.apl.commons</groupId>
-	<artifactId>native-lib-loader</artifactId>
-	<version>1.0.0</version>
-      </dependency>
-      <dependency>
-	<groupId>commons-codec</groupId>
-	<artifactId>commons-codec</artifactId>
-	<version>1.5</version>
-      </dependency>
-      <dependency>
-	<groupId>log4j</groupId>
-	<artifactId>log4j</artifactId>
-	<version>1.2.13</version>
-      </dependency>
-      <dependency>
-	<groupId>junit</groupId>
-	<artifactId>junit</artifactId>
-	<version>3.8</version>
-	<scope>test</scope>
-      </dependency>
-    </dependencies>
 
     <build>
       <defaultGoal>compile</defaultGoal>

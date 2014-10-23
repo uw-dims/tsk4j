@@ -26,6 +26,10 @@
  */
 package edu.uw.apl.commons.sleuthkit.base;
 
+import java.io.File;
+
+import edu.uw.apl.commons.sleuthkit.image.Image;
+
 public class NativeTest extends junit.framework.TestCase {
 
 	public void testNativeLoad() throws Exception {
@@ -33,6 +37,18 @@ public class NativeTest extends junit.framework.TestCase {
 			Native n = new Native();
 		} catch( ExceptionInInitializerError eiie ) {
 			fail( "" + eiie.getCause() );
+		}
+	}
+
+	public void testImage() throws Exception {
+		File f = new File( "/dev/sda" );
+		if( !f.exists() )
+			return;
+		System.out.println( "Image from " + f );
+		try {
+			Image i = new Image( f );
+		} catch( Throwable t ) {
+			fail( "" + t );
 		}
 	}
 }
