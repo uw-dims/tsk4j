@@ -63,6 +63,8 @@ public class VolumeSystem extends Closeable {
 	public VolumeSystem( Image i, long byteOffset ) {
 		image = i;
 		nativePtr = open( i.nativePtr(), byteOffset );
+		if( nativePtr == 0 )
+			throw new IllegalArgumentException( i.getPath() + ": No volume system" );
 	}
 
 	@Override

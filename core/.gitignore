@@ -3,7 +3,7 @@ target
 *.class
 *~
 paste
-*.so
+#*.so
 *.a
 *.o
 Makefile.env

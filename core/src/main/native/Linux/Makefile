@@ -18,14 +18,11 @@ ifndef TSK_LDLIBS
     $(error TSK_LDLIBS make variable missing.  Copy $(PWD)/Makefile.env.sample to $(PWD)/Makefile.env and edit)
 endif
 
-# Group, artifact, version expected passed down by the Maven
-# invocation of this build. We supply some bogus ones if not aleady
-# set.  This will obviously lead to failure at runtime!
-GROUP ?= G
-
+# The package and artifact name expected passed down by the Maven invocation of this
+# build. We supply some bogus ones if not aleady set.  This will
+# obviously lead to failure at runtime!
+PACKAGE  ?= P
 ARTIFACT ?= A
-
-VERSION ?= V
 
 BASEDIR = $(abspath $(NATIVEHOME)/../../..)
 
@@ -52,15 +49,15 @@ VPATH = $(NATIVEHOME)
 LINK.so = $(CC) $(LDFLAGS) $(LDLIBS)
 
 # the name of the library to build
-LIB		= lib$(ARTIFACT)-$(VERSION).so
+LIB		= lib$(ARTIFACT).so
 
 # link the C objects into a shared library
 $(LIB): $(MAINOBJS)
 	$(CC) $(LDFLAGS) $^ $(LDLIBS) $(OUTPUT_OPTION)
 
-GROUPASPATH = $(subst .,/,$(GROUP))
+PACKAGEASPATH = $(subst .,/,$(PACKAGE))
 
-TARGET_DIR = $(BASEDIR)/src/main/resources/$(GROUPASPATH)/native/$(OS)/$(ARCH)
+TARGET_DIR = $(BASEDIR)/src/main/resources/$(PACKAGEASPATH)/native/$(OS)/$(ARCH)
 
 default: install
 

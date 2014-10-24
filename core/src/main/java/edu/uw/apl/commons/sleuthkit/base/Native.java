@@ -45,28 +45,11 @@ import edu.uw.apl.nativelibloader.NativeLoader;
    
 public class Native {
 
-	static final String GROUP_DEFAULT			= "edu.uw.apl.commons";
-
-	static final String ARTIFACT_DEFAULT		= "tsk4j-core";
-
-	static final String VERSION_DEFAULT			= "413.0.0";
+	static final String ARTIFACT		= "tsk4j-core";
 
 	static {
-		// Can we derive these from the pom and/or manifest (jar plugin) ???
-		String group = GROUP_DEFAULT;
-		String artifact = ARTIFACT_DEFAULT;
-		String version = VERSION_DEFAULT;
-		
 		try {
-			Package p = Native.class.getPackage();
-
-			// try to derive version info from the manifest...
-			String s = p.getImplementationVersion();
-			if( s == null )
-				s = p.getSpecificationVersion();
-			if( s != null )
-				version = s;
-			NativeLoader.load( group, artifact, version );
+			NativeLoader.load( Native.class, ARTIFACT );
 		} catch( Throwable t ) {
 			throw new ExceptionInInitializerError( t );
 		}
