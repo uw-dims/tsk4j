@@ -1,0 +1,11 @@
+#!/bin/sh
+
+ARTIFACT=tsk4j-samples
+VERSION=413.0.0
+JAR=$ARTIFACT-$VERSION.jar
+
+CLAZZ=UnallocHash
+
+exec java -cp target/$JAR $CLAZZ "$@"
+
+# eof
