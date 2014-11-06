@@ -64,7 +64,9 @@ public class VolumeSystem extends Closeable {
 		image = i;
 		nativePtr = open( i.nativePtr(), byteOffset );
 		if( nativePtr == 0 )
-			throw new IllegalArgumentException( i.getPath() + ": No volume system" );
+			// mimic mmls's error message...
+			throw new IllegalStateException
+				( i.getPath() + ": cannot determine partition type." );
 	}
 
 	@Override

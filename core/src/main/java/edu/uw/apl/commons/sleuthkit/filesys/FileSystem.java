@@ -58,7 +58,8 @@ public class FileSystem extends Closeable {
 							   sectorOffset * image.sectorSize() );
 		if( nativePtr == 0 )
 			// mimic fls's error message...
-			throw new IOException( "Cannot determine file system type" );
+			throw new IllegalStateException
+				( "Cannot determine file system type" );
 	}
 	
 	public FileSystem( Image image, long sectorOffset ) throws IOException {

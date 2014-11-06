@@ -26,6 +26,7 @@
  */
 package edu.uw.apl.commons.sleuthkit.volsys;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 
@@ -90,6 +91,29 @@ public class VolumeSystemTest extends junit.framework.TestCase {
 		} catch( IllegalStateException ise ) {
 			// expected, since vs was closed before we accessed p
 		}
+	}
+
+	/*
+	  A specially crafted image, basically the first 1GB
+	  of a whole device (rejewski:/dev/sda), produced using
+
+	  $ dd if=/dev/sda of=sda.1g bs=1M count=1024
+
+	  The result appears to be that Sleuthkit can not define/locate
+	  a VolumeSystem in this image.  Get an error in tsk_vs_open.
+	*/
+	public void testCroppedImage() throws Exception {
+		File f = new File( "data/sda.1g" );
+		if( !f.exists() )
+			return;
+		Image i = new Image( f );
+		VolumeSystem vs = new VolumeSystem( i );
+		List<Partition> ps = vs.getPartitions();
+		System.out.println( ps );
+		for( Partition p : ps )
+			report( p );
+		vs.close();
+		i.close();
 	}
 	
 							
