@@ -32,6 +32,17 @@
     structures/routines
   </name>
 
+  <repositories>
+    <repository>
+      <id>tsk4j.local</id>
+      <name>tsk4j</name>
+      <url>file:${project.basedir}/../.repository</url>
+      <releases>
+	<updatePolicy>always</updatePolicy>
+      </releases>
+    </repository>
+  </repositories>
+
 
   <dependencies>
     <dependency>
