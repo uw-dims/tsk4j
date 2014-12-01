@@ -62,6 +62,8 @@ public class BodyFile {
 	public int size() {
 		return records.size();
 	}
+
+		
 	/**
 	   An object representation of one line in a 'body file', the data
 	   format as output by Sleuthkit's 'fls -m / -r /path/to/image'

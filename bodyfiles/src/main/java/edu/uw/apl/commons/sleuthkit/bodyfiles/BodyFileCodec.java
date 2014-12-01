@@ -6,9 +6,13 @@ import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.Writer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.Reader;
@@ -43,6 +47,19 @@ public class BodyFileCodec {
 		}
 		
 	}
+
+	static public void format( BodyFile bf, Writer w ) {
+		PrintWriter pw = new PrintWriter( w );
+		for( BodyFile.Record r : bf.records() )
+			pw.println( r );
+		pw.flush();
+	}
+
+	static public void format( BodyFile bf, OutputStream os ) {
+		Writer w = new OutputStreamWriter( os );
+		format( bf, w );
+	}
+
 	static public BodyFile parse( File f ) throws IOException {
 		Reader r = null;
 		try {

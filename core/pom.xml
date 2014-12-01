@@ -28,8 +28,7 @@
   <version>413.0.2</version>
   <packaging>jar</packaging>
   <name>
-    TSK4J: Core - JNI Bindings to Sleuthkit C
-    structures/routines
+    TSK4J: Core - JNI Bindings to Sleuthkit C library
   </name>
 
   <repositories>
