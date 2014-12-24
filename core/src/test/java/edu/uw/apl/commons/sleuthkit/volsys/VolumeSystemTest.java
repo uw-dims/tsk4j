@@ -135,6 +135,7 @@ public class VolumeSystemTest extends junit.framework.TestCase {
 		System.out.println( "Length: " + p.length() );
 		System.out.println( "Table/Slot: " + p.table() + "/" + p.slot());
 		System.out.println( "IsAllocated?: " + p.isAllocated() );
+		System.out.println( "IsMeta?: " + p.isMeta() );
 	}
 }
 

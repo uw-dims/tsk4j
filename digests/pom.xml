@@ -5,12 +5,12 @@
     <parent>
       <groupId>edu.uw.apl.commons</groupId>
       <artifactId>tsk4j-parent</artifactId>
-      <version>413.0.0</version>
+      <version>413.2.0</version>
     </parent>
     
-    <artifactId>tsk4j-bodyfiles</artifactId>
-    <version>413.0.2</version>
-    <name>TSK4J: BodyFile Manipulation</name>
+    <artifactId>tsk4j-digests</artifactId>
+    <version>413.2.0</version>
+    <name>TSK4J: Digests for Volume/File Systems</name>
 
     <dependencies>
       <dependency>
@@ -21,17 +21,11 @@
       <dependency>
 	<groupId>commons-codec</groupId>
 	<artifactId>commons-codec</artifactId>
-	<version>1.5</version>
       </dependency>
       <dependency>
 	<groupId>log4j</groupId>
 	<artifactId>log4j</artifactId>
-	<version>1.2.13</version>
-      </dependency>
-      <dependency>
-	<groupId>junit</groupId>
-	<artifactId>junit</artifactId>
-	<version>3.8</version>
+	<version>1.2.17</version>
 	<scope>test</scope>
       </dependency>
     </dependencies>

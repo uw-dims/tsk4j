@@ -120,26 +120,33 @@ public class Partition {
 	/**
 	 * @result TRUE if the flags for the Partition indicate 'allocated',
 	 * FALSE otherwise.  A non-allocated area would likely be a prime
-	 * candidate for an md5sum check over time
+	 * candidate for an md5sum check over time, but see also isMeta.
 	 */
 	public boolean isAllocated() {
-		checkClosed();
-		return flags() == VS_PART_FLAG_ALLOC;
+		return flagSet( VS_PART_FLAG_ALLOC );
 	}
-	
+
 	/**
 	 * @result TRUE if the flags for the Partition indicate 'unallocated',
 	 * FALSE otherwise.  A un-allocated area would likely be a prime
 	 * candidate for an md5sum check over time.
-	 *
-	 * We do NOT simpy call !isAllocated since that would let through
-	 * areas where the META flag were set, and META areas can CONTAIN
-	 * alloc'ed areas, e.g. a "DOS Extended Partition" is identified
-	 * by TSK as a META area.
-	 */
+	 */	
 	public boolean isUnAllocated() {
+		return flagSet( VS_PART_FLAG_UNALLOC );
+	}
+
+	/**
+	 * A partition can be flagged META, meaning it contains meta data like a
+	 * partition table.  Independently, such a partition can still be
+	 * allocated or unallocated
+	 */
+	public boolean isMeta() {
+		return flagSet( VS_PART_FLAG_META );
+	}
+
+	private boolean flagSet( int f ) {
 		checkClosed();
-		return flags() == VS_PART_FLAG_UNALLOC;
+		return (flags() & f) == f;
 	}
 
 	/**
@@ -205,9 +212,9 @@ public class Partition {
     } TSK_VS_PART_FLAG_ENUM;
 	*/
 
-	static final int VS_PART_FLAG_ALLOC = 0x01;
-	static final int VS_PART_FLAG_UNALLOC = 0x02;
-	static final int VS_PART_FLAG_META = 0x04;
+	static final int VS_PART_FLAG_ALLOC			= 0x01;
+	static final int VS_PART_FLAG_UNALLOC		= 0x02;
+	static final int VS_PART_FLAG_META			= 0x04;
 }
 
 // eof

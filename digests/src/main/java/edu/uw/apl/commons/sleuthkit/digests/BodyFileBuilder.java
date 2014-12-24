@@ -1,4 +1,4 @@
-package edu.uw.apl.commons.sleuthkit.bodyfiles;
+package edu.uw.apl.commons.sleuthkit.digests;
 
 import java.io.IOException;
 import java.io.InputStream;
