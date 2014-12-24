@@ -37,6 +37,11 @@ import edu.uw.apl.commons.sleuthkit.base.Utils;
  */
 public class ImageTest extends junit.framework.TestCase {
 
+    static String disk1Name() {
+	return System.getProperty( "os.name" ).startsWith( "Mac" ) ?
+	    "/dev/disk0" : "/dev/sda";
+    }
+
 	public void testTypeSupported() {
 		int types = Image.typeSupported();
 		System.out.printf( "Types supported %x\n", types );
@@ -52,7 +57,7 @@ public class ImageTest extends junit.framework.TestCase {
 	}
 	
 	public void testPostClosed() throws IOException {
-		String p1 = "/dev/sda";
+	    String p1 = disk1Name();
 		Image i = new Image( p1 );
 		String p2 = i.getPath();
 		assertEquals( p2, p1 );
@@ -83,7 +88,7 @@ public class ImageTest extends junit.framework.TestCase {
 	
 	public void testSz() throws Exception {
 
-		String path = "/dev/sda";
+	    String path = disk1Name();
 		Image i1 = new Image( path );
 		long sz = i1.size();
 		System.out.println( path + ": sz " + sz );
@@ -94,7 +99,7 @@ public class ImageTest extends junit.framework.TestCase {
 
 	public void testRead1K() throws Exception {
 
-		String path = "/dev/sda";
+	    String path = disk1Name();
 		Image i1 = new Image( path );
 		byte[] bs = new byte[1024];
 		int n = i1.read( 0, bs );
@@ -107,7 +112,7 @@ public class ImageTest extends junit.framework.TestCase {
 
 	public void testReadPastEnd() throws Exception {
 
-		String path = "/dev/sda";
+	    String path = disk1Name();
 		Image i1 = new Image( path );
 		byte[] bs = new byte[1024];
 		int n = i1.read( i1.size(), bs );
@@ -118,7 +123,7 @@ public class ImageTest extends junit.framework.TestCase {
 
 	public void testInputStream1() throws Exception {
 
-		String path = "/dev/sda";
+	    String path = disk1Name();
 		Image img = new Image( path );
 		byte[] ba = new byte[img.sectorSize()];
 		InputStream is = img.getInputStream();

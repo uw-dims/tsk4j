@@ -20,7 +20,7 @@
   <parent>
     <groupId>edu.uw.apl.commons</groupId>
     <artifactId>tsk4j-parent</artifactId>
-    <version>413.0.0</version>
+    <version>413.1.0</version>
   </parent>
   
   <groupId>edu.uw.apl.commons</groupId>
@@ -60,6 +60,12 @@
       <version>3.8</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.17</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <profiles>
@@ -91,11 +97,22 @@
 	<make>make</make>
       </properties>
     </profile>
+    <profile>
+      <id>mac-make</id>
+      <activation>
+	<os>
+	  <family>Mac</family>
+	</os>
+      </activation>
+      <properties>
+	<make>make</make>
+      </properties>
+    </profile>
     
     <!--
 	We only try to build/package the native (jni) code if we are a
 	'power' user: mvn -Pnative.  Once done, we then 'git add' the
-	resultant .so/.dll sitting under src/main/resources.  Then
+	resultant .so/.dll/.dylib sitting under src/main/resources.  Then
 	'regular' users see this lib as just a resource to bundle into
 	the runtime jar.
     -->
