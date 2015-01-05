@@ -55,6 +55,10 @@ public class BodyFile {
 		records.add( r );
 	}
 
+	public void addAll( List<Record> rs ) {
+		records.addAll( rs );
+	}
+
 	public List<Record> records() {
 		return records;
 	}
@@ -77,7 +81,7 @@ public class BodyFile {
 	static public class Record {
 
 		/*
-		  Used by BodyFileAlgebra and BodyFileBinaryOperators but
+		  Used by BodyFileAlgebra and BinaryBodyFileOperators but
 		  better defined here since it is Record objects that are
 		  being compared...
 		*/

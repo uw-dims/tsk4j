@@ -17,6 +17,18 @@ import org.apache.commons.logging.LogFactory;
 import edu.uw.apl.commons.sleuthkit.volsys.Partition;
 import edu.uw.apl.commons.sleuthkit.volsys.VolumeSystem;
 
+/**
+ * A VolumeSystemHash is a list of pairs: (PartitionInfo,PartitionContentHash)+.
+ *
+ * PartitionInfo is startSector + sectorCount.  No enclosing Image
+ * info is known, so you cannot tell WHICH disk/image the partition is
+ * from.  However, the very reason for this class is to compare hashes
+ * (md5,shaX) of unallocated areas of the SAME disk at two different
+ * TIMES.  Note that we say for 'unallocated' areas only.  For
+ * partitions containing file system, we use BodyFiles and BodyFile
+ * algebra (also in this package)
+ */
+ 
 public class VolumeSystemHash {
 
 	static public VolumeSystemHash create( VolumeSystem vs ) throws IOException{
@@ -52,20 +64,19 @@ public class VolumeSystemHash {
 		return sw.toString();
 	}
 
-		
 	@Override
-		public int hashCode() {
+	public int hashCode() {
 		return hps.size();
 	}
 
 	@Override
-		public boolean equals( Object o ) {
+	public boolean equals( Object o ) {
 		if( this == o )
 			return true;
 		if( !( o instanceof VolumeSystemHash ) )
 			return false;
-			VolumeSystemHash that = (VolumeSystemHash)o;
-			return this.hps.equals( that.hps );
+		VolumeSystemHash that = (VolumeSystemHash)o;
+		return this.hps.equals( that.hps );
 	}
 		
 	static byte[] hash( Partition p ) throws IOException {
@@ -95,12 +106,12 @@ public class VolumeSystemHash {
 		}
 
 		@Override
-			public int hashCode() {
+		public int hashCode() {
 			return (int)start;
 		}
-
+		
 		@Override
-			public boolean equals( Object o ) {
+		public boolean equals( Object o ) {
 			if( o == this )
 				return true;
 			if( !( o instanceof HashedPartition ) )
