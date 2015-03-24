@@ -1,3 +1,5 @@
+package tsk4jsamples;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -11,13 +13,14 @@ import edu.uw.apl.commons.sleuthkit.base.Utils;
 
 /**
  * Given an image file on args[0], locate its VolumeSystem V and its
- * allocated areas, i.e. its partitions.  Partitions hold file
- * systems. However, we are NOT interested here in the partitions
- * containing filesystems, but the space BETWEEN filesystems, and also
- * before the first one and after the last one.  These are
- * 'unallocated' areas of an image. If we repeatedly hash these areas,
- * using e.g. md5 or sha1, and save the results, we can identify
- * if/when an unallocated area is ever written.
+ * allocated areas (its partitions).  Partitions hold file
+ * systems. However, we are <b>not</b> interested here in the
+ * partitions containing filesystems.  Instead, we inspect the space
+ * <em>between</em> filesystems, and also before the first one and
+ * after the last one.  These are the 'unallocated' areas of an image. If
+ * we repeatedly hash these areas, using e.g. md5 or sha1, and save
+ * the results, we can identify if/when an unallocated area is ever
+ * written.
  *
  * Why is this useful?
  *
@@ -32,12 +35,14 @@ import edu.uw.apl.commons.sleuthkit.base.Utils;
  * This tool has echoes of Sleuthkit's 'mmls' tool but is doing a
  * slightly different task.  We take advantage of the fact that
  * Sleuthkit (and our VolumeSystem.getPartitions()) identifies
- * interesting data structures WITHIN unallocated areas.  For example,
- * if the first 63 sectors of a disk are unallocated, Sleuthkit will
- * tell us this AND tell us that the MBR, at sector zero and just one
- * sector long, also exists and is given its status as a 'partition'.
- * So we can hash both the mbr by itself and the 63-sector unallocated
- * area too.
+ * interesting data structures <em>within</em> unallocated areas.  For
+ * example, if the first 63 sectors of a disk are unallocated,
+ * Sleuthkit will tell us this <b>and</b> tell us that the MBR, at
+ * sector zero and just one sector long, also exists and is given its
+ * status as a 'partition'.  So we can hash both the mbr by itself and
+ * the 63-sector unallocated area too.
+ *
+ * @see edu.uw.apl.commons.sleuthkit.volsys.VolumeSystem
  */
 
 public class UnallocHash {

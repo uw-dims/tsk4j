@@ -10,9 +10,10 @@ ARTIFACT=tsk4j-samples
 JARSHOME=$DIRNAME/target
 JAR=`ls $JARSHOME | grep $ARTIFACT | sort -n -r | head -1`
 
+PACKAGE=tsk4jsamples
 CLAZZ=$1
 shift
 
-exec java -Xmx2g -cp target/$JAR $CLAZZ "$@"
+exec java -Xmx2g -cp target/$JAR $PACKAGE.$CLAZZ "$@"
 
 # eof

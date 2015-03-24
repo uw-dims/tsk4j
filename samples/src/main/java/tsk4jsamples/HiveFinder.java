@@ -1,3 +1,5 @@
+package tsk4jsamples;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,11 +16,11 @@ import edu.uw.apl.commons.sleuthkit.filesys.Walk;
 import edu.uw.apl.commons.sleuthkit.filesys.WalkFile;
 
 /**
- * Walk a filesystem, looking for Data Attributes of files which could
- * be Windows Registry Hive files, i.e. the file content starts with
- * the string 'regf'.  This turns up way more files than you might
- * imagine.  Here's a sample result from an XP system (see how the
- * .LOG and .sav files also start regf??):
+ * Walk an NTFS filesystem, looking for Data Attributes of files which
+ * could be Windows Registry Hive files, i.e. the file content starts
+ * with the string 'regf'.  This turns up way more files than you
+ * might imagine.  Here's a sample result from an XP system (see how
+ * the .LOG and .sav files also start regf??):
 
 Documents and Settings/apluw/Local Settings/Application Data/Microsoft/Windows/UsrClass.dat
 Documents and Settings/apluw/Local Settings/Application Data/Microsoft/Windows/UsrClass.dat.LOG

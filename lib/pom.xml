@@ -34,7 +34,7 @@
 
   <groupId>edu.uw.apl.commons</groupId>
   <artifactId>tsk4j-local-repo-builder</artifactId>
-  <version>413.0.0</version>
+  <version>413.2.0</version>
   <packaging>pom</packaging>
 
   <name>TSK4j - Third Party Artifact Bundling</name>
@@ -70,14 +70,14 @@
 		<configuration>
 		  <useRepositoryLayout>true</useRepositoryLayout>
 		  <!-- 
-		       Artifacts the listed dependencies depend are on
-		       Maven Central so we exclude them here.
+		       Artifacts on which the listed dependencies
+		       themselves depend are on Maven Central, so we
+		       exclude them here.
 		  -->
 		  <copyPom>true</copyPom>
 		  <addParentPoms>true</addParentPoms>
-		  <!--		  <excludeTransitive>true</excludeTransitive>-->
 		  <includeGroupIds>
-		    edu.uw.apl.commons,com.plant42
+		    edu.uw.apl.commons
 		  </includeGroupIds>
 		  <outputDirectory>${localRepo}</outputDirectory>
 		</configuration>
@@ -88,9 +88,6 @@
       </build>
     </profile>
   </profiles>
-
-  <build>
-  </build>
-	
+  
 </project>
 

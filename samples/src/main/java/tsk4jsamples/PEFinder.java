@@ -1,3 +1,5 @@
+package tsk4jsamples;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -19,15 +21,22 @@ import edu.uw.apl.commons.sleuthkit.base.Utils;
 /**
    Walk a filesystem, presumably an NTFS one, identifying all files
    (allocated or otherwise) which are 'Windows executables'.  We do
-   NOT simply look at the file name and say '.exe, .dll' etc are
+   <b>not</b> simply look at the file name and say 'foo.exe, bar.dll' etc are
    executables.  Rather, we test the file content against some assumed
    known Windows Portable Executable (PE) structure.
 
-   Prints 'hits' to stdout.
+   Prints hits, i.e. files with content passing the 'has PE
+   structure', to stdout.
+
+   @see <a href="http://go.microsoft.com/fwlink/p/?linkid=84140">PE Details</a>
 */
 
 public class PEFinder {
 
+	/**
+	 * @param args Path to an image, e.g. /dev/sda, someDisk.dd, etc,
+	 * plus any command line options.
+	 */
 	static public void main( String[] args ) {
 		PEFinder main = new PEFinder();
 		try {
@@ -54,11 +63,12 @@ public class PEFinder {
 	
 	private void readArgs( String[] args ) throws Exception {
 		Options os = new Options();
-		os.addOption( "o", true, "offset (sectors)" );
+		os.addOption( "o", true,
+					  "offset (sectors) of filesystem in larger image" );
 		os.addOption( "i", true, "starting inode" );
 		os.addOption( "v", false, "verbose" );
 
-		final String USAGE = "[-i starting inode] [-o sector offset of filesystem in larger image] [-v] image";
+		final String USAGE = "[-i inode] [-o offset] [-v] image";
 		final String HEADER = "";
 		final String FOOTER = "";
 		
@@ -92,7 +102,11 @@ public class PEFinder {
 			System.exit(1);
 		}
 	}
-	
+
+	/**
+	   Walk the filesystem, using a DirectoryWalk.Callback object to
+	   process each file.  Note how the flags bitmask affects the walk.
+	*/
 	private void start() throws IOException {
 		FileSystem fs = new FileSystem( image.getPath(), offset );
 		if( inode == -1 )
@@ -133,6 +147,9 @@ public class PEFinder {
 		if( defa == null )
 			return;
 
+		/*
+		  We actually test ALL attributes, NOT just the default $DATA one
+		*/
 		List<Attribute> as = f.getAttributes();
 		for( Attribute a : as ) {
 			boolean isPE = isWinPE( a, f, path );
@@ -142,16 +159,15 @@ public class PEFinder {
 		}
 	}
 
-	boolean isWinPE( Attribute a, WalkFile f, String path ) {
+	boolean isWinPE( Attribute a ) {
 		// Recall tiny.exe, smallest possible PE file ??
 		if( a.size() < 97 )
 			return false;
-		long inode = f.meta().addr();
 		byte[] ba = new byte[0x3c+4];
 		int flags = 0;
 		int n = a.read( 0, flags, ba );
 		if( n != ba.length ) {
-			// log ??
+			// log this reason for a 'miss' ??
 			return false;
 		}
 		int e_magic = EndianUtils.readSwappedUnsignedShort( ba, 0 );
@@ -159,18 +175,19 @@ public class PEFinder {
 			return false;
 		long e_lfanew = EndianUtils.readSwappedUnsignedInteger( ba, 0x3c );
 		if( e_lfanew + 4 > a.size() ) {
-			// log error ?
+			// log this reason for a 'miss' ??
 			return false;
 		}
 		n = a.read( e_lfanew, flags, ba, 0, 4 ); 
 		if( n != 4 ) {
-			// log ??
+			// log this reason for a 'miss' ??
 			return false;
 		}
 		long sig = EndianUtils.readSwappedUnsignedInteger( ba, 0 );
 		return sig == PESIGNATURE;
 	}
 
+	// OLDER, NO LONGER USED...
 	boolean isWinPEXXX( Attribute a ) {
 		// Recall tiny.exe, smallest possible PE file
 		if( a.size() < 97 )
