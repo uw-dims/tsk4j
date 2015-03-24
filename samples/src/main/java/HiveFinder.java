@@ -90,7 +90,6 @@ public class HiveFinder {
 
 	public HiveFinder() {
 		offset = 0;
-		inode = -1;
 		buf = new byte[4];
 	}
 
@@ -104,7 +103,6 @@ public class HiveFinder {
 	public void readArgs( String[] args ) {
 		Options os = new Options();
 		os.addOption( "o", true, "offset (sectors)" );
-		os.addOption( "i", true, "starting inode" );
 		os.addOption( "v", false, "verbose" );
 
 		final String USAGE =
@@ -121,10 +119,6 @@ public class HiveFinder {
 			System.exit(1);
 		}
 		verbose = cl.hasOption( "v" );
-		if( cl.hasOption( "i" ) ) {
-			String s = cl.getOptionValue( "i" );
-			inode = Long.parseLong( s );
-		}
 		if( cl.hasOption( "o" ) ) {
 			String s = cl.getOptionValue( "o" );
 			offset = Long.parseLong( s );
@@ -142,11 +136,13 @@ public class HiveFinder {
 			System.exit(1);
 		}
 	}
-	
+
+	/**
+	  Walk the filesystem, using a DirectoryWalk.Callback object to
+	  process each file.  Note how the flags bitmask affects the walk.
+	*/
 	public void start() throws IOException {
 		FileSystem fs = new FileSystem( image.getPath(), offset );
-		if( inode == -1 )
-			inode = fs.rootINum();
 		DirectoryWalk.Callback cb = new DirectoryWalk.Callback() {
 				public int apply( WalkFile f, String path ) {
 					try {
@@ -160,10 +156,18 @@ public class HiveFinder {
 			};
 		int flags = DirectoryWalk.FLAG_ALLOC | DirectoryWalk.FLAG_NOORPHAN;
 		flags |= DirectoryWalk.FLAG_RECURSE;
-		fs.dirWalk( inode, flags, cb );
+		fs.dirWalk( fs.rootINum(), flags, cb );
 		fs.close();
 	}
-	
+
+	/**
+	   Process a single file from a filesystem walk.  We attempt to
+	   locate a $Data attribute (the default attribute) and compare
+	   the first four bytes (if sufficient length) with the string
+	   "regf".  A bit suggests that this file is a Windows Registry
+	   Hive file.  We just print our 'hits' to stdout, we could also
+	   do something more elaborate.
+	*/
 	void process( WalkFile f, String path ) throws IOException {
 		String name = f.getName();
 		if( name == null )
@@ -182,10 +186,9 @@ public class HiveFinder {
 			System.out.println( path + name );
 	}
 
-	byte[] buf;
+	final byte[] buf;
 	java.io.File image;
 	long offset;
-	long inode;
 	boolean verbose;
 }
 

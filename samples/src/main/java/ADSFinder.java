@@ -70,7 +70,6 @@ public class ADSFinder {
 
 	ADSFinder() {
 		offset = 0;
-		//		inode = -1;
 		log = Logger.getLogger( getClass() );
 	}
 
@@ -86,7 +85,6 @@ public class ADSFinder {
 		os.addOption( "d", false, "deleted entries only" );
 		os.addOption( "u", false, "undeleted entries only" );
 		os.addOption( "o", true, "sector offset in larger image" );
-		//		os.addOption( "i", true, "root inode" );
 		os.addOption( "v", false, "verbose" );
 		os.addOption( "D", false, "directories only" );
 		os.addOption( "F", false, "files only" );
