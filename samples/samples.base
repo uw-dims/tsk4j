@@ -1,0 +1,18 @@
+#!/bin/bash                                                                     
+
+DIRNAME=`dirname $0`
+
+ARTIFACT=tsk4j-samples
+
+# The code version number is part of the main jar name.  Rather than            
+# hard-coding it here, we locate the jar with the LATEST version. Thus          
+# we always run the LATEST code, should many versions be present.               
+JARSHOME=$DIRNAME/target
+JAR=`ls $JARSHOME | grep $ARTIFACT | sort -n -r | head -1`
+
+CLAZZ=$1
+shift
+
+exec java -Xmx2g -cp target/$JAR $CLAZZ "$@"
+
+# eof
