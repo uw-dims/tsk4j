@@ -1,13 +1,19 @@
-#include "edu_uw_apl_commons_sleuthkit_filesys_Meta.h"
+#include "edu_uw_apl_commons_tsk4j_filesys_Meta.h"
 
 #include <tsk/libtsk.h>
 
+/**
+ * @author Stuart Maclean
+ *
+ * Implementations for filesys.Meta native methods.
+ */
+
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Meta
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Meta
  * Method:    addr
  * Signature: (J)J
  */
-JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Meta_addr
+JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_tsk4j_filesys_Meta_addr
 (JNIEnv *env, jobject thiz, jlong id ) {
   
   TSK_FS_META* meta = (TSK_FS_META*)id;
@@ -15,11 +21,11 @@ JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Meta_addr
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Meta
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Meta
  * Method:    atime
  * Signature: (J)I
  */
-JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Meta_atime
+JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_tsk4j_filesys_Meta_atime
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_FS_META* meta = (TSK_FS_META*)nativePtr;
@@ -27,11 +33,11 @@ JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Meta_atime
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Meta
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Meta
  * Method:    crtime
  * Signature: (J)I
  */
-JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Meta_crtime
+JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_tsk4j_filesys_Meta_crtime
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_FS_META* meta = (TSK_FS_META*)nativePtr;
@@ -39,11 +45,11 @@ JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Meta_crtime
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Meta
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Meta
  * Method:    ctime
  * Signature: (J)I
  */
-JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Meta_ctime
+JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_tsk4j_filesys_Meta_ctime
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_FS_META* meta = (TSK_FS_META*)nativePtr;
@@ -51,11 +57,11 @@ JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Meta_ctime
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Meta
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Meta
  * Method:    mtime
  * Signature: (J)I
  */
-JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Meta_mtime
+JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_tsk4j_filesys_Meta_mtime
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_FS_META* meta = (TSK_FS_META*)nativePtr;
@@ -65,12 +71,12 @@ JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Meta_mtime
 
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Meta
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Meta
  * Method:    contentLen
  * Signature: (J)J
  */
 JNIEXPORT jlong JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_Meta_contentLen
+Java_edu_uw_apl_commons_tsk4j_filesys_Meta_contentLen
 (JNIEnv *env, jobject thiz, jlong id ) {
   
   TSK_FS_META* meta = (TSK_FS_META*)id;
@@ -78,11 +84,11 @@ Java_edu_uw_apl_commons_sleuthkit_filesys_Meta_contentLen
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Meta
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Meta
  * Method:    size
  * Signature: (J)J
  */
-JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Meta_size
+JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_tsk4j_filesys_Meta_size
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
   
   TSK_FS_META* meta = (TSK_FS_META*)nativePtr;
@@ -91,22 +97,22 @@ JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Meta_size
 
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Meta
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Meta
  * Method:    flags
  * Signature: (J)I
  */
-JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Meta_flags
+JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_tsk4j_filesys_Meta_flags
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
   
   TSK_FS_META* meta = (TSK_FS_META*)nativePtr;
   return (jint)meta->flags;
 }
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Meta
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Meta
  * Method:    mode
  * Signature: (J)I
  */
-JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Meta_mode
+JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_tsk4j_filesys_Meta_mode
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_FS_META* meta = (TSK_FS_META*)nativePtr;
@@ -114,11 +120,11 @@ JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Meta_mode
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Meta
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Meta
  * Method:    type
  * Signature: (J)I
  */
-JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Meta_type
+JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_tsk4j_filesys_Meta_type
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
   
   TSK_FS_META* meta = (TSK_FS_META*)nativePtr;
@@ -126,11 +132,11 @@ JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Meta_type
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Meta
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Meta
  * Method:    gid
  * Signature: (J)I
  */
-JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Meta_gid
+JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_tsk4j_filesys_Meta_gid
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
   
   TSK_FS_META* meta = (TSK_FS_META*)nativePtr;
@@ -138,11 +144,11 @@ JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Meta_gid
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Meta
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Meta
  * Method:    uid
  * Signature: (J)I
  */
-JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Meta_uid
+JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_tsk4j_filesys_Meta_uid
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
   
   TSK_FS_META* meta = (TSK_FS_META*)nativePtr;

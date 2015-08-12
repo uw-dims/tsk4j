@@ -24,19 +24,22 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package edu.uw.apl.commons.sleuthkit.filesys;
+package edu.uw.apl.commons.tsk4j.filesys;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
 
 import edu.uw.apl.commons.sleuthkit.base.Utils;
 
 public class AttributeFlagTests extends junit.framework.TestCase {
 
 	public void testXP() throws Exception {
-		String path = "data/nuga2.dd";
-		FileSystem fs = new FileSystem( path,63*512 );
+		File diskImage  = new File( "data/nuga2.dd" );
+		if( !diskImage.exists() )
+			return;
+		FileSystem fs = new FileSystem( diskImage.getPath(), 63 );
 		walk( fs );
 		fs.close();
 	}

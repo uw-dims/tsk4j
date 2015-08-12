@@ -1,14 +1,20 @@
-#include "edu_uw_apl_commons_sleuthkit_volsys_VolumeSystem.h"
+#include "edu_uw_apl_commons_tsk4j_volsys_VolumeSystem.h"
 
 #include <tsk/libtsk.h>
 
+/**
+ * @author Stuart Maclean
+ *
+ * Implementations for volsys.VolumeSystem native methods.
+ */
+
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_volsys_VolumeSystem
+ * Class:     edu_uw_apl_commons_tsk4j_volsys_VolumeSystem
  * Method:    open
  * Signature: (JJ)J
  */
 JNIEXPORT jlong JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_volsys_VolumeSystem_open
+Java_edu_uw_apl_commons_tsk4j_volsys_VolumeSystem_open
 (JNIEnv *env, jobject thiz, jlong imageNativePtr, jlong offset ) {
 
   TSK_IMG_INFO* img_info = (TSK_IMG_INFO*)imageNativePtr;
@@ -18,24 +24,24 @@ Java_edu_uw_apl_commons_sleuthkit_volsys_VolumeSystem_open
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_volsys_VolumeSystem
+ * Class:     edu_uw_apl_commons_tsk4j_volsys_VolumeSystem
  * Method:    close
  * Signature: (J)V
  */
 JNIEXPORT void JNICALL
-Java_edu_uw_apl_commons_sleuthkit_volsys_VolumeSystem_close
+Java_edu_uw_apl_commons_tsk4j_volsys_VolumeSystem_close
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
   TSK_VS_INFO* info = (TSK_VS_INFO*)nativePtr;
   tsk_vs_close( info );
 }
   
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_volsys_VolumeSystem
+ * Class:     edu_uw_apl_commons_tsk4j_volsys_VolumeSystem
  * Method:    blockSize
  * Signature: (J)I
  */
 JNIEXPORT jint JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_volsys_VolumeSystem_blockSize
+Java_edu_uw_apl_commons_tsk4j_volsys_VolumeSystem_blockSize
 (JNIEnv *env, jobject thiz, jlong nativePtr) {
 
   TSK_VS_INFO* info = (TSK_VS_INFO*)nativePtr;
@@ -43,12 +49,12 @@ Java_edu_uw_apl_commons_sleuthkit_volsys_VolumeSystem_blockSize
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_volsys_VolumeSystem
+ * Class:     edu_uw_apl_commons_tsk4j_volsys_VolumeSystem
  * Method:    endianness
  * Signature: (J)I
  */
 JNIEXPORT jint JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_volsys_VolumeSystem_endianness
+Java_edu_uw_apl_commons_tsk4j_volsys_VolumeSystem_endianness
 (JNIEnv *env, jobject thiz, jlong nativePtr) {
   
   TSK_VS_INFO* info = (TSK_VS_INFO*)nativePtr;
@@ -56,12 +62,12 @@ Java_edu_uw_apl_commons_sleuthkit_volsys_VolumeSystem_endianness
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_volsys_VolumeSystem
+ * Class:     edu_uw_apl_commons_tsk4j_volsys_VolumeSystem
  * Method:    offset
  * Signature: (J)J
  */
 JNIEXPORT jlong JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_volsys_VolumeSystem_offset
+Java_edu_uw_apl_commons_tsk4j_volsys_VolumeSystem_offset
 (JNIEnv *env, jobject thiz, jlong nativePtr) {
   
   TSK_VS_INFO* info = (TSK_VS_INFO*)nativePtr;
@@ -70,12 +76,12 @@ Java_edu_uw_apl_commons_sleuthkit_volsys_VolumeSystem_offset
 
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_volsys_VolumeSystem
+ * Class:     edu_uw_apl_commons_tsk4j_volsys_VolumeSystem
  * Method:    partitionCount
  * Signature: (J)I
  */
 JNIEXPORT jint JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_volsys_VolumeSystem_partitionCount
+Java_edu_uw_apl_commons_tsk4j_volsys_VolumeSystem_partitionCount
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_VS_INFO* info = (TSK_VS_INFO*)nativePtr;
@@ -83,12 +89,12 @@ Java_edu_uw_apl_commons_sleuthkit_volsys_VolumeSystem_partitionCount
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_volsys_VolumeSystem
+ * Class:     edu_uw_apl_commons_tsk4j_volsys_VolumeSystem
  * Method:    partition
  * Signature: (JI)J
  */
 JNIEXPORT jlong JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_volsys_VolumeSystem_partition
+Java_edu_uw_apl_commons_tsk4j_volsys_VolumeSystem_partition
 (JNIEnv *env, jobject thiz, jlong nativePtr, jint indx ) {
 
   TSK_VS_INFO* info = (TSK_VS_INFO*)nativePtr;
@@ -97,12 +103,12 @@ Java_edu_uw_apl_commons_sleuthkit_volsys_VolumeSystem_partition
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_volsys_VolumeSystem
+ * Class:     edu_uw_apl_commons_tsk4j_volsys_VolumeSystem
  * Method:    type
  * Signature: (J)I
  */
 JNIEXPORT jint JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_volsys_VolumeSystem_type
+Java_edu_uw_apl_commons_tsk4j_volsys_VolumeSystem_type
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
   
   TSK_VS_INFO* info = (TSK_VS_INFO*)nativePtr;
@@ -110,12 +116,12 @@ Java_edu_uw_apl_commons_sleuthkit_volsys_VolumeSystem_type
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_volsys_VolumeSystem
+ * Class:     edu_uw_apl_commons_tsk4j_volsys_VolumeSystem
  * Method:    type2Description
  * Signature: (I)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_volsys_VolumeSystem_type2Description
+Java_edu_uw_apl_commons_tsk4j_volsys_VolumeSystem_type2Description
 (JNIEnv *env, jclass clazz, jint type ) {
   
   const char* cp = tsk_vs_type_todesc( type );

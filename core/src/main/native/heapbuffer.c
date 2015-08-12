@@ -1,17 +1,23 @@
-#include "edu_uw_apl_commons_sleuthkit_base_HeapBuffer.h"
+#include "edu_uw_apl_commons_tsk4j_base_HeapBuffer.h"
 
 #include <stdlib.h>
 
+/**
+ * @author Stuart Maclean
+ *
+ * Implementations for base.HeapBuffer native methods, whose use
+ * permits caching of C buffers which would otherwise be needed on a
+ * per JNI-call basis, for those C routines which need such a buffer.
+ */
+
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_base_HeapBuffer
+ * Class:     edu_uw_apl_commons_tsk4j_base_HeapBuffer
  * Method:    malloc
  * Signature: (J)J
  */
 JNIEXPORT jlong JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_base_HeapBuffer_malloc
+Java_edu_uw_apl_commons_tsk4j_base_HeapBuffer_malloc
 (JNIEnv *env, jobject thiz, jlong size ) {
-
-  //  fprintf( stderr, "%llu %u \n", size, (size_t)size );
 
   void* buf = malloc( (size_t)size );
   if( buf == NULL ) {
@@ -26,11 +32,11 @@ Java_edu_uw_apl_commons_sleuthkit_base_HeapBuffer_malloc
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_base_HeapBuffer
+ * Class:     edu_uw_apl_commons_tsk4j_base_HeapBuffer
  * Method:    free
  * Signature: (J)V
  */
-JNIEXPORT void JNICALL Java_edu_uw_apl_commons_sleuthkit_base_HeapBuffer_free
+JNIEXPORT void JNICALL Java_edu_uw_apl_commons_tsk4j_base_HeapBuffer_free
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   free( (void*)nativePtr );

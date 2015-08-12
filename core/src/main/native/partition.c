@@ -1,14 +1,21 @@
-#include "edu_uw_apl_commons_sleuthkit_volsys_Partition.h"
+#include "edu_uw_apl_commons_tsk4j_volsys_Partition.h"
 
 #include <tsk/libtsk.h>
 
+
+/**
+ * @author Stuart Maclean
+ *
+ * Implementations for volsys.Partition native methods.
+ */
+
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_volsys_Partition
+ * Class:     edu_uw_apl_commons_tsk4j_volsys_Partition
  * Method:    address
  * Signature: (J)J
  */
 JNIEXPORT jlong JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_volsys_Partition_address
+Java_edu_uw_apl_commons_tsk4j_volsys_Partition_address
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_VS_PART_INFO* info = (TSK_VS_PART_INFO*)nativePtr;
@@ -16,12 +23,12 @@ Java_edu_uw_apl_commons_sleuthkit_volsys_Partition_address
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_volsys_Partition
+ * Class:     edu_uw_apl_commons_tsk4j_volsys_Partition
  * Method:    description
  * Signature: (J)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_volsys_Partition_description
+Java_edu_uw_apl_commons_tsk4j_volsys_Partition_description
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
   
   TSK_VS_PART_INFO* info = (TSK_VS_PART_INFO*)nativePtr;
@@ -30,11 +37,11 @@ Java_edu_uw_apl_commons_sleuthkit_volsys_Partition_description
 
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_volsys_Partition
+ * Class:     edu_uw_apl_commons_tsk4j_volsys_Partition
  * Method:    flags
  * Signature: (J)I
  */
-JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_volsys_Partition_flags
+JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_tsk4j_volsys_Partition_flags
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_VS_PART_INFO* info = (TSK_VS_PART_INFO*)nativePtr;
@@ -42,24 +49,24 @@ JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_volsys_Partition_flags
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_volsys_Partition
+ * Class:     edu_uw_apl_commons_tsk4j_volsys_Partition
  * Method:    length
  * Signature: (J)J
  */
 JNIEXPORT jlong JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_volsys_Partition_length
+Java_edu_uw_apl_commons_tsk4j_volsys_Partition_length
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_VS_PART_INFO* info = (TSK_VS_PART_INFO*)nativePtr;
   return (jlong)info->len;
 }
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_volsys_Partition
+ * Class:     edu_uw_apl_commons_tsk4j_volsys_Partition
  * Method:    start
  * Signature: (J)J
  */
 JNIEXPORT jlong JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_volsys_Partition_start
+Java_edu_uw_apl_commons_tsk4j_volsys_Partition_start
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_VS_PART_INFO* info = (TSK_VS_PART_INFO*)nativePtr;
@@ -67,11 +74,11 @@ Java_edu_uw_apl_commons_sleuthkit_volsys_Partition_start
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_volsys_Partition
+ * Class:     edu_uw_apl_commons_tsk4j_volsys_Partition
  * Method:    slot
  * Signature: (J)I
  */
-JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_volsys_Partition_slot
+JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_tsk4j_volsys_Partition_slot
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_VS_PART_INFO* info = (TSK_VS_PART_INFO*)nativePtr;
@@ -80,11 +87,11 @@ JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_volsys_Partition_slot
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_volsys_Partition
+ * Class:     edu_uw_apl_commons_tsk4j_volsys_Partition
  * Method:    table
  * Signature: (J)I
  */
-JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_volsys_Partition_table
+JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_tsk4j_volsys_Partition_table
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_VS_PART_INFO* info = (TSK_VS_PART_INFO*)nativePtr;
@@ -93,12 +100,12 @@ JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_volsys_Partition_table
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_volsys_Partition
+ * Class:     edu_uw_apl_commons_tsk4j_volsys_Partition
  * Method:    read
  * Signature: (JJ[BII)I
  */
 JNIEXPORT jint JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_volsys_Partition_read
+Java_edu_uw_apl_commons_tsk4j_volsys_Partition_read
 (JNIEnv *env, jobject thiz, jlong nativePtr, jlong volumeOffset, 
  jbyteArray buf, jint bufOffset, jint len ) {
 

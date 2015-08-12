@@ -24,12 +24,12 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package edu.uw.apl.commons.sleuthkit.filesys;
+package edu.uw.apl.commons.tsk4j.filesys;
 
 import java.util.List;
 
-import edu.uw.apl.commons.sleuthkit.base.Utils;
-import edu.uw.apl.commons.sleuthkit.image.Image;
+import edu.uw.apl.commons.tsk4j.base.Utils;
+import edu.uw.apl.commons.tsk4j.image.Image;
 
 public class AttributeTests extends junit.framework.TestCase {
 
@@ -78,9 +78,8 @@ public class AttributeTests extends junit.framework.TestCase {
 		java.io.File f = new java.io.File( "data/nuga2.dd" );
 		if( !f.exists() )
 			return;
-		FileSystem fs = new FileSystem( f.getPath(), 63 * 512 );
+		FileSystem fs = new FileSystem( f.getPath(), 63 );
 		System.out.println( fs.nativePtr() );
-		long root = fs.rootINum();
 		DirectoryWalk.Callback cb = new DirectoryWalk.Callback() {
 				public int apply( WalkFile f, String path ) {
 					String name = f.getName();
@@ -95,7 +94,9 @@ public class AttributeTests extends junit.framework.TestCase {
 					return Walk.WALK_CONT;
 				}
 			};
-		//	fs.dirWalk( root, DirWalk.FLAG_UNALLOC|DirWalk.FLAG_RECURSE, l );
+		long root = fs.rootINum();
+		fs.dirWalk( root,
+					DirectoryWalk.FLAG_UNALLOC|DirectoryWalk.FLAG_RECURSE, cb );
 		fs.close();
 	}
 }

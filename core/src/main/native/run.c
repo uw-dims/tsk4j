@@ -1,13 +1,21 @@
-#include "edu_uw_apl_commons_sleuthkit_filesys_Run.h"
+#include "edu_uw_apl_commons_tsk4j_filesys_Run.h"
 
 #include <tsk/libtsk.h>
 
+/**
+ * @author Stuart Maclean
+ *
+ * Implementations for filesys.Run native methods.  Consists solely of
+ * routines forwarding the Java wrapper to the matching underlying C
+ * call.
+ */
+
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Run
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Run
  * Method:    addr
  * Signature: (J)J
  */
-JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Run_addr
+JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_tsk4j_filesys_Run_addr
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_FS_ATTR_RUN* info = (TSK_FS_ATTR_RUN*)nativePtr;
@@ -15,11 +23,11 @@ JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Run_addr
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Run
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Run
  * Method:    flags
  * Signature: (J)I
  */
-JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Run_flags
+JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_tsk4j_filesys_Run_flags
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_FS_ATTR_RUN* info = (TSK_FS_ATTR_RUN*)nativePtr;
@@ -28,11 +36,11 @@ JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Run_flags
 
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Run
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Run
  * Method:    length
  * Signature: (J)J
  */
-JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Run_length
+JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_tsk4j_filesys_Run_length
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_FS_ATTR_RUN* info = (TSK_FS_ATTR_RUN*)nativePtr;
@@ -40,11 +48,11 @@ JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Run_length
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Run
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Run
  * Method:    offset
  * Signature: (J)J
  */
-JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Run_offset
+JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_tsk4j_filesys_Run_offset
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_FS_ATTR_RUN* info = (TSK_FS_ATTR_RUN*)nativePtr;

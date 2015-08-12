@@ -24,12 +24,12 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package edu.uw.apl.commons.sleuthkit.filesys;
+package edu.uw.apl.commons.tsk4j.filesys;
 
 import java.util.*;
 
-import edu.uw.apl.commons.sleuthkit.base.Utils;
-import edu.uw.apl.commons.sleuthkit.image.Image;
+import edu.uw.apl.commons.tsk4j.base.Utils;
+import edu.uw.apl.commons.tsk4j.image.Image;
 
 public class BlockWalkTest extends junit.framework.TestCase {
 
@@ -42,6 +42,9 @@ public class BlockWalkTest extends junit.framework.TestCase {
 	
 	public void testNuga2() throws Exception {
 		String path = "data/nuga2.dd";
+		java.io.File f = new java.io.File( path );
+		if( !f.exists() )
+			return;
 		FileSystem fs = new FileSystem( path, 63 );
 		test( fs );
 		fs.close();
@@ -50,7 +53,8 @@ public class BlockWalkTest extends junit.framework.TestCase {
 	public void test( FileSystem fs ) throws Exception {
 		System.out.println( "BlockSize: " + fs.blockSize() );
 		System.out.println( "BlockCount: " + fs.blockCount() );
-		if( false && fs.blockCount() * fs.blockSize() > 1024L * 1024 * 1024 * 16 )
+		if( false && fs.blockCount() * fs.blockSize() >
+			1024L * 1024 * 1024 * 16 )
 			return;
 		printBlockWalk( fs );
 		if( true )

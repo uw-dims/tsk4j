@@ -24,11 +24,11 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package edu.uw.apl.commons.sleuthkit.filesys;
+package edu.uw.apl.commons.tsk4j.filesys;
 
 import java.io.File;
 
-import edu.uw.apl.commons.sleuthkit.image.Image;
+import edu.uw.apl.commons.tsk4j.image.Image;
 
 /*
   Testing whether we can at least locate a filesystem in a specially

@@ -24,7 +24,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package edu.uw.apl.commons.sleuthkit.base;
+package edu.uw.apl.commons.tsk4j.base;
 
 public class VersionTest extends junit.framework.TestCase {
 
@@ -37,7 +37,8 @@ public class VersionTest extends junit.framework.TestCase {
 	/*
 	  This actually likely to return null, since test cases are run
 	  BEFORE final jar built, but getImplementationVersion() relies on
-	  manifest entries, which of course are only available in the jar.
+	  manifest entries, which of course are only available in the
+	  artifact jar.
 
 	  We would need an actual program (with a main entry point) to
 	  really stress this code.

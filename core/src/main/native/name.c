@@ -1,13 +1,19 @@
-#include "edu_uw_apl_commons_sleuthkit_filesys_Name.h"
+#include "edu_uw_apl_commons_tsk4j_filesys_Name.h"
 
 #include <tsk/libtsk.h>
 
+/**
+ * @author Stuart Maclean
+ *
+ * Implementations for filesys.Name native methods.
+ */
+
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Name
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Name
  * Method:    flags
  * Signature: (J)I
  */
-JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Name_flags
+JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_tsk4j_filesys_Name_flags
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_FS_NAME* info = (TSK_FS_NAME*)nativePtr;
@@ -15,11 +21,11 @@ JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Name_flags
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Name
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Name
  * Method:    metaAddr
  * Signature: (J)J
  */
-JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Name_metaAddr
+JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_tsk4j_filesys_Name_metaAddr
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_FS_NAME* info = (TSK_FS_NAME*)nativePtr;
@@ -27,11 +33,11 @@ JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Name_metaAddr
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Name
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Name
  * Method:    name
  * Signature: (J)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Name_name
+JNIEXPORT jstring JNICALL Java_edu_uw_apl_commons_tsk4j_filesys_Name_name
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
   
   TSK_FS_NAME* info = (TSK_FS_NAME*)nativePtr;
@@ -40,12 +46,12 @@ JNIEXPORT jstring JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Name_name
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Name
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Name
  * Method:    parentAddr
  * Signature: (J)J
  */
 JNIEXPORT jlong JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_Name_parentAddr
+Java_edu_uw_apl_commons_tsk4j_filesys_Name_parentAddr
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
   
   TSK_FS_NAME* info = (TSK_FS_NAME*)nativePtr;
@@ -53,11 +59,11 @@ Java_edu_uw_apl_commons_sleuthkit_filesys_Name_parentAddr
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Name
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Name
  * Method:    type
  * Signature: (J)I
  */
-JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Name_type
+JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_tsk4j_filesys_Name_type
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
   
   TSK_FS_NAME* info = (TSK_FS_NAME*)nativePtr;

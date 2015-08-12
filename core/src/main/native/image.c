@@ -1,13 +1,19 @@
-#include "edu_uw_apl_commons_sleuthkit_image_Image.h"
+#include "edu_uw_apl_commons_tsk4j_image_Image.h"
 
 #include <tsk/libtsk.h>
 
+/**
+ * @author Stuart Maclean
+ *
+ * Implementations for image.Image native methods.
+ */
+
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_image_Image
+ * Class:     edu_uw_apl_commons_tsk4j_image_Image
  * Method:    openSingle
  * Signature: (Ljava/lang/String;)J
  */
-JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_sleuthkit_image_Image_openSingle
+JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_tsk4j_image_Image_openSingle
 ( JNIEnv * env, jobject thiz, jstring path ) {
   
   const char* pathC = (*env)->GetStringUTFChars( env, path, NULL );
@@ -22,11 +28,11 @@ JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_sleuthkit_image_Image_openSingle
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_image_Image
+ * Class:     edu_uw_apl_commons_tsk4j_image_Image
  * Method:    open
  * Signature: ([Ljava/lang/String;)J
  */
-JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_sleuthkit_image_Image_open
+JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_tsk4j_image_Image_open
 ( JNIEnv *env, jobject thiz, jobjectArray paths ) {
 
   jsize len = (*env)->GetArrayLength( env, paths );
@@ -42,6 +48,7 @@ JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_sleuthkit_image_Image_open
   unsigned a_ssize = 0;
   TSK_IMG_INFO* info = tsk_img_open_utf8( len, (const char* const*)cpp, 
 										  TSK_IMG_TYPE_DETECT, a_ssize );
+  // Whether or not info is null, must clean up the C string array
   for( jsize i = 0; i < len; i++ ) {
 	jstring path = (jstring)(*env)->GetObjectArrayElement( env, paths, i );
 	char* pathC = cpp[i];
@@ -52,11 +59,11 @@ JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_sleuthkit_image_Image_open
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_image_Image
+ * Class:     edu_uw_apl_commons_tsk4j_image_Image
  * Method:    close
  * Signature: (J)V
  */
-JNIEXPORT void JNICALL Java_edu_uw_apl_commons_sleuthkit_image_Image_close
+JNIEXPORT void JNICALL Java_edu_uw_apl_commons_tsk4j_image_Image_close
 ( JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_IMG_INFO* info = (TSK_IMG_INFO*)nativePtr;
@@ -64,11 +71,11 @@ JNIEXPORT void JNICALL Java_edu_uw_apl_commons_sleuthkit_image_Image_close
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_image_Image
+ * Class:     edu_uw_apl_commons_tsk4j_image_Image
  * Method:    size
  * Signature: (J)J
  */
-JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_sleuthkit_image_Image_size
+JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_tsk4j_image_Image_size
 (JNIEnv *env, jobject thiz, jlong id ) {
 
   TSK_IMG_INFO* info = (TSK_IMG_INFO*)id;
@@ -76,11 +83,11 @@ JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_sleuthkit_image_Image_size
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_image_Image
+ * Class:     edu_uw_apl_commons_tsk4j_image_Image
  * Method:    sectorSize
  * Signature: (J)I
  */
-JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_image_Image_sectorSize
+JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_tsk4j_image_Image_sectorSize
 (JNIEnv *env, jobject thiz, jlong id ) {
 
   TSK_IMG_INFO* info = (TSK_IMG_INFO*)id;
@@ -88,11 +95,11 @@ JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_image_Image_sectorSize
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_image_Image
+ * Class:     edu_uw_apl_commons_tsk4j_image_Image
  * Method:    read
  * Signature: (JJ[BIIJ)I
  */
-JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_image_Image_read
+JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_tsk4j_image_Image_read
   (JNIEnv *env, jobject thiz, jlong nativePtr, 
    jlong fileOffset, jbyteArray buf, jint bufOffset, jint bufLen, 
    jlong nativeHeapPtr ) {
@@ -109,12 +116,12 @@ JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_image_Image_read
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_image_Image
+ * Class:     edu_uw_apl_commons_tsk4j_image_Image
  * Method:    typeSupported
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_image_Image_typeSupported__
+Java_edu_uw_apl_commons_tsk4j_image_Image_typeSupported__
 ( JNIEnv *env, jclass c ) {
   return (jint)tsk_img_type_supported();
 }

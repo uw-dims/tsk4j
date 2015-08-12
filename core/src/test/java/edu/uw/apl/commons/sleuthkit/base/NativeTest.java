@@ -24,11 +24,11 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package edu.uw.apl.commons.sleuthkit.base;
+package edu.uw.apl.commons.tsk4j.base;
 
 import java.io.File;
 
-import edu.uw.apl.commons.sleuthkit.image.Image;
+import edu.uw.apl.commons.tsk4j.image.Image;
 
 public class NativeTest extends junit.framework.TestCase {
 
@@ -40,6 +40,7 @@ public class NativeTest extends junit.framework.TestCase {
 		}
 	}
 
+	// LOOK: Should this not be in Image testing??
 	public void testImage() throws Exception {
 		File f = new File( "/dev/sda" );
 		if( !f.exists() )

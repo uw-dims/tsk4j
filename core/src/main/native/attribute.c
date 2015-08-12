@@ -1,13 +1,19 @@
-#include "edu_uw_apl_commons_sleuthkit_filesys_Attribute.h"
+#include "edu_uw_apl_commons_tsk4j_filesys_Attribute.h"
 
 #include <tsk/libtsk.h>
 
+/**
+ * @author Stuart Maclean
+ *
+ * Implementations for filesys.Attribute native methods.
+ */
+
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Attribute
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Attribute
  * Method:    flags
  * Signature: (J)I
  */
-JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Attribute_flags
+JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_tsk4j_filesys_Attribute_flags
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_FS_ATTR* info = (TSK_FS_ATTR*)nativePtr;
@@ -15,11 +21,11 @@ JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Attribute_flags
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Attribute
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Attribute
  * Method:    id
  * Signature: (J)I
  */
-JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Attribute_id
+JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_tsk4j_filesys_Attribute_id
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_FS_ATTR* info = (TSK_FS_ATTR*)nativePtr;
@@ -28,11 +34,11 @@ JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Attribute_id
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Attribute
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Attribute
  * Method:    type
  * Signature: (J)I
  */
-JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Attribute_type
+JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_tsk4j_filesys_Attribute_type
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_FS_ATTR* info = (TSK_FS_ATTR*)nativePtr;
@@ -40,12 +46,12 @@ JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Attribute_type
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Attribute
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Attribute
  * Method:    name
  * Signature: (J)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_Attribute_name
+Java_edu_uw_apl_commons_tsk4j_filesys_Attribute_name
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_FS_ATTR* info = (TSK_FS_ATTR*)nativePtr;
@@ -56,11 +62,11 @@ Java_edu_uw_apl_commons_sleuthkit_filesys_Attribute_name
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Attribute
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Attribute
  * Method:    size
  * Signature: (J)J
  */
-JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Attribute_size
+JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_tsk4j_filesys_Attribute_size
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_FS_ATTR* info = (TSK_FS_ATTR*)nativePtr;
@@ -68,12 +74,12 @@ JNIEXPORT jlong JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Attribute_size
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Attribute
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Attribute
  * Method:    nrdAllocSize
  * Signature: (J)J
  */
 JNIEXPORT jlong JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_Attribute_nrdAllocSize
+Java_edu_uw_apl_commons_tsk4j_filesys_Attribute_nrdAllocSize
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_FS_ATTR* info = (TSK_FS_ATTR*)nativePtr;
@@ -81,12 +87,12 @@ Java_edu_uw_apl_commons_sleuthkit_filesys_Attribute_nrdAllocSize
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Attribute
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Attribute
  * Method:    nrdInitSize
  * Signature: (J)J
  */
 JNIEXPORT jlong JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_Attribute_nrdInitSize
+Java_edu_uw_apl_commons_tsk4j_filesys_Attribute_nrdInitSize
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_FS_ATTR* info = (TSK_FS_ATTR*)nativePtr;
@@ -94,12 +100,12 @@ Java_edu_uw_apl_commons_sleuthkit_filesys_Attribute_nrdInitSize
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Attribute
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Attribute
  * Method:    nrdSkipLen
  * Signature: (J)I
  */
 JNIEXPORT jint JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_Attribute_nrdSkipLen
+Java_edu_uw_apl_commons_tsk4j_filesys_Attribute_nrdSkipLen
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
   
   TSK_FS_ATTR* info = (TSK_FS_ATTR*)nativePtr;
@@ -107,12 +113,12 @@ Java_edu_uw_apl_commons_sleuthkit_filesys_Attribute_nrdSkipLen
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Attribute
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Attribute
  * Method:    rdBuf
  * Signature: (J)[B
  */
 JNIEXPORT jbyteArray JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_Attribute_rdBuf
+Java_edu_uw_apl_commons_tsk4j_filesys_Attribute_rdBuf
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_FS_ATTR* info = (TSK_FS_ATTR*)nativePtr;
@@ -123,19 +129,19 @@ Java_edu_uw_apl_commons_sleuthkit_filesys_Attribute_rdBuf
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Attribute
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Attribute
  * Method:    rdBufSize
  * Signature: (J)I
  */
 JNIEXPORT jint JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_Attribute_rdBufSize
+Java_edu_uw_apl_commons_tsk4j_filesys_Attribute_rdBufSize
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
   
   TSK_FS_ATTR* info = (TSK_FS_ATTR*)nativePtr;
   return (jint)info->rd.buf_size;
 }
 
-JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Attribute_read
+JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_tsk4j_filesys_Attribute_read
 (JNIEnv *env, jobject thiz, jlong nativePtr, jlong fileOffset, jint flags,
  jbyteArray buf, jint bufOffset, jint len, jlong nativeHeapPtr ) {
 
@@ -164,18 +170,18 @@ static jmethodID RunConstructor = NULL;
 static char* RunConstructorSig = "(J)V";
 */
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Attribute
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Attribute
  * Method:    run
- * Signature: (JJ)Ledu/uw/apl/commons/sleuthkit/filesys/Run;
+ * Signature: (JJ)Ledu/uw/apl/commons/tsk4j/filesys/Run;
  */
 /*
 JNIEXPORT jobject JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_Attribute_run
+Java_edu_uw_apl_commons_tsk4j_filesys_Attribute_run
 (JNIEnv *env, jobject thiz, jlong nativePtr, jlong nativeRunPtr ) {
   
   if( !RunConstructor ) {
 	RunClass = (*env)->FindClass
-	  ( env, "edu/uw/apl/commons/sleuthkit/filesys/Run" );
+	  ( env, "edu/uw/apl/commons/tsk4j/filesys/Run" );
 	RunConstructor = (*env)->GetMethodID( env, RunClass, 
 										  "<init>", RunConstructorSig );
   }
@@ -194,12 +200,12 @@ Java_edu_uw_apl_commons_sleuthkit_filesys_Attribute_run
 }
 */
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Attribute
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Attribute
  * Method:    runNative
  * Signature: (JJ)J
  */
 JNIEXPORT jlong JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_Attribute_runNative
+Java_edu_uw_apl_commons_tsk4j_filesys_Attribute_runNative
 (JNIEnv *env, jobject thiz, jlong nativePtr, jlong nativeRunPtr ) {
 
   TSK_FS_ATTR* info = (TSK_FS_ATTR*)nativePtr;
@@ -213,12 +219,12 @@ Java_edu_uw_apl_commons_sleuthkit_filesys_Attribute_runNative
   return (jlong)nextRun;
 }
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Attribute
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Attribute
  * Method:    runEndNative
  * Signature: (J)J
  */
 JNIEXPORT jlong JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_Attribute_runEndNative
+Java_edu_uw_apl_commons_tsk4j_filesys_Attribute_runEndNative
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_FS_ATTR* info = (TSK_FS_ATTR*)nativePtr;

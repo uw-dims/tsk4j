@@ -24,10 +24,10 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package edu.uw.apl.commons.sleuthkit.filesys;
+package edu.uw.apl.commons.tsk4j.filesys;
 
-import edu.uw.apl.commons.sleuthkit.base.Utils;
-import edu.uw.apl.commons.sleuthkit.image.Image;
+import edu.uw.apl.commons.tsk4j.base.Utils;
+import edu.uw.apl.commons.tsk4j.image.Image;
 
 public class BlockTest extends junit.framework.TestCase {
 

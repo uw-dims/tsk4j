@@ -24,13 +24,13 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package edu.uw.apl.commons.sleuthkit.filesys;
+package edu.uw.apl.commons.tsk4j.filesys;
 
 import java.io.*;
 import java.util.*;
 
-import edu.uw.apl.commons.sleuthkit.base.Utils;
-import edu.uw.apl.commons.sleuthkit.image.Image;
+import edu.uw.apl.commons.tsk4j.base.Utils;
+import edu.uw.apl.commons.tsk4j.image.Image;
 
 public class BlockOrderTest extends junit.framework.TestCase {
 
@@ -59,8 +59,10 @@ public class BlockOrderTest extends junit.framework.TestCase {
 	}
 
 	public void testNuga2() throws Exception {
-		String path = "data/nuga2.dd";
-		FileSystem fs = new FileSystem( path, 63 );
+		File diskImage  = new File( "data/nuga2.dd" );
+		if( !diskImage.exists() )
+			return;
+		FileSystem fs = new FileSystem( diskImage.getPath(), 63 );
 		testCountAlloced( fs );
 		//testCountAlloced( fs );
 		testFileBasedMD5( fs );
@@ -68,36 +70,33 @@ public class BlockOrderTest extends junit.framework.TestCase {
 	}
 	
 	public void testCountAlloced( FileSystem fs ) throws Exception {
-		final List<File> files = new ArrayList<File>();
+		final List<Proxy> ps = new ArrayList<Proxy>();
 		DirectoryWalk.Callback cb = new DirectoryWalk.Callback() {
 				public int apply( WalkFile f, String path ) {
 					String name = f.getName();
 					if( "..".equals( name ) || ".".equals( name ) ) {
 						return Walk.WALK_CONT;
 					}
-					files.add( f );
-					return files.size() == 24 ? Walk.WALK_STOP :
+					ps.add( f.metaProxy() );
+					return ps.size() == 24 ? Walk.WALK_STOP :
 						Walk.WALK_CONT;
 				}
 			};
 		int flags = DirectoryWalk.FLAG_ALLOC|DirectoryWalk.FLAG_RECURSE;
 		fs.dirWalk( fs.rootINum(), flags, cb );
-		for( File f : files )
-			f.close();
-		System.out.println( "CountAlloced " + files.size() );
+		System.out.println( "CountAlloced " + ps.size() );
 	}
 	
 	public void testFileBasedMD5( FileSystem fs ) throws Exception {
-
 		
-		final List<File> files = new ArrayList<File>();
+		final List<Proxy> ps = new ArrayList<Proxy>();
 		DirectoryWalk.Callback cb = new DirectoryWalk.Callback() {
 				public int apply( WalkFile f, String path ) {
 					String name = f.getName();
 					if( "..".equals( name ) || ".".equals( name ) ) {
 						return Walk.WALK_CONT;
 					}
-					files.add( f );
+					ps.add( f.metaProxy() );
 					return Walk.WALK_CONT;
 				}
 			};
@@ -106,7 +105,8 @@ public class BlockOrderTest extends junit.framework.TestCase {
 
 		byte[] buf = new byte[1024*1024];
 		int N = 1;
-		for( File f : files ) {
+		for( Proxy p : ps ) {
+			File f = p.openFile();
 			System.out.println( N + " " + f.getName() );
 			//f.allocNativeBuffer( buf.length );
 			InputStream is = f.getInputStream();

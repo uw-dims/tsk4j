@@ -1,14 +1,19 @@
-#include "edu_uw_apl_commons_sleuthkit_filesys_Directory.h"
+#include "edu_uw_apl_commons_tsk4j_filesys_Directory.h"
 
 #include "filesystem.h"
 
+/**
+ * @author Stuart Maclean
+ *
+ * Implementations for filesys.Directory native methods.
+ */
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Directory
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Directory
  * Method:    close
  * Signature: (J)V
  */
-JNIEXPORT void JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Directory_close
+JNIEXPORT void JNICALL Java_edu_uw_apl_commons_tsk4j_filesys_Directory_close
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_FS_DIR* info = (TSK_FS_DIR*)nativePtr;
@@ -16,12 +21,12 @@ JNIEXPORT void JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Directory_close
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Directory
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Directory
  * Method:    get
- * Signature: (JJ)Ledu/uw/apl/commons/sleuthkit/filesys/File;
+ * Signature: (JJ)Ledu/uw/apl/commons/tsk4j/filesys/File;
  */
 JNIEXPORT jobject 
-JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Directory_get
+JNICALL Java_edu_uw_apl_commons_tsk4j_filesys_Directory_get
 (JNIEnv *env, jobject thiz, jlong nativePtr, jlong indx ) {
 
   TSK_FS_DIR* info = (TSK_FS_DIR*)nativePtr;
@@ -38,18 +43,17 @@ JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_Directory_get
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_Directory
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_Directory
  * Method:    getSize
  * Signature: (J)J
  */
 JNIEXPORT jlong JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_Directory_getSize
+Java_edu_uw_apl_commons_tsk4j_filesys_Directory_getSize
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_FS_DIR* info = (TSK_FS_DIR*)nativePtr;
   return (jlong)tsk_fs_dir_getsize( info );
 }
-
 
 // eof
 
