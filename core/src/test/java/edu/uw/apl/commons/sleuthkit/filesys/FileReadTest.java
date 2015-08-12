@@ -24,10 +24,10 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package edu.uw.apl.commons.sleuthkit.filesys;
+package edu.uw.apl.commons.tsk4j.filesys;
 
-import edu.uw.apl.commons.sleuthkit.base.Utils;
-import edu.uw.apl.commons.sleuthkit.image.Image;
+import edu.uw.apl.commons.tsk4j.base.Utils;
+import edu.uw.apl.commons.tsk4j.image.Image;
 
 public class FileReadTest extends junit.framework.TestCase {
 
@@ -37,8 +37,10 @@ public class FileReadTest extends junit.framework.TestCase {
 		System.err.println( "FS.nativePtr: " + fs.nativePtr() );
 		String fName = "/home/stuart/.bashrc";
 		File f = fs.fileOpen( fName );
-		read( f );
-		f.close();
+		if( f != null ) {
+			read( f );
+			f.close();
+		}
 		fs.close();
 	}
 
@@ -78,6 +80,8 @@ public class FileReadTest extends junit.framework.TestCase {
 	
 	private void testGood( FileSystem fs, String fName ) throws Exception {
 		File f = fs.fileOpen( fName );
+		if( f == null )
+			return;
 		byte[] buf = new byte[32];
 		int n = f.read( 0, File.READ_FLAG_NONE, buf );
 		assertTrue( n == buf.length );
@@ -110,6 +114,8 @@ public class FileReadTest extends junit.framework.TestCase {
 	private void testGood( FileSystem fs, String fName, long length )
 		throws Exception {
 		File f = fs.fileOpen( fName );
+		if( f == null )
+			return;
 		byte[] buf = new byte[1];//*(int)length];
 		int n = f.read( 0, File.READ_FLAG_NONE, buf );
 		assertTrue( n == length );

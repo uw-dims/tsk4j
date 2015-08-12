@@ -24,16 +24,18 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package edu.uw.apl.commons.sleuthkit.filesys;
+package edu.uw.apl.commons.tsk4j.filesys;
 
-import edu.uw.apl.commons.sleuthkit.base.Utils;
-import edu.uw.apl.commons.sleuthkit.image.Image;
+import edu.uw.apl.commons.tsk4j.base.Utils;
+import edu.uw.apl.commons.tsk4j.image.Image;
 
 public class FileSystemDirWalkTest extends junit.framework.TestCase {
 
 	public void testSz1() throws Exception {
 
 		String path = "/dev/sda";
+		if( ! new java.io.File( path ).exists() )
+			return;
 		FileSystem fs1 = new FileSystem( path, 2048 );
 		testDirWalk( fs1 );
 		fs1.close();
@@ -42,6 +44,8 @@ public class FileSystemDirWalkTest extends junit.framework.TestCase {
 	public void testSz2() throws Exception {
 
 		String path = "/dev/sda1";
+		if( ! new java.io.File( path ).exists() )
+			return;
 		FileSystem fs1 = new FileSystem( path );
 		testDirWalk( fs1 );
 		fs1.close();
@@ -50,6 +54,8 @@ public class FileSystemDirWalkTest extends junit.framework.TestCase {
 	public void testNuga2() throws Exception {
 
 		String path = "data/nuga2.dd";
+		if( ! new java.io.File( path ).exists() )
+			return;
 		FileSystem fs = new FileSystem( path, 63 );
 		testDirWalk( fs );
 		fs.close();
@@ -60,10 +66,9 @@ public class FileSystemDirWalkTest extends junit.framework.TestCase {
 				public int apply( WalkFile f, String path ) {
 					System.out.println( path );
 					System.out.println( f.getName() );
-					//					System.out.println( f.paramString() );
+					//	System.out.println( f.paramString() );
 					//f.close();
 					return Walk.WALK_CONT;
-					//					return FileSystem.Listener.WALKSTOP;
 				}
 			};
 		int flags = DirectoryWalk.FLAG_RECURSE | DirectoryWalk.FLAG_NOORPHAN;

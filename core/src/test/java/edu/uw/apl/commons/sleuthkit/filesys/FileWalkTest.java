@@ -24,7 +24,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package edu.uw.apl.commons.sleuthkit.filesys;
+package edu.uw.apl.commons.tsk4j.filesys;
 
 import java.util.List;
 
@@ -34,6 +34,8 @@ public class FileWalkTest extends junit.framework.TestCase {
 		String path = "/dev/sda1";
 		FileSystem fs = new FileSystem( path );
 		File f = fs.fileOpen( "/home/stuart/.bashrc" );
+		if( f == null )
+			return;
 		walk( f );
 	}
 
@@ -41,6 +43,8 @@ public class FileWalkTest extends junit.framework.TestCase {
 		String path = "/dev/sda1";
 		FileSystem fs = new FileSystem( path );
 		File f = fs.fileOpen( "/home/stuart/wineserver.log" );
+		if( f == null )
+			return;
 		walk( f );
 	}
 

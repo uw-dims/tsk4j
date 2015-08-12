@@ -45,6 +45,9 @@ import edu.uw.apl.commons.tsk4j.base.TSKInputStream;
  * In the Sleuthkit library, TSK_FS_FILE contains a back pointer to
  * its enclosing TSK_FS_INFO. To mimic this, we pass FileSystem to
  * File in its constructor and store the equivalent back pointer.
+ *
+ * LOOK: Is File really a suitable name for this class, given the
+ * existence of java.io.File ??
  */
 
 public class File extends Closeable {

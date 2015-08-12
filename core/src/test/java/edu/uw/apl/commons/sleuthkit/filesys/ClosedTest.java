@@ -38,8 +38,12 @@ public class ClosedTest extends junit.framework.TestCase {
 
 	public void testClosedAttribute() throws Exception {
 		String path = "/dev/sda1";
+		if( ! new java.io.File( path ).exists() )
+			return;
 		FileSystem fs = new FileSystem( path );
 		File f = fs.fileOpen( "/home/stuart/.bashrc" );
+		if( f == null )
+			return;
 		System.out.println( f.getName() );
 		Attribute a = f.getAttribute();
 
@@ -63,8 +67,12 @@ public class ClosedTest extends junit.framework.TestCase {
 
 	public void testClosedRuns() throws Exception {
 		String path = "/dev/sda1";
+		if( ! new java.io.File( path ).exists() )
+			return;
 		FileSystem fs = new FileSystem( path );
 		File f = fs.fileOpen( "/home/stuart/.bashrc" );
+		if( f == null )
+			return;
 		System.out.println( f.getName() );
 		Attribute a = f.getAttribute();
 		List<Run> rs = a.runs();

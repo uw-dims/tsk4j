@@ -26,7 +26,7 @@
  */
 package edu.uw.apl.commons.tsk4j.filesys;
 
-import java.io.*;
+import java.io.InputStream;
 import java.util.*;
 
 import edu.uw.apl.commons.tsk4j.base.Utils;
@@ -59,7 +59,7 @@ public class BlockOrderTest extends junit.framework.TestCase {
 	}
 
 	public void testNuga2() throws Exception {
-		File diskImage  = new File( "data/nuga2.dd" );
+		java.io.File diskImage  = new java.io.File( "data/nuga2.dd" );
 		if( !diskImage.exists() )
 			return;
 		FileSystem fs = new FileSystem( diskImage.getPath(), 63 );

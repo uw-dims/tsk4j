@@ -24,18 +24,20 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package edu.uw.apl.commons.sleuthkit.filesys;
+package edu.uw.apl.commons.tsk4j.filesys;
 
 import java.io.InputStream;
 import java.io.IOException;
 import java.util.*;
 
-import edu.uw.apl.commons.sleuthkit.base.Utils;
+import edu.uw.apl.commons.tsk4j.base.Utils;
 
 public class RunsTest extends junit.framework.TestCase {
 
 	public void _test1() throws Exception {
 		String path = "/dev/sda1";
+		if( ! new java.io.File( path ).exists() )
+			return;
 		FileSystem fs = new FileSystem( path );
 		walk( fs );
 		fs.close();
@@ -43,6 +45,8 @@ public class RunsTest extends junit.framework.TestCase {
 
 	public void test2() throws Exception {
 		String path = "data/nuga2.dd";
+		if( ! new java.io.File( path ).exists() )
+			return;
 		FileSystem fs = new FileSystem( path, 63 );
 		walk( fs );
 		fs.close();

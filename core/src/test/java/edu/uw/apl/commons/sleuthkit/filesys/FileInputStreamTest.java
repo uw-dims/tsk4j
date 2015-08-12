@@ -24,12 +24,12 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package edu.uw.apl.commons.sleuthkit.filesys;
+package edu.uw.apl.commons.tsk4j.filesys;
 
 import java.io.InputStream;
 
-import edu.uw.apl.commons.sleuthkit.base.Utils;
-import edu.uw.apl.commons.sleuthkit.image.Image;
+import edu.uw.apl.commons.tsk4j.base.Utils;
+import edu.uw.apl.commons.tsk4j.image.Image;
 
 public class FileInputStreamTest extends junit.framework.TestCase {
 
@@ -39,8 +39,10 @@ public class FileInputStreamTest extends junit.framework.TestCase {
 		System.err.println( "FS.nativePtr: " + fs.nativePtr() );
 		String fName = "/home/stuart/.bashrc";
 		File f = fs.fileOpen( fName );
-		read( f );
-		f.close();
+		if( f != null ) {
+			read( f );
+			f.close();
+		}
 		fs.close();
 	}
 
@@ -50,8 +52,10 @@ public class FileInputStreamTest extends junit.framework.TestCase {
 		System.err.println( "FS.nativePtr: " + fs.nativePtr() );
 		String fName = "/home/stuart/wineserver.log";
 		File f = fs.fileOpen( fName );
-		read( f );
-		f.close();
+		if( f != null ) {
+			read( f );
+			f.close();
+		}
 		fs.close();
 	}
 

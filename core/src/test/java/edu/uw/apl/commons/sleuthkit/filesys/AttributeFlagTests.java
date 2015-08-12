@@ -31,12 +31,12 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.util.List;
 
-import edu.uw.apl.commons.sleuthkit.base.Utils;
+import edu.uw.apl.commons.tsk4j.base.Utils;
 
 public class AttributeFlagTests extends junit.framework.TestCase {
 
 	public void testXP() throws Exception {
-		File diskImage  = new File( "data/nuga2.dd" );
+		java.io.File diskImage  = new java.io.File( "data/nuga2.dd" );
 		if( !diskImage.exists() )
 			return;
 		FileSystem fs = new FileSystem( diskImage.getPath(), 63 );

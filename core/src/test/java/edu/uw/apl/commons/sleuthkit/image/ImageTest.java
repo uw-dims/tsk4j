@@ -24,13 +24,13 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package edu.uw.apl.commons.sleuthkit.image;
+package edu.uw.apl.commons.tsk4j.image;
 
 import java.io.File;
 import java.io.InputStream;
 import java.io.IOException;
 
-import edu.uw.apl.commons.sleuthkit.base.Utils;
+import edu.uw.apl.commons.tsk4j.base.Utils;
 
 /**
  * Tests on Image objects.  Opening, closing and reading data from an image
@@ -38,10 +38,10 @@ import edu.uw.apl.commons.sleuthkit.base.Utils;
 public class ImageTest extends junit.framework.TestCase {
 
     static String disk1Name() {
-	return System.getProperty( "os.name" ).startsWith( "Mac" ) ?
-	    "/dev/disk0" : "/dev/sda";
+		return System.getProperty( "os.name" ).startsWith( "Mac" ) ?
+			"/dev/disk0" : "/dev/sda";
     }
-
+	
 	public void testTypeSupported() {
 		int types = Image.typeSupported();
 		System.out.printf( "Types supported %x\n", types );
@@ -144,8 +144,11 @@ public class ImageTest extends junit.framework.TestCase {
 	}
 
 	public void testSplitImage() throws Exception {
-		String[] paths = { "data/nuga2.dd.split1",
-						   "data/nuga2.dd.split2" };
+		File f1 = new File( "data/nuga2.dd.split1" );
+		File f2 = new File( "data/nuga2.dd.split2" );
+		if( !( f1.exists() && f2.exists() ) )
+			return;
+		String[] paths = { f1.getPath(), f2.getPath() };
 		Image img = new Image( paths );
 		InputStream is = img.getInputStream();
 		String hash = Utils.md5sum( is );
