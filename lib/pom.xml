@@ -34,10 +34,10 @@
 
   <groupId>edu.uw.apl.commons</groupId>
   <artifactId>tsk4j-local-repo-builder</artifactId>
-  <version>413.2.0</version>
+  <version>413.3.0</version>
   <packaging>pom</packaging>
 
-  <name>TSK4j - Third Party Artifact Bundling</name>
+  <name>TSK4J: Lib - Local Repository Construction for Third Party Artifacts</name>
 
   <properties>
     <localRepo>../.repository</localRepo>

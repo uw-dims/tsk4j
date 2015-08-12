@@ -7,7 +7,7 @@
   
   <groupId>edu.uw.apl.commons</groupId>
   <artifactId>tsk4j-parent</artifactId>
-  <version>413.2.0</version>
+  <version>413.3.0</version>
   <packaging>pom</packaging>
   
   <name>TSK4J: Parent</name>
@@ -31,6 +31,7 @@
   
   <modules>
     <module>core</module>
+    <module>lib</module>
     <module>digests</module>
     <module>samples</module> 
     <!--
