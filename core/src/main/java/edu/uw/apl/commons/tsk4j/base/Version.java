@@ -26,6 +26,8 @@
  */
 package edu.uw.apl.commons.tsk4j.base;
 
+import edu.uw.apl.commons.tsk4j.Native;
+
 /**
  * @author Stuart Maclean
  */

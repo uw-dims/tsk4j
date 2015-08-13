@@ -31,9 +31,9 @@ import java.io.InputStream;
 import java.io.IOException;
 
 import edu.uw.apl.commons.tsk4j.base.Closeable;
-import edu.uw.apl.commons.tsk4j.base.Native;
 import edu.uw.apl.commons.tsk4j.base.HeapBuffer;
 import edu.uw.apl.commons.tsk4j.base.TSKInputStream;
+import edu.uw.apl.commons.tsk4j.Native;
 
 /**
  * @author Stuart Maclean

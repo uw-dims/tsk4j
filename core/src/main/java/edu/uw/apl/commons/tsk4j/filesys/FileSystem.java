@@ -29,10 +29,10 @@ package edu.uw.apl.commons.tsk4j.filesys;
 import java.io.IOException;
 
 import edu.uw.apl.commons.tsk4j.base.Closeable;
-import edu.uw.apl.commons.tsk4j.base.Native;
 import edu.uw.apl.commons.tsk4j.base.HeapBuffer;
 import edu.uw.apl.commons.tsk4j.image.Image;
 import edu.uw.apl.commons.tsk4j.volsys.Partition;
+import edu.uw.apl.commons.tsk4j.Native;
 
 /**
  * @author Stuart Maclean

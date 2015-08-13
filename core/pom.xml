@@ -193,15 +193,6 @@
 			edu.uw.apl.commons.tsk4j.base.Version
 		      </javahClassName>
 		      <javahClassName>
-			edu.uw.apl.commons.tsk4j.image.Image
-		      </javahClassName>
-		      <javahClassName>
-			edu.uw.apl.commons.tsk4j.volsys.VolumeSystem
-		      </javahClassName>
-		      <javahClassName>
-			edu.uw.apl.commons.tsk4j.volsys.Partition
-		      </javahClassName>
-		      <javahClassName>
 			edu.uw.apl.commons.tsk4j.filesys.FileSystem
 		      </javahClassName>
 		      <javahClassName>
@@ -224,6 +215,15 @@
 		      </javahClassName>
 		      <javahClassName>
 			edu.uw.apl.commons.tsk4j.filesys.Run
+		      </javahClassName>
+		      <javahClassName>
+			edu.uw.apl.commons.tsk4j.image.Image
+		      </javahClassName>
+		      <javahClassName>
+			edu.uw.apl.commons.tsk4j.volsys.VolumeSystem
+		      </javahClassName>
+		      <javahClassName>
+			edu.uw.apl.commons.tsk4j.volsys.Partition
 		      </javahClassName>
 		    </javahClassNames>
 		  </configuration>
@@ -254,7 +254,7 @@
 		      <ARCH>${arch}</ARCH>
 		      <!-- LOOK: Is this valid, using .. ? -->
 		      <JDK_HOME>${java.home}/..</JDK_HOME>
-		      <PREFIX>edu.uw.apl.commons.tsk4j.base</PREFIX>
+		      <PREFIX>edu.uw.apl.commons.tsk4j</PREFIX>
 		      <LIBNAME>tsk4j-core</LIBNAME>
 		    </environmentVariables>
 		  </configuration>
@@ -276,7 +276,7 @@
 		      <ARCH>${arch}</ARCH>
 		      <!-- LOOK: Is this valid, using .. ? -->
 		      <JDK_HOME>${java.home}/..</JDK_HOME>
-		      <PREFIX>edu.uw.apl.commons.tsk4j.base</PREFIX>
+		      <PREFIX>edu.uw.apl.commons.tsk4j</PREFIX>
 		      <LIBNAME>tsk4j-core</LIBNAME>
 		    </environmentVariables>
 		  </configuration>
