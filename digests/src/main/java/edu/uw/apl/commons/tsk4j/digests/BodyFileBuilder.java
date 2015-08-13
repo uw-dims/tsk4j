@@ -1,4 +1,4 @@
-package edu.uw.apl.commons.sleuthkit.digests;
+package edu.uw.apl.commons.tsk4j.digests;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,19 +10,28 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.codec.binary.Hex;
 
-import edu.uw.apl.commons.sleuthkit.filesys.Attribute;
-import edu.uw.apl.commons.sleuthkit.filesys.Meta;
-import edu.uw.apl.commons.sleuthkit.filesys.Name;
-import edu.uw.apl.commons.sleuthkit.filesys.FileSystem;
-import edu.uw.apl.commons.sleuthkit.filesys.DirectoryWalk;
-import edu.uw.apl.commons.sleuthkit.filesys.WalkFile;
+import edu.uw.apl.commons.tsk4j.filesys.Attribute;
+import edu.uw.apl.commons.tsk4j.filesys.Meta;
+import edu.uw.apl.commons.tsk4j.filesys.Name;
+import edu.uw.apl.commons.tsk4j.filesys.FileSystem;
+import edu.uw.apl.commons.tsk4j.filesys.DirectoryWalk;
+import edu.uw.apl.commons.tsk4j.filesys.WalkFile;
+
+/**
+ * @author Stuart Maclean
+ *
+ * Static routines for BodyFile construction
+ *
+ * @see BodyFile
+ */
 
 public class BodyFileBuilder {
 
 	/*
 	 * Walk a FileSystem, producing a BodyFile, a container of
 	 * BodyFile.Record structs such that each Record summarizes one
-	 * file in the Filesystem
+	 * file in the Filesystem.  Will only inspect allocated files.
+	 * For other flag combinations, see below.
 	 */
 	static public BodyFile create( FileSystem fs ) {
 		return create( fs, DirectoryWalk.FLAG_ALLOC );
@@ -49,11 +58,24 @@ public class BodyFileBuilder {
 				}
 			};
 		long inum = fs.rootINum();
+		/*
+		  LOOK: Have seen infinite loops w/out the NOORPHAN flag,
+		  but don't quite understand why (or what ORPHANs actually are)
+		*/
 		flags |= DirectoryWalk.FLAG_RECURSE | DirectoryWalk.FLAG_NOORPHAN;
 		fs.dirWalk( inum, flags, cb );
 		return result;
 	}
 
+	/*
+	 * Creates a new BodyFile.Record for the passed File f.  Unlike
+	 * Sleuthkit's own fls command line tool, we <em>do</em> include
+	 * an md5 hash of the file content.
+	 *
+	 * LOOK: We are considering only the <b>default</b> attribute of
+	 * the File.  Better to consider <b>all</b> attributes, at least those
+	 * of type $Data (NTFS)
+	 */
 	static private void processWalk( WalkFile f, String path,
 									 BodyFile result ) throws IOException {
 		String name = f.getName();
@@ -68,7 +90,7 @@ public class BodyFileBuilder {
 		Attribute a = f.getAttribute();
 		if( a == null ) {
 			LOG.warn( "No default attribute " + name );
-			// to do, as fls does, locate some other attrs....
+			// To do, as fls does, locate some other attrs....
 			List<Attribute> as = f.getAttributes();
 			if( as.isEmpty() ) {
 				LOG.warn( "No attrs? " + fullPath );
@@ -77,9 +99,12 @@ public class BodyFileBuilder {
 			a = as.get(0);
 			fullPath += ":" + a.name();
 		}
-		//		System.out.println( fullPath + " " + m.addr() );
 		byte[] md5 = md5( a );
 		long sz = a.size();
+		/*
+		  LOOK: Too many parameters to the Record constructor, easy to
+		  get the actual and expected parameters mixed up!
+		*/
 		/*
 		Record( byte[] md5, String path, long inode,
 				int nameType, int metaType,	int mode,
@@ -99,8 +124,7 @@ public class BodyFileBuilder {
 		MessageDigest md = null;
 		try {
 			md = MessageDigest.getInstance( "md5" );
-		} catch( Exception e ) {
-			// never
+		} catch( Exception neverForMD5 ) {
 		}
 		InputStream is = a.getInputStream();
 		try( DigestInputStream dis = new DigestInputStream( is, md ) ) {

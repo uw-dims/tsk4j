@@ -1,4 +1,4 @@
-package edu.uw.apl.commons.sleuthkit.digests;
+package edu.uw.apl.commons.tsk4j.digests;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -20,9 +20,16 @@ import java.io.Reader;
 import org.apache.commons.codec.binary.Hex;
 
 /**
+ * @author Stuart Maclean
+ 
  * Operations on BodyFile objects.  Mostly deals with parsing some
  * external representation of BodyFiles, e.g. 'timeline' format as
- * produced by 'fls -m' and 'fiwalk'.
+ * produced by 'fls -m' and 'fiwalk', and with the reverse operation,
+ * that of formatting a BodyFile to some string representation
+ * suitable for export.
+ *
+ * The BodyFile format we use is the TSK3.0+ version, described at
+ * {@link http://wiki.sleuthkit.org/index.php?title=Body_file}.
  */
 
 public class BodyFileCodec {
@@ -31,7 +38,7 @@ public class BodyFileCodec {
 	 * Assert that the contents of the supplied file suggest that it
 	 * is or is not a BodyFile.  We do this by reading the first line
 	 * (which may be long if the file is binary!) and matching it
-	 * against the known regex for a BodyFile record
+	 * against the known regex for a BodyFile record.
 	 */
 	static public boolean isBodyFile( File f ) throws IOException {
 		BufferedReader br = null;
@@ -115,7 +122,7 @@ public class BodyFileCodec {
 	}
 
 	/**
-	 * @param m - previously asserted that the Matcher succeeded
+	 * @param m - Previously asserted that the Matcher succeeded
 	 */
 	static BodyFile.Record record( Matcher m ) throws Exception {
 		String md5Hex = m.group( 1 );

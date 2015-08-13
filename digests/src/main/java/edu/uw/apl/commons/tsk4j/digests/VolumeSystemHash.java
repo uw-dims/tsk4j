@@ -1,4 +1,4 @@
-package edu.uw.apl.commons.sleuthkit.digests;
+package edu.uw.apl.commons.tsk4j.digests;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,8 +14,22 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import edu.uw.apl.commons.sleuthkit.volsys.Partition;
-import edu.uw.apl.commons.sleuthkit.volsys.VolumeSystem;
+import edu.uw.apl.commons.tsk4j.volsys.Partition;
+import edu.uw.apl.commons.tsk4j.volsys.VolumeSystem;
+
+/**
+ * @author Stuart Maclean
+ *
+ * For all Partitions in an Image that do <em>not</em> contain
+ * filesystems, we read the entire content (a sector sequence) of each
+ * one, and hash that content using MD5.  Each Partition is identified
+ * by each start sector and length, and a list composed to hold each
+ * 'HashedPartition' triple.
+ *
+ * The point of this class is to compare two instances of
+ * VolumeSystemHash computed from the same image at two timepoints, to
+ * see if any data is being hidden in unallocated space.
+ */
 
 public class VolumeSystemHash {
 
@@ -24,8 +38,9 @@ public class VolumeSystemHash {
 		List<Partition> ps = vs.getPartitions();
 		for( Partition p : ps ) {
 			/*
-			  LOOK: trying to get non-filesystem, non-extended, non-swap.
-			  Seems like slot check suffices.  Test on windows, mac disks!
+			  LOOK: Trying to identify non-filesystem, non-extended,
+			  non-swap.  Seems like slot check suffices.  Test on
+			  windows, mac disks!
 			*/
 			if( p.slot() > -1 )
 				continue;
@@ -52,7 +67,6 @@ public class VolumeSystemHash {
 		return sw.toString();
 	}
 
-		
 	@Override
 		public int hashCode() {
 		return hps.size();
@@ -64,8 +78,8 @@ public class VolumeSystemHash {
 			return true;
 		if( !( o instanceof VolumeSystemHash ) )
 			return false;
-			VolumeSystemHash that = (VolumeSystemHash)o;
-			return this.hps.equals( that.hps );
+		VolumeSystemHash that = (VolumeSystemHash)o;
+		return this.hps.equals( that.hps );
 	}
 		
 	static byte[] hash( Partition p ) throws IOException {

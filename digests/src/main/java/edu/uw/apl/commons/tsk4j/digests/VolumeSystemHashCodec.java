@@ -1,4 +1,4 @@
-package edu.uw.apl.commons.sleuthkit.digests;
+package edu.uw.apl.commons.tsk4j.digests;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,6 +21,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * @author Stuart Maclean
+ *
  * Avoid polluting the main VolumeSystemHash class with I/O clutter by
  * using this codec class instead.  It serializes/deserializes
  * VolumeSystemHash objects to/from external text representations,
@@ -28,6 +30,7 @@ import org.apache.commons.logging.LogFactory;
  * writeTo/readFrom, both overloaded to take e.g. File, Streams,
  * Writer/Reader.
  *
+ * @see VolumeSystemHash
  */
 
 public class VolumeSystemHashCodec {

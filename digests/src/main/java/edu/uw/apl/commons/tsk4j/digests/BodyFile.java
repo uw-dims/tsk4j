@@ -1,4 +1,4 @@
-package edu.uw.apl.commons.sleuthkit.digests;
+package edu.uw.apl.commons.tsk4j.digests;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -7,11 +7,19 @@ import java.util.List;
 
 import org.apache.commons.codec.binary.Hex;
 
-import edu.uw.apl.commons.sleuthkit.filesys.FileSystem;
-import edu.uw.apl.commons.sleuthkit.filesys.Meta;
-import edu.uw.apl.commons.sleuthkit.filesys.Name;
+import edu.uw.apl.commons.tsk4j.filesys.FileSystem;
+import edu.uw.apl.commons.tsk4j.filesys.Meta;
+import edu.uw.apl.commons.tsk4j.filesys.Name;
 
 /**
+ * @author Stuart Maclean
+ *
+ * The BodyFile format captured in a Java class.  For
+ * marshaling/unmarshaling of BodyFile objects to and from external
+ * representations, see BodyFileCodec.
+ *
+ * @see BodyFileCodec
+ *
  * @see http://wiki.sleuthkit.org/index.php?title=Body_file
  *
  * @see http://wiki.sleuthkit.org/index.php?title=Fls
@@ -24,6 +32,12 @@ public class BodyFile {
 		this.fs = fs;
 	}
 
+	/*
+	  If produced via some BodyFileAlgebra operation, we likely do not
+	  have a <em>single</em> FileSystem as our 'container', so best we
+	  can do is a descriptive string presumably concocted from the
+	  source FileSystems and/or the operator.
+	*/
 	public BodyFile( String name ) {
 		this();
 		this.name = name;
@@ -73,7 +87,7 @@ public class BodyFile {
 	   are too many variants and the choice is a dynamic one.
 	   Instead, we use our EqualityWrapper idiom, where a supplied
 	   lambda defines the predicate.
-	   	*/
+	*/
 	static public class Record {
 
 		/*
@@ -315,7 +329,6 @@ public class BodyFile {
 	private FileSystem fs;
 	private String name;
 	private final List<Record> records;
-	
 }
 
 // eof
