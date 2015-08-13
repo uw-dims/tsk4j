@@ -1,5 +1,4 @@
-package edu.uw.apl.commons.sleuthkit.analysis;
-
+package edu.uw.apl.commons.tsk4j.digests;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -7,8 +6,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * @author Stuart Maclean
+ *
+ */
 public class BodyFileAlgebra {
-
+	
 	/*
 	  We do the 'wrapping, unwrapping' of BodyFile.Record objects for
 	  equality comparison purposes solely in the terms of the Record

@@ -1,10 +1,15 @@
-package edu.uw.apl.commons.sleuthkit.analysis;
+package edu.uw.apl.commons.tsk4j.digests;
 
 import java.util.Arrays;
 import java.util.List;
 
-import edu.uw.apl.commons.sleuthkit.filesys.FileSystem;
-import edu.uw.apl.commons.sleuthkit.filesys.Meta;
+import edu.uw.apl.commons.tsk4j.filesys.FileSystem;
+import edu.uw.apl.commons.tsk4j.filesys.Meta;
+
+/**
+ * @author Stuart Maclean
+ *
+ */
 
 /**
    Some common BodyFile Record Operators.  Add more as needed, or define

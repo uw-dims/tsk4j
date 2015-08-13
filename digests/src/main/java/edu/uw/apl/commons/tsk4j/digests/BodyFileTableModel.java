@@ -1,16 +1,16 @@
-package edu.uw.apl.commons.sleuthkit.analysis;
+package edu.uw.apl.commons.tsk4j.digests;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import javax.swing.table.*;
-
-import org.apache.log4j.Logger;
+import javax.swing.table.AbstractTableModel;
 
 /**
+ * @author Stuart Maclean
  */
+
 public class BodyFileTableModel extends AbstractTableModel {
 
 	public BodyFileTableModel( BodyFile bf ) {

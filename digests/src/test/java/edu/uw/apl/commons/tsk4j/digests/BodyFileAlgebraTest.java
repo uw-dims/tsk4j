@@ -1,8 +1,8 @@
-package edu.uw.apl.commons.sleuthkit.analysis;
+package edu.uw.apl.commons.tsk4j.digests;
 
-import edu.uw.apl.commons.sleuthkit.filesys.FileSystem;
-import edu.uw.apl.commons.sleuthkit.filesys.Meta;
-import edu.uw.apl.commons.sleuthkit.filesys.Name;
+import edu.uw.apl.commons.tsk4j.filesys.FileSystem;
+import edu.uw.apl.commons.tsk4j.filesys.Meta;
+import edu.uw.apl.commons.tsk4j.filesys.Name;
 
 /**
    Record( byte[] md5, String path, long inode,
@@ -17,7 +17,7 @@ public class BodyFileAlgebraTest extends junit.framework.TestCase {
 	public void testNewFiles1() throws Exception {
 
 		BodyFile.Record r1 = new BodyFile.Record
-			( null, "/some/path", 1L, Name.TYPE_REG, Meta.TYPE_REG,
+			( null, "/some/path", 1L, 0, 0, Name.TYPE_REG, Meta.TYPE_REG,
 			  0, 0, 0, 500L, 1, 2, 3, 4 );
 		BodyFile b1 = new BodyFile();
 		b1.add( r1 );
@@ -34,7 +34,7 @@ public class BodyFileAlgebraTest extends junit.framework.TestCase {
 
 		// as r1 but different inode...
 		BodyFile.Record r2 = new BodyFile.Record
-			( null, "/some/path", 2L, Name.TYPE_REG, Meta.TYPE_REG,
+			( null, "/some/path", 2L, 0, 0, Name.TYPE_REG, Meta.TYPE_REG,
 			  0, 0, 0, 500L, 1, 2, 3, 4 );
 		b2.add( r2 );
 
@@ -53,13 +53,13 @@ public class BodyFileAlgebraTest extends junit.framework.TestCase {
 	*/
 	public void testNewFiles2() throws Exception {
 		BodyFile.Record r1 = new BodyFile.Record
-			( null, "/old/file", 1L, Name.TYPE_REG, Meta.TYPE_REG,
+			( null, "/old/file", 1L, 0, 0, Name.TYPE_REG, Meta.TYPE_REG,
 			  0, 0, 0, 500L, 1, 2, 3, 4 );
 		BodyFile b1 = new BodyFile();
 		b1.add( r1 );
 
 		BodyFile.Record r2 = new BodyFile.Record
-			( null, "/new/file", 1L, Name.TYPE_REG, Meta.TYPE_REG,
+			( null, "/new/file", 1L, 0, 0, Name.TYPE_REG, Meta.TYPE_REG,
 			  0, 0, 0, 500L, 1, 2, 3, 4 );
 		BodyFile b2 = new BodyFile();
 		b2.add( r2 );
@@ -72,13 +72,13 @@ public class BodyFileAlgebraTest extends junit.framework.TestCase {
 	public void testChangedFiles() throws Exception {
 
 		BodyFile.Record r1 = new BodyFile.Record
-			( null, "/some/path", 1L, Name.TYPE_REG, Meta.TYPE_REG,
+			( null, "/some/path", 1L, 0, 0, Name.TYPE_REG, Meta.TYPE_REG,
 			  0, 0, 0, 500L, 1, 2, 3, 4 );
 		BodyFile b1 = new BodyFile();
 		b1.add( r1 );
 
 		BodyFile.Record r2 = new BodyFile.Record
-			( new byte[16], "/some/path", 1L, Name.TYPE_REG, Meta.TYPE_REG,
+			( new byte[16], "/some/path", 1L, 0, 0, Name.TYPE_REG, Meta.TYPE_REG,
 			  0, 0, 0, 500L, 1, 2, 3, 4 );
 		BodyFile b2 = new BodyFile();
 		b2.add( r2 );
@@ -103,13 +103,13 @@ public class BodyFileAlgebraTest extends junit.framework.TestCase {
 	public void testDisguisedChangedFiles() throws Exception {
 
 		BodyFile.Record r1 = new BodyFile.Record
-			( null, "/some/path", 1L, Name.TYPE_REG, Meta.TYPE_REG,
+			( null, "/some/path", 1L, 0, 0, Name.TYPE_REG, Meta.TYPE_REG,
 			  0, 0, 0, 500L, 1, 2, 3, 4 );
 		BodyFile.Record r2 = new BodyFile.Record
-			( null, "/some/path", 2L, Name.TYPE_REG, Meta.TYPE_REG,
+			( null, "/some/path", 2L, 0, 0, Name.TYPE_REG, Meta.TYPE_REG,
 			  0, 0, 0, 500L, 1, 2, 3, 4 );
 		BodyFile.Record r3 = new BodyFile.Record
-			( new byte[16], "/some/path", 1L, Name.TYPE_REG, Meta.TYPE_REG,
+			( new byte[16], "/some/path", 1L,0, 0, Name.TYPE_REG, Meta.TYPE_REG,
 			  0, 0, 0, 500L, 1, 2, 3, 4 );
 
 		BodyFile b1 = new BodyFile();
@@ -138,7 +138,7 @@ public class BodyFileAlgebraTest extends junit.framework.TestCase {
 	public void testUnchangedFiles() throws Exception {
 
 		BodyFile.Record r1 = new BodyFile.Record
-			( null, "/some/path", 1L, Name.TYPE_REG, Meta.TYPE_REG,
+			( null, "/some/path", 1L, 0, 0, Name.TYPE_REG, Meta.TYPE_REG,
 			  0, 0, 0, 500L, 1, 2, 3, 4 );
 		BodyFile b1 = new BodyFile();
 		b1.add( r1 );
@@ -155,13 +155,13 @@ public class BodyFileAlgebraTest extends junit.framework.TestCase {
 		assertTrue( bf4.size() == 1 );
 
 		BodyFile.Record r2 = new BodyFile.Record
-			( null, "/some/path", 1L, Name.TYPE_REG, Meta.TYPE_REG,
+			( null, "/some/path", 1L, 0, 0, Name.TYPE_REG, Meta.TYPE_REG,
 			  0, 0, 0, 500L, 111, 222, 3, 4 );
 		b1.add( r2 );
 		
 		// different in 1+ fields to r2
 		BodyFile.Record r3 = new BodyFile.Record
-			( null, "/some/path", 1L, Name.TYPE_REG, Meta.TYPE_REG,
+			( null, "/some/path", 1L, 0, 0, Name.TYPE_REG, Meta.TYPE_REG,
 			  0, 0, 0, 500L, 1, 2, 333, 444 );
 		b2.add( r3 );
 		
@@ -178,7 +178,7 @@ public class BodyFileAlgebraTest extends junit.framework.TestCase {
 	public void testSomehowChangedFiles() throws Exception {
 
 		BodyFile.Record r1 = new BodyFile.Record
-			( null, "/some/path", 1L, Name.TYPE_REG, Meta.TYPE_REG,
+			( null, "/some/path", 1L, 0, 0, Name.TYPE_REG, Meta.TYPE_REG,
 			  0, 0, 0, 500L, 1, 2, 3, 4 );
 		BodyFile b1 = new BodyFile();
 		b1.add( r1 );
@@ -186,7 +186,7 @@ public class BodyFileAlgebraTest extends junit.framework.TestCase {
 		BodyFile b2 = new BodyFile();
 		
 		BodyFile.Record r2 = new BodyFile.Record
-			( null, "/some/path", 1L, Name.TYPE_REG, Meta.TYPE_REG,
+			( null, "/some/path", 1L, 0, 0, Name.TYPE_REG, Meta.TYPE_REG,
 			  0, 0, 0, 500L, 1, 2, 3, 44 );
 		b2.add( r2 );
 		

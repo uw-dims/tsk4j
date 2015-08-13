@@ -1,14 +1,15 @@
-package edu.uw.apl.commons.sleuthkit.analysis;
+package edu.uw.apl.commons.tsk4j.digests;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.uw.apl.commons.sleuthkit.filesys.FileSystem;
+import edu.uw.apl.commons.tsk4j.filesys.FileSystem;
 
 /**
    A unary operator for BodyFile Record.  Much like a FileFilter, when
    applied to a BodyFile Record it either accepts it or not.  A filter
-   operation, reduces one set to a possibly (likely) smaller one.
+   operation, reduces one set (a BodyFile) to a possibly (likely)
+   smaller one (another BodyFile).
 */
    
 public class BodyFileUnaryOperator extends BodyFileOperator {

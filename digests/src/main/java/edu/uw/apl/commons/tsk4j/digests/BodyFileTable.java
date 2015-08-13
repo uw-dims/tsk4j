@@ -1,4 +1,4 @@
-package edu.uw.apl.commons.sleuthkit.analysis;
+package edu.uw.apl.commons.tsk4j.digests;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -17,6 +17,11 @@ import java.util.Date;
 import java.util.List;
 
 import java.text.SimpleDateFormat;
+
+/**
+ * @author Stuart Maclean
+ *
+ */
 
 /**
  * Present BodyFile.Record objects in Swing tabular form

@@ -1,4 +1,4 @@
-package edu.uw.apl.commons.sleuthkit.analysis;
+package edu.uw.apl.commons.tsk4j.digests;
 
 import java.io.File;
 
@@ -6,22 +6,21 @@ import java.util.concurrent.Semaphore;
 import java.awt.event.*;
 import javax.swing.*;
 
-import edu.uw.apl.commons.sleuthkit.filesys.FileSystem;
+import edu.uw.apl.commons.tsk4j.filesys.FileSystem;
 
 public class BodyFileTableTest extends junit.framework.TestCase {
 
 	protected void setUp() {
 		done = new Semaphore(0);
 	}
-
+	
 	public void testNuga2() throws Exception {
 		File f = new File( "data/nuga2.dd" );
 		if( !f.exists() ) {
 			return;
 		}
 		FileSystem fs = new FileSystem( f.getPath(), 63 );
-		boolean computeContentHash = false;
-		BodyFile bf = BodyFileBuilder.create( fs, computeContentHash );
+		BodyFile bf = BodyFileBuilder.create( fs, 0 );
 		BodyFileTable bft = new BodyFileTable( bf );
 		bft.setAutoCreateRowSorter( true );
 		JScrollPane p = new JScrollPane( bft );

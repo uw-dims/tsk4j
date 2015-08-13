@@ -1,9 +1,9 @@
-package edu.uw.apl.commons.sleuthkit.analysis;
+package edu.uw.apl.commons.tsk4j.digests;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import edu.uw.apl.commons.sleuthkit.filesys.FileSystem;
+import edu.uw.apl.commons.tsk4j.filesys.FileSystem;
 
 /**
    Given a regex pattern (which may have previously been formed via

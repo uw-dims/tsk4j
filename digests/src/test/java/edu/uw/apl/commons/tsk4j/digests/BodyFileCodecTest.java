@@ -1,4 +1,4 @@
-package edu.uw.apl.commons.sleuthkit.analysis;
+package edu.uw.apl.commons.tsk4j.digests;
 
 public class BodyFileCodecTest extends junit.framework.TestCase {
 

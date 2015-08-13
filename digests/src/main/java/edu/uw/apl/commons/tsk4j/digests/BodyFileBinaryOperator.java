@@ -1,15 +1,21 @@
-package edu.uw.apl.commons.sleuthkit.analysis;
+package edu.uw.apl.commons.tsk4j.digests;
+
 
 
 import java.util.List;
 
 /**
+ * @author Stuart Maclean
+ *
+ */
+
+/**
    A binary operator for BodyFile.Record.  Takes an Equals e object at
    construction, and when applied to records R1, R2, produces a
    boolean yes/no value based on e.  When coupled with the Choice
-   value, when the operator is applied to two sets of records (rather
-   than two individual records) it produces either set intersection or
-   asymmetic set difference.
+   value, when the operator is applied to two sets of records ,
+   i.e. two BodyFiles, (rather than two individual records) it
+   produces either set intersection or asymmetic set difference.
 */
    
 public class BodyFileBinaryOperator extends BodyFileOperator {

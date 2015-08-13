@@ -1,12 +1,12 @@
-package edu.uw.apl.commons.sleuthkit.analysis;
+package edu.uw.apl.commons.tsk4j.digests;
 
 import java.io.InputStream;
 
 import org.apache.commons.io.EndianUtils;
 
-import edu.uw.apl.commons.sleuthkit.filesys.Attribute;
-import edu.uw.apl.commons.sleuthkit.filesys.File;
-import edu.uw.apl.commons.sleuthkit.filesys.FileSystem;
+import edu.uw.apl.commons.tsk4j.filesys.Attribute;
+import edu.uw.apl.commons.tsk4j.filesys.File;
+import edu.uw.apl.commons.tsk4j.filesys.FileSystem;
 
 /**
    A unary operator which tests each BodyFile.Record to see if its main

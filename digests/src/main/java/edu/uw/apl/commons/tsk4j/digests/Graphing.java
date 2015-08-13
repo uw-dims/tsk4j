@@ -1,4 +1,4 @@
-package edu.uw.apl.commons.sleuthkit.analysis;
+package edu.uw.apl.commons.tsk4j.digests;
 
 import java.util.ArrayList;
 import java.util.Collections;

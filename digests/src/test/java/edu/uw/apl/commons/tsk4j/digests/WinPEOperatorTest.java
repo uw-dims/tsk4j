@@ -1,6 +1,7 @@
-package edu.uw.apl.commons.sleuthkit.analysis;
+package edu.uw.apl.commons.tsk4j.digests;
 
-import java.io.*;
+import java.io.File;
+import java.io.RandomAccessFile;
 
 public class WinPEOperatorTest extends junit.framework.TestCase {
 

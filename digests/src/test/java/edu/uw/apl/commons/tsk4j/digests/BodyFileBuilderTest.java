@@ -1,8 +1,8 @@
-package edu.uw.apl.commons.sleuthkit.analysis;
+package edu.uw.apl.commons.tsk4j.digests;
 
 import java.io.File;
 
-import edu.uw.apl.commons.sleuthkit.filesys.FileSystem;
+import edu.uw.apl.commons.tsk4j.filesys.FileSystem;
 
 public class BodyFileBuilderTest extends junit.framework.TestCase {
 
@@ -12,8 +12,8 @@ public class BodyFileBuilderTest extends junit.framework.TestCase {
 			return;
 		}
 		FileSystem fs = new FileSystem( f.getPath(), 63 );
-		boolean computeContentHash = false;
-		BodyFile bf = BodyFileBuilder.create( fs, computeContentHash );
+
+		BodyFile bf = BodyFileBuilder.create( fs, 0 );
 		fs.close();
 		for( BodyFile.Record r : bf.records() ) {
 			System.out.println( r );

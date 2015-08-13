@@ -1,4 +1,9 @@
-package edu.uw.apl.commons.sleuthkit.analysis;
+package edu.uw.apl.commons.tsk4j.digests;
+
+/**
+ * @author Stuart Maclean
+ *
+ */
 
 public abstract class BodyFileOperator {
 
