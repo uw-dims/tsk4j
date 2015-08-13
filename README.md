@@ -9,7 +9,7 @@ These Java bindings are not related to an existing effort described
 bindings are used more to populate Java objects from an SQL database of
 pre-acquired data.  The bindings described here are geared more to image
 and filesystems traversal as performed by the core sleuthkit C/C++
-code.  These bindings are thus just a Java veneer over libtsk, with
+code.  These bindings are essentially just a Java veneer over libtsk, with
 some additions.
 
 Motivation
@@ -74,17 +74,17 @@ LOCAL REPOSITORY
 ----------------
 
 The Maven artifacts built here themselves depend on the following
-existing Maven artifacts:
+existing Maven artifacts which are not (yet) available on a public
+Maven repo (like Maven Central):
 
-* edu.uw.apl.commons:native-lib-loader:jar:2.0.0
+* edu.uw.apl.commons:native-lib-loader:jar:2.1.0
 
-These artifacts are not currently available in binary form (e.g. they
-are not on Maven Central nor any other popular repo site).  Neither
-are they yet available in source form (on e.g. github).  
-
-Until either of these two conditions change, we are bundling these
-artifacts in a 'local Maven repo' at XXX.  The poms refer to this repo
-to resolve the build dependencies.  The local repo looks like this:
+The source for this Maven artifact is available on
+(github)[https://github.com/uw-dims/java-native-loader].  But to save
+the TSK4J user the chore of building the dependency, we are bundling
+these artifacts in a 'project-local Maven repo' at ./repository.  The
+poms refer to this repo to resolve the build dependencies.  The local
+repo looks like this:
 
 ```
 $ cd /path/to/tsk4j
@@ -96,17 +96,22 @@ $ tree .repository/
         `-- apl
             `-- commons
                 `-- native-lib-loader
-                    `-- 2.0.0
-                        |-- native-lib-loader-2.0.0.jar
-                        `-- native-lib-loader-2.0.0.pom
+                    `-- 2.1.0
+                        |-- native-lib-loader-2.1.0.jar
+                        `-- native-lib-loader-2.1.0.pom
 ```
 
 
 INSTALLATION
 ============
 
-Currently this codebase is organised as four Maven 'modules', with a
+Currently this codebase is organised as XXX Maven 'modules', with a
 parent pom at the root level.
+
+
+
+TO FINISH:
+
 
 * Module 1: the .  Java classes auto-generated from .xsd
 file set via xjc. xjc is bundled with recent JDK releases (1.6+). This
