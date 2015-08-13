@@ -73,8 +73,8 @@
   </dependencies>
 
   <profiles>
+    <!-- Canonicalise all 32-bit arch names to 'x86' -->
     <profile>
-      <!-- Canonicalise all 32-bit arch names to 'x86' -->
       <id>x86</id>
       <activation>
 	<os>
@@ -86,8 +86,31 @@
       </properties>
     </profile>
     <profile>
-      <!-- Canonicalise all 64-bit arch names to 'x86_64' -->
+      <id>i386</id>
+      <activation>
+	<os>
+	  <arch>i386</arch>
+	</os>
+      </activation>
+      <properties>
+	<arch>x86</arch>
+      </properties>
+    </profile>
+
+    <!-- Canonicalise all 64-bit arch names to 'x86_64' -->
+    <profile>
       <id>x86_64</id>
+      <activation>
+	<os>
+	  <arch>x86_64</arch>
+	</os>
+      </activation>
+      <properties>
+	<arch>x86_64</arch>
+      </properties>
+    </profile>
+    <profile>
+      <id>amd64</id>
       <activation>
 	<os>
 	  <arch>amd64</arch>
@@ -97,6 +120,12 @@
 	<arch>x86_64</arch>
       </properties>
     </profile>
+    <!--
+	The previous profile sets, to canonicalise arch names to that string
+	understood by java-native-loader, would be needed in ANY project
+	that uses java-native-loader, so might go in settings.xml ??
+    -->
+
     <profile>
       <id>tester</id>
       <properties>
