@@ -29,7 +29,7 @@ public class BodyFileTableModel extends AbstractTableModel {
 		case 2:
 			return r.inode;
 		case 3:
-			return r.formatType() + r.formatMode();
+			return r.formatType() + r.formatPerms();
 		case 4:
 			return r.uid;
 		case 5:

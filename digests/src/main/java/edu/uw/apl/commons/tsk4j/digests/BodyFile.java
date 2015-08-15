@@ -111,9 +111,15 @@ public class BodyFile {
 		   this is the actual 16-byte value, NOT the 32 char hexstring. We'll
 		   convert where necessary.
 
-		   @param name - e.g. the file name in a directory entry (extN) or
+		   @param path - e.g. the file name in a directory entry (extN) or
 		   MFT entry (NFTS)
 
+		   @param inode - inode in Unix FS, MFT entry in NTFS
+
+		   @param attrType - 0/unused for non-NTFS, MFT attribute type in NTFS
+
+		   @param attrID - 0/unused for non-NTFS, MFT attribute id in NTFS
+		   
 		   @param nameType - enum value as stored in directory entry
 		   (if applicable).  Typically 'd' for directory, 'r' for
 		   regular file, etc.
@@ -121,7 +127,7 @@ public class BodyFile {
 		   @param metaType - enum value as stored in inode.  Same value
 		   space as for filetype1.
 
-		   @param mode - permission bits
+		   @param perms - permission bits
 		   
 		   Following 4 times relate to Windows (from Carrier p 317)
 		   
@@ -148,19 +154,20 @@ public class BodyFile {
 		   or perms change
 		   
 		*/
-		Record( byte[] md5, String path, long inode, int type, int id,
-				int nameType, int metaType,	int mode,
+		Record( byte[] md5, String path,
+				long inode, int attrType, int attrID,
+				int nameType, int metaType,	int perms,
 				int uid, int gid,
 				long size,
 				int atime, int mtime, int ctime, int crtime) {
 			this.md5 = md5;
 			this.path = path;
 			this.inode = inode;
-			this.attrType = (short)type;
-			this.attrId = (short)id;
+			this.attrType = (short)attrType;
+			this.attrId = (short)attrID;
 			this.nameType = (byte)nameType;
 			this.metaType = (byte)metaType;
-			this.mode = mode;
+			this.perms = perms;
 			this.uid = uid;
 			this.gid = gid;
 			this.size = size;
@@ -180,8 +187,8 @@ public class BodyFile {
 				formatMetaType( metaType );
 		}
 		
-		public String formatMode() {
-			return formatMode( mode );
+		public String formatPerms() {
+			return BodyFileCodec.formatPerms( perms );
 		}
 		
 		/**
@@ -209,7 +216,7 @@ public class BodyFile {
 			pw.print( md5String() );
 			pw.print( "|" + path );
 			pw.print( "|" + inode );
-			pw.print( "|" + formatType() + formatMode() );
+			pw.print( "|" + formatType() + formatPerms() );
 			pw.print( "|" + uid );
 			pw.print( "|" + gid );
 			pw.print( "|" + size );
@@ -248,28 +255,6 @@ public class BodyFile {
 			}
 		}
 
-		static String formatMode( int mode ) {
-			StringBuilder sb = new StringBuilder( "---------" );
-			if( (mode & Meta.MODE_IRUSR) == Meta.MODE_IRUSR)
-				sb.setCharAt( 0, 'r' );
-			if( (mode & Meta.MODE_IWUSR) == Meta.MODE_IWUSR)
-				sb.setCharAt( 1, 'w' );
-			if( (mode & Meta.MODE_IXUSR) == Meta.MODE_IXUSR)
-				sb.setCharAt( 2, 'x' );
-			if( (mode & Meta.MODE_IRGRP) == Meta.MODE_IRGRP)
-				sb.setCharAt( 3, 'r' );
-			if( (mode & Meta.MODE_IWGRP) == Meta.MODE_IWGRP)
-				sb.setCharAt( 4, 'w' );
-			if( (mode & Meta.MODE_IXGRP) == Meta.MODE_IXGRP)
-				sb.setCharAt( 5, 'x' );
-			if( (mode & Meta.MODE_IROTH) == Meta.MODE_IROTH)
-				sb.setCharAt( 6, 'r' );
-			if( (mode & Meta.MODE_IWOTH) == Meta.MODE_IWOTH)
-				sb.setCharAt( 7, 'w' );
-			if( (mode & Meta.MODE_IXOTH) == Meta.MODE_IXOTH)
-				sb.setCharAt( 8, 'x' );
-			return sb.toString();
-		}
 
 		public int maxTime() {
 			return Math.max( atime, Math.max( mtime, Math.max
@@ -288,7 +273,7 @@ public class BodyFile {
 		public final short attrType, attrId;
 		
 		final public byte nameType, metaType;
-		final public int mode;
+		final public int perms;
 		
 		final public int uid, gid;
 		final public long size;

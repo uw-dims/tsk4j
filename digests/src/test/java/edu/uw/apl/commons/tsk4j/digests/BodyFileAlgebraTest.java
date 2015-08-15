@@ -138,8 +138,10 @@ public class BodyFileAlgebraTest extends junit.framework.TestCase {
 	public void testUnchangedFiles() throws Exception {
 
 		BodyFile.Record r1 = new BodyFile.Record
-			( null, "/some/path", 1L, 0, 0, Name.TYPE_REG, Meta.TYPE_REG,
-			  0, 0, 0, 500L, 1, 2, 3, 4 );
+			( null, "/some/path", 1L, 0, 0,
+			  Name.TYPE_REG, Meta.TYPE_REG, 0,
+			  0, 0, 500L,
+			  1, 2, 3, 4 );
 		BodyFile b1 = new BodyFile();
 		b1.add( r1 );
 
@@ -155,14 +157,18 @@ public class BodyFileAlgebraTest extends junit.framework.TestCase {
 		assertTrue( bf4.size() == 1 );
 
 		BodyFile.Record r2 = new BodyFile.Record
-			( null, "/some/path", 1L, 0, 0, Name.TYPE_REG, Meta.TYPE_REG,
-			  0, 0, 0, 500L, 111, 222, 3, 4 );
+			( null, "/some/path", 1L, 0, 0,
+			  Name.TYPE_REG, Meta.TYPE_REG, 0,
+			  0, 0, 500L,
+			  111, 222, 3, 4 );
 		b1.add( r2 );
 		
 		// different in 1+ fields to r2
 		BodyFile.Record r3 = new BodyFile.Record
-			( null, "/some/path", 1L, 0, 0, Name.TYPE_REG, Meta.TYPE_REG,
-			  0, 0, 0, 500L, 1, 2, 333, 444 );
+			( null, "/some/path", 1L, 0, 0,
+			  Name.TYPE_REG, Meta.TYPE_REG, 0,
+			  0, 0, 500L,
+			  1, 2, 333, 444 );
 		b2.add( r3 );
 		
 		BodyFile bf5 = BodyFileOperators.UNCHANGEDFILES.apply

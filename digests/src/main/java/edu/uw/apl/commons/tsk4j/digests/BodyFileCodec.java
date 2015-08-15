@@ -19,6 +19,8 @@ import java.io.Reader;
 
 import org.apache.commons.codec.binary.Hex;
 
+import edu.uw.apl.commons.tsk4j.filesys.Meta;
+
 /**
  * @author Stuart Maclean
  
@@ -71,7 +73,9 @@ public class BodyFileCodec {
 		Reader r = null;
 		try {
 			r = new FileReader( f );
-			return parse( r );
+			BodyFile result = parse( r );
+			result.setName( f.getPath() );
+			return result;
 		} finally {
 			r.close();
 		}
@@ -144,28 +148,35 @@ public class BodyFileCodec {
 			// skip past the '-' delimiter
 			typeS = typeS.substring(1);
 		}
-		int type = typeS == null ? 0 : Integer.parseInt( typeS );
+		int attrType = typeS == null ? 0 : Integer.parseInt( typeS );
 		String idS = m.group(5);
 		if( idS != null ) {
 			// skip past the '-' delimiter
 			idS = idS.substring(1);
 		}
-		int id = idS == null ? 0 : Integer.parseInt( idS );
+		int attrID = idS == null ? 0 : Integer.parseInt( idS );
 
 		/*
 		  Example mode string d/drwxr-xr-x.  Three sub-fields
-		  available.  filetype1 is file type as stored in
+		  available:
+
+		  1 d
+		  2 d
+		  3 rwxr-xr-x
+
+		  Field 1, 'd' in the example, is the file type as stored in
 		  directory entry, in this case d (directory).
-		  filetype2 is file type as stored in inode, in this
-		  case also d.  For an allocated file, should be same.
-		  perms is rest of the string, in this case rwxr-xr-x.
+
+		  Field 2, also 'd' in the example, is the file type as stored
+		  in inode. For an allocated file, should be same.
+
+		  Field 3, above, is the perms, in this case rwxr-xr-x.
 		*/
 		String modeS = m.group( 6 );
 		char ft1 = modeS.charAt(0);
 		char ft2 = modeS.charAt(2);
-		String perms = modeS.substring( 3 );
-		int mode = 0;
-		// TODO : parse perms
+		String permsS = modeS.substring( 3 );
+		int perms = parsePerms( permsS );
 		int uid = Integer.parseInt( m.group( 7 ) );
 		int gid = Integer.parseInt( m.group( 8 ) );
 									
@@ -176,12 +187,40 @@ public class BodyFileCodec {
 		int crtime = Integer.parseInt( m.group( 13 ) );
 
 		BodyFile.Record r = new BodyFile.Record
-			( md5, name, address, type, id,
-			  ft1, ft2, mode, uid, gid, size,
+			( md5, name, address, attrType, attrID,
+			  ft1, ft2, perms, uid, gid, size,
 			  atime, mtime, ctime, crtime );
 		return r;
 	}
 	
+			
+	static int parsePerms( String s ) {
+		int perms = 0;
+		for( int i = 0; i < PERM_CHARS.length; i++ ) {
+			if( s.charAt( i ) == PERM_CHARS[i] )
+				perms |= PERM_VALUES[i];
+		}
+		return perms;
+	}
+		
+	static String formatPerms( int perms ) {
+		StringBuilder sb = new StringBuilder( "---------" );
+		for( int i = 0; i < PERM_VALUES.length; i++ ) {
+			if( (perms & PERM_VALUES[i]) == PERM_VALUES[i] )
+				sb.setCharAt( i, PERM_CHARS[i] );
+		}
+		return sb.toString();
+	}
+	
+	static private final int[] PERM_VALUES = {
+		Meta.MODE_IRUSR, Meta.MODE_IWUSR, Meta.MODE_IXUSR,
+		Meta.MODE_IRGRP, Meta.MODE_IWGRP, Meta.MODE_IXGRP,
+		Meta.MODE_IROTH, Meta.MODE_IWOTH, Meta.MODE_IXOTH };
+	
+	static private final char[] PERM_CHARS = {
+		'r', 'w', 'x', 'r', 'w', 'x', 'r', 'w', 'x' };
+
+
 	/*
 	  The textual format of a BodyFile record.  Since the file name
 	  (first field on line) could contain '|', which also serves as

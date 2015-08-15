@@ -135,7 +135,7 @@ public class BodyFileOperators {
 					r1.inode == r2.inode &&
 					r1.nameType == r2.nameType &&
 					r1.metaType == r2.metaType &&
-					r1.mode == r2.mode &&
+					r1.perms == r2.perms &&
 					r1.uid == r2.uid &&
 					r1.gid == r2.gid &&
 					r1.size == r2.size &&
@@ -166,7 +166,7 @@ public class BodyFileOperators {
 					  r1.path.equals( r2.path ) &&
 					  r1.nameType == r2.nameType &&
 					  r1.metaType == r2.metaType &&
-					  r1.mode == r2.mode &&
+					  r1.perms == r2.perms &&
 					  r1.uid == r2.uid &&
 					  r1.gid == r2.gid &&
 					  r1.size == r2.size &&
@@ -192,7 +192,7 @@ public class BodyFileOperators {
 	static public final BodyFileUnaryOperator ISDIRECTORY =
 		new BodyFileUnaryOperator( "IsDir", ISDIRECTORYP );
 
-	static public final BodyFileUnaryOperator ISEXECUTABLE =
+	static public final BodyFileUnaryOperator ISWINEXECUTABLE =
 		new BodyFileUnaryOperator( "IsWinPE", WinPEOperator.WINPEP );
 }
 
