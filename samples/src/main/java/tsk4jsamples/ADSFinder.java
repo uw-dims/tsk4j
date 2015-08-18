@@ -1,30 +1,36 @@
 /**
- * Copyright © 2014, University of Washington
+ * Copyright © 2015, University of Washington
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
  *     * Redistributions of source code must retain the above copyright
  *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the University of Washington nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL UNIVERSITY OF WASHINGTON BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ *     * Redistributions in binary form must reproduce the above
+ *       copyright notice, this list of conditions and the following
+ *       disclaimer in the documentation and/or other materials provided
+ *       with the distribution.
+ *
+ *     * Neither the name of the University of Washington nor the names
+ *       of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written
+ *       permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL UNIVERSITY OF
+ * WASHINGTON BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package tsk4jsamples;
 
 import java.io.IOException;
@@ -35,16 +41,16 @@ import java.util.List;
 import org.apache.commons.cli.*;
 import org.apache.log4j.Logger;
 
-import edu.uw.apl.commons.sleuthkit.filesys.Attribute;
-import edu.uw.apl.commons.sleuthkit.filesys.FileSystem;
-import edu.uw.apl.commons.sleuthkit.filesys.File;
-import edu.uw.apl.commons.sleuthkit.filesys.Meta;
-import edu.uw.apl.commons.sleuthkit.filesys.MetaWalk;
-import edu.uw.apl.commons.sleuthkit.filesys.Name;
-import edu.uw.apl.commons.sleuthkit.filesys.WalkFile;
-import edu.uw.apl.commons.sleuthkit.base.Utils;
+import edu.uw.apl.commons.tsk4j.filesys.Attribute;
+import edu.uw.apl.commons.tsk4j.filesys.FileSystem;
+import edu.uw.apl.commons.tsk4j.filesys.File;
+import edu.uw.apl.commons.tsk4j.filesys.Meta;
+import edu.uw.apl.commons.tsk4j.filesys.MetaWalk;
+import edu.uw.apl.commons.tsk4j.filesys.WalkFile;
 
 /**
+   @author Stuart Maclean
+
    Walk an NTFS filesystem, looking for files with more than one $Data
    attribute.  These extra attributes are commonly called 'Alternate
    Data Streams'.  Such files are identified by their MFT entry having
@@ -53,9 +59,12 @@ import edu.uw.apl.commons.sleuthkit.base.Utils;
 
    For any such MFT entries found, print all such attributes in summary.
 
-   Note: currently walks the FS via metaWalk, so file NAMES not shown
+   Note: Currently walks the FS via metaWalk, so file NAMES not shown
    in the output.  Only meta ADDR (aka the inode/mft entry) shown.
    TODO: option to use dirWalk.
+
+   We accept various command line options to alter which files get visited.
+   These follow those same options as used in Sleuthkit's fls tool.
 */
 
 public class ADSFinder {
@@ -91,9 +100,10 @@ public class ADSFinder {
 		os.addOption( "v", false, "verbose" );
 		os.addOption( "D", false, "directories only" );
 		os.addOption( "F", false, "files only" );
+		os.addOption( "h", false, "help" );
 
-		final String USAGE =
-			"[-d] [-u] [-o offset] [-D] [-F] image";
+		final String USAGE = ADSFinder.class.getName() +
+			" [-h] [-d] [-u] [-o offset] [-D] [-F] image";
 		final String HEADER = "";
 		final String FOOTER = "";
 		
@@ -105,6 +115,11 @@ public class ADSFinder {
 			printUsage( os, USAGE, HEADER, FOOTER );
 			System.exit(1);
 		}
+		if( cl.hasOption( "h" ) ) {
+			printUsage( os, USAGE, HEADER, FOOTER );
+			System.exit(1);
+		}
+
 		directoriesOnly = cl.hasOption( "D" );
 		filesOnly = cl.hasOption( "F" );
 		deletedOnly = cl.hasOption( "d" );
@@ -138,6 +153,12 @@ public class ADSFinder {
 
 		MetaWalk.Callback cb = new MetaWalk.Callback() {
 				public int apply( WalkFile f ) {
+					/*
+					  Recall that f is closed once apply returns, so
+					  do NOT try to persist f in some list. Best you
+					  can do is grab a Proxy object, see API for
+					  WalkFile
+					*/
 					try {
 						process( f );
 						return MetaWalk.WALK_CONT;
@@ -174,8 +195,9 @@ public class ADSFinder {
 		List<Attribute> das = new ArrayList<Attribute>( as.size() );
 		for( Attribute a : as ) {
 			/*
-			  LOOK: Shouldn't we inspect $AttrDef (inode 4) instead
-			  of assuming that DATA attributes are numbered 128 ??
+			  LOOK: Shouldn't we first inspect MFT entry $AttrDef
+			  (inode 4) instead of assuming that DATA attributes are
+			  numbered 128 ??
 			*/
 			if( a.type() == 128 ) {
 				das.add( a );

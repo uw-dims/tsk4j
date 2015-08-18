@@ -31,23 +31,51 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package edu.uw.apl.commons.tsk4j.digests;
+package tsk4jsamples;
 
-import java.io.File;
-import java.io.RandomAccessFile;
+import java.io.IOException;
+import java.io.InputStream;
 
-public class WinPEOperatorTest extends junit.framework.TestCase {
+import edu.uw.apl.commons.tsk4j.image.Image;
+import edu.uw.apl.commons.tsk4j.base.Utils;
 
-	public void testTiny97() throws Exception {
-		File f = new File( "data/tiny97.exe" );
-		if( !f.exists() )
-			return;
-		RandomAccessFile raf = new RandomAccessFile( f, "r" );
-		byte[] ba = new byte[(int)f.length()];
-		raf.readFully( ba );
-		raf.close();
-		boolean b = WinPEOperator.isWinPE( ba );
-		assertTrue( b );
+/**
+   @author Stuart Maclean
+   
+   Open an image supplied in args[0]. e.g. /dev/sda or a disk image
+   file like foo.dd. Read the content and feed that content through an
+   MD5 derivation scheme.
+
+   Obviously you get the same result, and without any programming, via
+   a simple command line invocation:
+
+   $ md5sum /dev/sda
+
+   The point here is just give a flavor of tsk4j's Image and Utils
+   classes, and particulary how Image supports access to its data via
+   the familiar java.io.InputStream.
+*/
+
+public class ImageMD5 {
+
+	static public void main( String[] args ) {
+		if( args.length < 1 ) {
+			System.err.println( "Usage: " + ImageMD5.class.getName() +
+								" /path/to/image" );
+			System.exit(0);
+		}
+
+		String path = args[0];
+
+		try {
+			Image i = new Image( path );
+			InputStream is = i.getInputStream();
+			String md5 = Utils.md5sum( is );
+			is.close();
+			System.out.println( md5 );
+		} catch( Exception e ) {
+			System.err.println( e );
+		}
 	}
 }
 

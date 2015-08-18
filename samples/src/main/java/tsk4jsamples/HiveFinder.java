@@ -1,3 +1,36 @@
+/**
+ * Copyright © 2015, University of Washington
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *
+ *     * Redistributions in binary form must reproduce the above
+ *       copyright notice, this list of conditions and the following
+ *       disclaimer in the documentation and/or other materials provided
+ *       with the distribution.
+ *
+ *     * Neither the name of the University of Washington nor the names
+ *       of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written
+ *       permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL UNIVERSITY OF
+ * WASHINGTON BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package tsk4jsamples;
 
 import java.io.IOException;
@@ -7,20 +40,22 @@ import java.util.List;
 
 import org.apache.commons.cli.*;
 
-import edu.uw.apl.commons.sleuthkit.image.Image;
-import edu.uw.apl.commons.sleuthkit.filesys.Attribute;
-import edu.uw.apl.commons.sleuthkit.filesys.DirectoryWalk;
-import edu.uw.apl.commons.sleuthkit.filesys.FileSystem;
-import edu.uw.apl.commons.sleuthkit.filesys.Meta;
-import edu.uw.apl.commons.sleuthkit.filesys.Walk;
-import edu.uw.apl.commons.sleuthkit.filesys.WalkFile;
+import edu.uw.apl.commons.tsk4j.image.Image;
+import edu.uw.apl.commons.tsk4j.filesys.Attribute;
+import edu.uw.apl.commons.tsk4j.filesys.DirectoryWalk;
+import edu.uw.apl.commons.tsk4j.filesys.FileSystem;
+import edu.uw.apl.commons.tsk4j.filesys.Meta;
+import edu.uw.apl.commons.tsk4j.filesys.Walk;
+import edu.uw.apl.commons.tsk4j.filesys.WalkFile;
 
 /**
+ * @author Stuart Maclean
+ *
  * Walk an NTFS filesystem, looking for Data Attributes of files which
- * could be Windows Registry Hive files, i.e. the file content starts
- * with the string 'regf'.  This turns up way more files than you
- * might imagine.  Here's a sample result from an XP system (see how
- * the .LOG and .sav files also start regf??):
+ * could be Windows Registry Hive files.  We identify such files via
+ * their content starting with the string 'regf'.  This turns up way
+ * more files than you might imagine.  Here's a sample result from an
+ * XP system (see how the .LOG and .sav files also start regf??):
 
 Documents and Settings/apluw/Local Settings/Application Data/Microsoft/Windows/UsrClass.dat
 Documents and Settings/apluw/Local Settings/Application Data/Microsoft/Windows/UsrClass.dat.LOG
@@ -104,11 +139,12 @@ public class HiveFinder {
 
 	public void readArgs( String[] args ) {
 		Options os = new Options();
-		os.addOption( "o", true, "offset (sectors)" );
+		os.addOption( "o", true, "sector offset in larger image (0)" );
 		os.addOption( "v", false, "verbose" );
+		os.addOption( "h", false, "help" );
 
 		final String USAGE =
-			HiveFinder.class.getName() + " [-o offset] image";
+			HiveFinder.class.getName() + " [-h] [-o offset] [-v] image";
 		final String HEADER = "";
 		final String FOOTER = "";
 		
@@ -120,6 +156,11 @@ public class HiveFinder {
 			printUsage( os, USAGE, HEADER, FOOTER );
 			System.exit(1);
 		}
+		if( cl.hasOption( "h" ) ) {
+			printUsage( os, USAGE, HEADER, FOOTER );
+			System.exit(1);
+		}
+
 		verbose = cl.hasOption( "v" );
 		if( cl.hasOption( "o" ) ) {
 			String s = cl.getOptionValue( "o" );
@@ -147,6 +188,12 @@ public class HiveFinder {
 		FileSystem fs = new FileSystem( image.getPath(), offset );
 		DirectoryWalk.Callback cb = new DirectoryWalk.Callback() {
 				public int apply( WalkFile f, String path ) {
+					/*
+					  Recall that f is closed once apply returns, so
+					  do NOT try to persist f in some list. Best you
+					  can do is grab a Proxy object, see API for
+					  WalkFile
+					*/
 					try {
 						process( f, path );
 						return Walk.WALK_CONT;
@@ -166,7 +213,7 @@ public class HiveFinder {
 	   Process a single file from a filesystem walk.  We attempt to
 	   locate a $Data attribute (the default attribute) and compare
 	   the first four bytes (if sufficient length) with the string
-	   "regf".  A bit suggests that this file is a Windows Registry
+	   "regf".  A 'hit' suggests that this file is a Windows Registry
 	   Hive file.  We just print our 'hits' to stdout, we could also
 	   do something more elaborate.
 	*/

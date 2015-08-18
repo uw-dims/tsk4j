@@ -1,3 +1,36 @@
+/**
+ * Copyright © 2015, University of Washington
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *
+ *     * Redistributions in binary form must reproduce the above
+ *       copyright notice, this list of conditions and the following
+ *       disclaimer in the documentation and/or other materials provided
+ *       with the distribution.
+ *
+ *     * Neither the name of the University of Washington nor the names
+ *       of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written
+ *       permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL UNIVERSITY OF
+ * WASHINGTON BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package tsk4jsamples;
 
 import java.io.IOException;
@@ -6,21 +39,23 @@ import java.util.List;
 
 import org.apache.commons.cli.*;
 
-import edu.uw.apl.commons.sleuthkit.image.Image;
-import edu.uw.apl.commons.sleuthkit.volsys.VolumeSystem;
-import edu.uw.apl.commons.sleuthkit.volsys.Partition;
-import edu.uw.apl.commons.sleuthkit.base.Utils;
+import edu.uw.apl.commons.tsk4j.image.Image;
+import edu.uw.apl.commons.tsk4j.volsys.VolumeSystem;
+import edu.uw.apl.commons.tsk4j.volsys.Partition;
+import edu.uw.apl.commons.tsk4j.base.Utils;
 
 /**
+ * @author Stuart Maclean
+ *
  * Given an image file on args[0], locate its VolumeSystem V and its
- * allocated areas (its partitions).  Partitions hold file
+ * allocated areas (its partitions).  Partitions can hold file
  * systems. However, we are <b>not</b> interested here in the
  * partitions containing filesystems.  Instead, we inspect the space
  * <em>between</em> filesystems, and also before the first one and
- * after the last one.  These are the 'unallocated' areas of an image. If
- * we repeatedly hash these areas, using e.g. md5 or sha1, and save
- * the results, we can identify if/when an unallocated area is ever
- * written.
+ * after the last one.  These are the 'unallocated' areas of an
+ * image. If we repeatedly hash these areas, using e.g. md5 or sha1,
+ * and save the results, we can identify if/when an unallocated area
+ * is ever written.
  *
  * Why is this useful?
  *
@@ -39,10 +74,11 @@ import edu.uw.apl.commons.sleuthkit.base.Utils;
  * example, if the first 63 sectors of a disk are unallocated,
  * Sleuthkit will tell us this <b>and</b> tell us that the MBR, at
  * sector zero and just one sector long, also exists and is given its
- * status as a 'partition'.  So we can hash both the mbr by itself and
- * the 63-sector unallocated area too.
+ * own status as a 'partition'.  So we can hash both the mbr by itself
+ * and the 63-sector unallocated area too.
  *
- * @see edu.uw.apl.commons.sleuthkit.volsys.VolumeSystem
+ * @see edu.uw.apl.commons.tsk4j.volsys.Partition
+ * @see edu.uw.apl.commons.tsk4j.volsys.VolumeSystem
  */
 
 public class UnallocHash {
@@ -59,8 +95,8 @@ public class UnallocHash {
 	}
 
 	public UnallocHash() {
-		offset = 0;
 		image = null;
+		offset = 0;
 	}
 
 	static private void printUsage( Options os, String usage,
@@ -72,10 +108,11 @@ public class UnallocHash {
 
 	public void readArgs( String[] args ) {
 		Options os = new Options();
-		os.addOption( "o", true, "offset (sectors) of volume system in image" );
+		os.addOption( "o", true, "sector offset in larger image (0)" );
+		os.addOption( "h", false, "help" );
 
 		final String USAGE =
-			UnallocHash.class.getName() + " [-o offset] image";
+			UnallocHash.class.getName() + " [-h] [-o offset] image";
 		final String HEADER = "";
 		final String FOOTER = "";
 		
@@ -87,6 +124,11 @@ public class UnallocHash {
 			printUsage( os, USAGE, HEADER, FOOTER );
 			System.exit(1);
 		}
+		if( cl.hasOption( "h" ) ) {
+			printUsage( os, USAGE, HEADER, FOOTER );
+			System.exit(1);
+		}
+
 		if( cl.hasOption( "o" ) ) {
 			String s = cl.getOptionValue( "o" );
 			offset = Long.parseLong( s );
@@ -120,7 +162,7 @@ public class UnallocHash {
 			String md5 = Utils.md5sum( is );
 			is.close();
 
-			// Save to disk somehow.  We are just printing to stdout
+			// Save to disk somehow?  We are just printing to stdout for now
 			System.out.println( md5 );
 			System.out.println();
 		}

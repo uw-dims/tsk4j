@@ -1,3 +1,36 @@
+/**
+ * Copyright © 2015, University of Washington
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *
+ *     * Redistributions in binary form must reproduce the above
+ *       copyright notice, this list of conditions and the following
+ *       disclaimer in the documentation and/or other materials provided
+ *       with the distribution.
+ *
+ *     * Neither the name of the University of Washington nor the names
+ *       of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written
+ *       permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL UNIVERSITY OF
+ * WASHINGTON BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package tsk4jsamples;
 
 import java.io.File;
@@ -8,23 +41,29 @@ import java.util.List;
 import org.apache.commons.cli.*;
 import org.apache.log4j.Logger;
 
-import edu.uw.apl.commons.sleuthkit.filesys.Attribute;
-import edu.uw.apl.commons.sleuthkit.filesys.FileSystem;
-import edu.uw.apl.commons.sleuthkit.filesys.DirectoryWalk;
-import edu.uw.apl.commons.sleuthkit.filesys.Meta;
-import edu.uw.apl.commons.sleuthkit.filesys.Name;
-import edu.uw.apl.commons.sleuthkit.filesys.Run;
-import edu.uw.apl.commons.sleuthkit.filesys.Walk;
-import edu.uw.apl.commons.sleuthkit.filesys.WalkFile;
-import edu.uw.apl.commons.sleuthkit.base.Utils;
+import edu.uw.apl.commons.tsk4j.filesys.Attribute;
+import edu.uw.apl.commons.tsk4j.filesys.FileSystem;
+import edu.uw.apl.commons.tsk4j.filesys.DirectoryWalk;
+import edu.uw.apl.commons.tsk4j.filesys.Meta;
+import edu.uw.apl.commons.tsk4j.filesys.Name;
+import edu.uw.apl.commons.tsk4j.filesys.Run;
+import edu.uw.apl.commons.tsk4j.filesys.Walk;
+import edu.uw.apl.commons.tsk4j.filesys.WalkFile;
+import edu.uw.apl.commons.tsk4j.base.Utils;
 
 /**
-   Deriving the 'cost' of walking a file system.  We do NOT actually
-   read file content, just summarise how much it would 'cost' in terms
-   of files/attributes/runs/blocks/bytes read and therefore time
-   taken.  We derive
+   @author Stuart Maclean
+   
+   Deriving the 'cost' of walking a file system whose path is supplied
+   in args[0].  An example would be /dev/sda1, or /dev/sda with a
+   possible offset identified via the -o option.
 
-   total number of files visited
+   We don't actually read file content, just summarise how much it
+   would 'cost' to walk the filesystem in terms of
+   files/attributes/runs/blocks/bytes read and therefore time taken.
+   We derive
+
+   total number of files visited (regular files only, not directories)
 
    total number of attributes that would need to be read
 
@@ -33,6 +72,13 @@ import edu.uw.apl.commons.sleuthkit.base.Utils;
    total 'run seek' value, based on the 'seek distance' from one run to another.
 
    total number of blocks (and thus bytes) that would need to be read
+
+   This sample highlights the use of FileSystem.dirWalk and how the
+   user can supply an arbitrary callback routine, via implementations
+   of DirectoryWalk.Callback.  This mimics the underlying Sleuthkit's
+   own file system walk routine tsk_fs_dir_walk which also takes a
+   callback as parameter.
+   
 */
 
 public class WalkCost {
@@ -67,12 +113,13 @@ public class WalkCost {
 	
 	private void readArgs( String[] args ) throws Exception {
 		Options os = new Options();
-		os.addOption( "o", true, "sector offset in larger image" );
-		os.addOption( "i", true, "root inode" );
-		os.addOption( "v", false, "verbose" );
+		os.addOption( "o", true, "sector offset in larger image (0)" );
+		os.addOption( "i", true, "starting inode (root inode)" );
+		os.addOption( "v", false, "verbose (false)" );
+		os.addOption( "h", false, "help" );
 
 		final String USAGE =
-			"[-i inode] [-o offset] [-v] image";
+			"[-h] [-i inode] [-o offset] [-v] image";
 		final String HEADER = "";
 		final String FOOTER = "";
 		
@@ -84,11 +131,16 @@ public class WalkCost {
 			printUsage( os, USAGE, HEADER, FOOTER );
 			System.exit(1);
 		}
+		if( cl.hasOption( "h" ) ) {
+			printUsage( os, USAGE, HEADER, FOOTER );
+			System.exit(1);
+		}
+		
+		verbose = cl.hasOption( "v" );
 		if( cl.hasOption( "i" ) ) {
 			String s = cl.getOptionValue( "i" );
 			inode = Long.parseLong( s );
 		}
-		verbose = cl.hasOption( "v" );
 		if( cl.hasOption( "o" ) ) {
 			String s = cl.getOptionValue( "o" );
 			offset = Long.parseLong( s );
