@@ -12,6 +12,21 @@
   <version>413.3.0</version>
   <name>TSK4J: Armour Shell for BodyFile Manipulation/Visualization</name>
   
+  <repositories>
+    <!-- 
+    To locate our dependent artifacts which are not (yet) available at
+    Maven Central, we bundle them into this project-local repo
+    -->
+    <repository>
+      <id>tsk4j.local</id>
+      <name>tsk4j</name>
+      <url>file:${project.basedir}/../.repository</url>
+      <releases>
+	<updatePolicy>always</updatePolicy>
+      </releases>
+    </repository>
+  </repositories>
+
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
