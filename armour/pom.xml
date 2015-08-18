@@ -70,7 +70,7 @@
 	  <archive>
 	    <manifest>
 	      <addClasspath>true</addClasspath>
-	      <mainClass>edu.uw.apl.commons.tsk4j.armour.Main</mainClass>
+	      <mainClass>edu.uw.apl.commons.tsk4j.armour.Armour</mainClass>
 	    </manifest>
 	  </archive>
 	</configuration>
