@@ -49,7 +49,7 @@ package edu.uw.apl.commons.tsk4j.filesys;
    during that time.
 
    The Proxy classes, NameProxy and MetaProxy, preserve enough info
-   from the WalkFile so that a 'real' File can be later opened.  If
+   from the WalkFile so that the 'real' File can be later opened.  If
    you later need a full path to the open file, use the NameProxy.  If
    you just need its meta address, use the MetaProxy.
 
@@ -87,10 +87,10 @@ public class WalkFile extends File {
 	 */
 	@Override
 	protected void closeImpl() {
-		//		fs.heapBuffer.free();
 	}
 
 	public Proxy nameProxy( String path ) {
+		// LOOK: This cannot be right ??
 		return null;
 	}
 

@@ -54,7 +54,7 @@ import edu.uw.apl.commons.tsk4j.base.TSKInputStream;
  * File in its constructor and store the equivalent back pointer.
  *
  * LOOK: Is File really a suitable name for this class, given the
- * existence of java.io.File ??
+ * existence/ubiquity of java.io.File ??
  */
 
 public class File extends Closeable {

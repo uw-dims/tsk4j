@@ -47,17 +47,17 @@ import edu.uw.apl.commons.tsk4j.digests.*;
    additions/manipulations.
 */
 
-public class Main extends Shell {
+public class Armour extends Shell {
 
     static public void main( String[] args ) throws Exception {
-		Main main = new Main();
+		Armour main = new Armour();
 	   	main.readConfig();
 		main.readArgs( args );
 		main.start();
 		System.exit(0);
 	}
 
-	public Main() {
+	public Armour() {
 		log = Logger.getLogger( getClass() );
 		
 		// initial state, before any configuration...
