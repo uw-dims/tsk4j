@@ -20,7 +20,8 @@ Why use these bindings?
 * You prefer coding in Java over C (and thus likely prefer Maven over make).
 
 * You want to compose a larger application that needs Sleuthkit's
-  power but want to use existing Java libraries/codebases.
+  filesystem traversal power but want to use existing Java
+  libraries/codebases.
 
 * You do not need/want to store your results in SQL.
 
@@ -29,8 +30,10 @@ Why use these bindings?
 
 * The included 'digests' module is useful to you.
 
-* The included 'sample' programs (module) are useful to you.
+* The included 'sample' programs (own module) are useful to you.
 
+* You want to use or build upon the Armour tool, a method for
+  comparing BodyFiles and thus filesystem contents.
 
 PRE-REQUISITES
 --------------
@@ -42,7 +45,7 @@ Sun/Oracle's JDK works well, as does OpenJDK's JDK.
 The build is via Maven, a build and project management tool for Java
 artifacts. So Maven is required too.  All code dependencies are
 resolved by Maven. At time of writing (Mar 2015), the author uses
-Maven 3.2.5 on Ubuntu 12.04 LTS. See
+Maven 3.2.5 on both Ubuntu 12.04 LTS and Mint 17. See
 http://maven.apache.org/download.cgi for more details.
 
 To verify you are running suitable versions of Java and Maven, run
@@ -58,16 +61,108 @@ Default locale: en_US, platform encoding: UTF-8
 OS name: "linux", version: "2.6.32-73-generic", arch: "i386", family: "unix"
 ```
 
-INSTALL
--------
+If you wish to take on the task of compiling the native C parts for
+either MacOS or Windows platforms, you will need a suitable C compiler
+and make/build system.  These native parts are already built for
+Linux.
+
+BUILD
+-----
 
 ```
+$ cd /path/to/tsk4j
+
 $ mvn install
 
 $ mvn javadoc:aggregate
 ```
 
-The Javadoc APIs should then be available at ./target/site/apidocs
+The Javadoc APIs should then be available at ./target/site/apidocs.
+
+There are unit tests for some modules.  These are only run when the
+'tester' profile is activated.  If you want to run unit tests, try:
+
+```
+$ mvn test -Ptester
+```
+
+MODULES
+-------
+
+The tsk4j codebase is organised as four Maven 'modules', with a
+parent pom at the root level.  The modules are as follows
+
+# Core
+
+The primary tsk4j module, the one that wraps existing
+Sleuthkit C routines with their Java equivalents.  If you just want to
+write new filesystem traversal routines in Java, this module is the
+only artifact you need.  To build:
+
+```
+$ cd /path/to/tsk4j/core
+
+$ mvn install
+
+// Unit tests optional, need profile activation
+$ mvn test -Ptester
+```
+
+The core module is mostly a thin Java wrapper for libtsk.  Perhaps the
+one value-added feature is the ability to extract data from various
+objects via the familiar java.io.InputStream api.  An example:
+
+```
+InputStream is = new Image( "/dev/sda" ).getInputStream();
+```
+
+The following core tsk4j classes support the InputStream API:
+
+* [image.Image] (./core/src/main/java/edu/uw/apl/commons/tsk4j/image/Image.java)
+
+* [filesys.Attribute] (./core/src/main/java/edu/uw/apl/commons/tsk4j/filesys/Attribute.java)
+
+* [filesys.File] (./core/src/main/java/edu/uw/apl/commons/tsk4j/filesys/File.java)
+
+* volsys.Partition (./core/src/main/java/edu/uw/apl/commons/tsk4j/volsys/Partition.java)
+
+So far we have built the native parts of the core tsk4j module for
+Linux 32bit and Linux 64bit.  Still to do are MacOS and Windows
+builds.  We use the [Java Native Loader]
+(https://github.com/uw-dims/java-native-loader) framework to handle
+the split Java/C language build.
+
+# Digests
+
+TODO
+
+# Samples
+
+This module contains some sample programs built around the core tsk4j
+artifact.
+
+```
+$ cd /path/to/tsk4j/samples
+
+$ mvn package
+```
+
+Included are some Unix-style shell scripts to drive the sample program
+invocation, on Linux/MacOS at least, e.g:
+
+```
+$ ./adsfind /path/to/fileSystem
+
+$ ./hivefind /path/to/some/ntfsFilesystem
+
+$ ./pefind /path/to/some/ntfsFilesystem
+
+$ ./unallochash /dev/sda
+```
+
+# Armour
+
+TODO
 
 
 LOCAL REPOSITORY
@@ -75,16 +170,18 @@ LOCAL REPOSITORY
 
 The Maven artifacts built here themselves depend on the following
 existing Maven artifacts which are not (yet) available on a public
-Maven repo (like Maven Central):
+Maven repository (like Maven Central):
 
 * edu.uw.apl.commons:native-lib-loader:jar:2.1.0
 
-The source for this Maven artifact is available on
+* edu.uw.apl.commons:shell-base:jar:1.0
+
+The source for the first Maven artifact is available on
 (github)[https://github.com/uw-dims/java-native-loader].  But to save
-the TSK4J user the chore of building the dependency, we are bundling
-these artifacts in a 'project-local Maven repo' at ./repository.  The
-poms refer to this repo to resolve the build dependencies.  The local
-repo looks like this:
+the TSK4J user the chore of building and installing the dependencies,
+we are bundling these artifacts in a 'project-local Maven repo' at
+./repository.  The relevant poms refer to this repo to resolve the
+artifact dependencies.  The project-local repo looks like this:
 
 ```
 $ cd /path/to/tsk4j
@@ -99,69 +196,15 @@ $ tree .repository/
                     `-- 2.1.0
                         |-- native-lib-loader-2.1.0.jar
                         `-- native-lib-loader-2.1.0.pom
+                `-- shell-base
+                    `-- 1.0
+                        |-- shell-base-1.0.jar
+                        `-- shell-base-1.0.pom
 ```
 
+# Video/Slides
 
-INSTALLATION
-============
+Ideas related to this work were presented at the [OSDFCon]
+(http://www.osdfcon.org/2013-event/) workshop in 2013.  A local copy
+of the slides is also included [here](./doc/Maclean-OSDF2013-tsk4j.pdf).
 
-Currently this codebase is organised as XXX Maven 'modules', with a
-parent pom at the root level.
-
-
-
-TO FINISH:
-
-
-* Module 1: the .  Java classes auto-generated from .xsd
-file set via xjc. xjc is bundled with recent JDK releases (1.6+). This
-module includes some sample STIX  documents (from Mitre and elsewhere).
-See under jaxb/src/test/resources.
-
-
-
-Getting the xsd file set to build took some work. See
-[./jaxb/README.md](./jaxb/README.md) for more details.
-
-* Module 2: utils. Example routines for document authoring (writing)
-  and document ingesting (reading).  Authoring utilities are at
-  [HashComposers](./utils/src/main/java/edu/uw/apl/stix/utils/HashComposers.java).  Ingest utilities are at
-  [HashExtractors](./utils/src/main/java/edu/uw/apl/stix/utils/HashExtractors.java).
-
-* Module 3: cli.  Command line driver tools for invoking the utilities
-  above.  For authoring, see
-  [MD5Composer](./cli/src/main/java/edu/uw/apl/stix/cli/MD5Composer.java).
-  For ingesting, see
-  [MD5Extractor](./cli/src/main/java/edu/uw/apl/stix/cli/MD5Extractor.java).
-
-* Module 4: json.  Experimenting whether STIX Java objects can be
-  represented as JSON.  The basic answer is no, at least for the
-  complex STIX instance documents cited above. See the [json
-  sources](./json/src/main) and [json test
-  case](./json/src/test/java/edu/uw/apl/stix/json/SamplesTest.java) for
-  more details.
-
-
-To build:
-
-```
-$ cd stix-java
-
-$ mvn install
-```
-To then try out a bundled command line interface (cli) tool:
-```
-$ cd stix-java/cli
-
-$ ./stix.md5 ../jaxb/src/test/resources/APT1/Appendix_G_IOCs_Full.xml
-``` 
-
-The tool simply loads the supplied file and extracts any md5 hashes
-found in Indicators and/or Observables.  It should print a list of
-1797 md5 hashes to stdout. The stix.md5 file is a simple bash script
-driving the JVM invocation of the appropriate class.
-
-
-Observation: This whole jaxb lark is way too complicated. Just use grep!
-
-eof
