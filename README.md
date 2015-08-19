@@ -36,7 +36,7 @@ Why use these bindings?
 * You want to use or build upon the [Armour](./armour/src/main/java/edu/uw/apl/commons/tsk4j/armour/Armour.java). tool, a method for
   comparing BodyFiles and thus filesystem contents.
 
-PRE-REQUISITES
+Required Tools
 --------------
 
 This codebase is Java, and so needs a Java compiler system, aka a
@@ -67,8 +67,8 @@ either MacOS or Windows platforms, you will need a suitable C compiler
 and make/build system.  These native parts are already built for
 Linux.
 
-BUILD
------
+Build/Install
+------------
 
 ```
 $ cd /path/to/tsk4j
@@ -87,11 +87,19 @@ There are unit tests for some modules.  These are only run when the
 $ mvn test -Ptester
 ```
 
-MODULES
+Modules
 -------
 
 The tsk4j codebase is organised as four Maven 'modules', with a
 parent pom at the root level.  The modules are as follows
+
+* core
+
+* samples
+
+* digests
+
+* armour
 
 # Core
 
@@ -133,14 +141,11 @@ builds.  We use the [Java Native Loader]
 (https://github.com/uw-dims/java-native-loader) framework to handle
 the split Java/C language build.
 
-# Digests
-
-TODO
 
 # Samples
 
 This module contains some sample programs built around the core tsk4j
-artifact.
+artifact, which is a dependency of the sample module:
 
 ```
 $ cd /path/to/tsk4j/samples
@@ -152,14 +157,22 @@ Included are some Unix-style shell scripts to drive the sample program
 invocation, on Linux/MacOS at least, e.g:
 
 ```
+// Find files with Alternate Data Streams (NTFS only)
 $ ./adsfind /path/to/fileSystem
 
+// Find all Windows Registry Hive Files (NTFS only)
 $ ./hivefind /path/to/some/ntfsFilesystem
 
+// Find all Windows PE Executables (NTFS only)
 $ ./pefind /path/to/some/ntfsFilesystem
 
+// Locate all unused parts of an image and hash content of each
 $ ./unallochash /dev/sda
 ```
+
+# Digests
+
+TODO
 
 # Armour
 
@@ -205,9 +218,11 @@ $ ./armour sda1.bf sda2.bf
 
 Armour is not limited to interactive use.  Like any good shell, its
 invocation can be 'batch-driven', so might be placed in some larger
-workflow (perhaps a Cuckoo Sandbox pipeline?):
+workflow.  An example is the Cuckoo Sandbox system, with the bodyfiles
+contain the before and after disk contents associated with some
+malware sample run:
 
-$ armour -c "op 2 1 2; cat 3" sda1.bf sda2.bf > diffs.bf
+$ ./armour -c "op 2 1 2; cat 3" sda1.bf sda2.bf > diffs.bf
 
 
 TO FINISH
