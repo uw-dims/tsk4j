@@ -33,7 +33,7 @@ Why use these bindings?
 
 * The included sample programs are useful to you.
 
-* You want to use or build upon the [Armour](./armour/src/main/java/edu/uw/apl/commons/tsk4j/armour/Armour.java). tool, a method for
+* You want to use or build upon the [Armour](./armour/src/main/java/edu/uw/apl/commons/tsk4j/armour/Armour.java) tool, a method for
   comparing BodyFiles and thus filesystem contents.
 
 Required Tools
