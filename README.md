@@ -243,7 +243,7 @@ The source for the first Maven artifact is available on [github]
 (https://github.com/uw-dims/java-native-loader).  But to save the
 TSK4J user the chore of building and installing the dependencies, we
 are bundling these artifacts in a 'project-local Maven repo' at
-[./repository](./repository).  The relevant poms refer to this repo to
+[./.repository](./.repository).  The relevant poms refer to this repo to
 resolve the artifact dependencies.  The project-local repo looks like
 this:
 
