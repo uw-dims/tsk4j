@@ -218,9 +218,10 @@ $ ./armour sda1.bf sda2.bf
 
 Armour is not limited to interactive use.  Like any good shell, its
 invocation can be 'batch-driven', so might be placed in some larger
-workflow.  An example is the Cuckoo Sandbox system, with the bodyfiles
-contain the before and after disk contents associated with some
-malware sample run:
+workflow.  An example might be its usage in the
+[Cuckoo Sandbox](http://www.cuckoosandbox.org) workflow, with two
+bodyfiles containing the before and after disk contents associated
+with some malware sample run:
 
 $ ./armour -c "op 2 1 2; cat 3" sda1.bf sda2.bf > diffs.bf
 
