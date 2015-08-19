@@ -125,7 +125,7 @@ The following core tsk4j classes support the InputStream API:
 
 * [filesys.File] (./core/src/main/java/edu/uw/apl/commons/tsk4j/filesys/File.java)
 
-* volsys.Partition (./core/src/main/java/edu/uw/apl/commons/tsk4j/volsys/Partition.java)
+* [volsys.Partition] (./core/src/main/java/edu/uw/apl/commons/tsk4j/volsys/Partition.java)
 
 So far we have built the native parts of the core tsk4j module for
 Linux 32bit and Linux 64bit.  Still to do are MacOS and Windows
@@ -224,7 +224,7 @@ Maven repository (like Maven Central):
 * edu.uw.apl.commons:shell-base:jar:1.0
 
 The source for the first Maven artifact is available on
-(github)[https://github.com/uw-dims/java-native-loader].  But to save
+[github] (https://github.com/uw-dims/java-native-loader).  But to save
 the TSK4J user the chore of building and installing the dependencies,
 we are bundling these artifacts in a 'project-local Maven repo' at
 ./repository.  The relevant poms refer to this repo to resolve the
