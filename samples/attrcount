@@ -1,0 +1,7 @@
+#!/bin/sh
+
+./samples.base AttrCounter "$@"
+
+# eof
+
+

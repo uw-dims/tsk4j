@@ -70,7 +70,7 @@ public class Armour extends Shell {
 					list();
 				}
 			} );
-		commandHelp( "ls", "List bodyfile record lists" );
+		commandHelp( "ls", "List bodyfiles" );
 		
 		addCommand( "tb", "(\\d+)", new Lambda() {
 				public void apply( String[] args ) throws IOException {
@@ -84,7 +84,7 @@ public class Armour extends Shell {
 				}
 			} );
 		commandHelp( "tb", "n",
-					 "Show table for selected record list" );
+					 "Show table for selected bodyfile" );
 		
 		addCommand( "ts", "(\\d+)", new Lambda() {
 				public void apply( String[] args ) throws IOException {
@@ -98,7 +98,7 @@ public class Armour extends Shell {
 				}
 			} );
 		commandHelp( "ts", "n",
-					 "Show time series for selected record list" );
+					 "Show time series for selected bodyfile" );
 		
 		addCommand( "op", "(\\d+)\\s+(\\d+)(?:\\s+(\\d+))?", new Lambda() {
 				public void apply( String[] args ) throws IOException {
@@ -152,7 +152,7 @@ public class Armour extends Shell {
 				}
 			} );
 		commandHelp( "op", "o n m?",
-					 "Apply op indexed o to selected record list n (unary op) or n,m (binary op)" );
+					 "Apply op indexed o to selected bodyfile(s) n (unary op) or n,m (binary op)" );
 		
 		addCommand( "ops", new Lambda() {
 				public void apply( String[] args ) {
@@ -187,10 +187,12 @@ public class Armour extends Shell {
 		Runnable r = new Runnable() {
 				public void run() {
 					JFrame jf = new JFrame( title );
-					jf.addWindowListener( new WindowAdapter() {
+					/*
+					  jf.addWindowListener( new WindowAdapter() {
 							public void windowClosing( WindowEvent we ) {
 							}
 						} );
+					*/
 					jf.setContentPane( p );
 					jf.pack();
 					jf.setVisible( true );
@@ -200,12 +202,7 @@ public class Armour extends Shell {
 	}
 
 	private void timeSeries( BodyFile bf ) {
-		/*
-		  final RecordList l = recordLists.get(sel-1);
-		List<BodyFile.Record> sorted = new ArrayList<BodyFile.Record>( l.records );
-		Collections.sort( sorted, BodyFile.CMPMTIME );
-		*/
-		JFreeChart chart = null;//Graphing.createChart( bf );
+		JFreeChart chart = Graphing.mTimeSeriesPlot( bf );
         final ChartPanel chartPanel = new ChartPanel(chart, false);
         chartPanel.setPreferredSize(new java.awt.Dimension(1024, 768));
 		Runnable r = new Runnable() {

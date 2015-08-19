@@ -1,30 +1,4 @@
-/**
- * Copyright © 2014, University of Washington
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the University of Washington nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL UNIVERSITY OF WASHINGTON BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-package edu.uw.apl.commons.sleuthkit.cli;
+package tsk4jsamples;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,23 +7,26 @@ import java.util.List;
 import org.apache.commons.cli.*;
 import org.apache.log4j.Logger;
 
-import edu.uw.apl.commons.sleuthkit.filesys.Attribute;
-import edu.uw.apl.commons.sleuthkit.filesys.FileSystem;
-import edu.uw.apl.commons.sleuthkit.filesys.File;
-import edu.uw.apl.commons.sleuthkit.filesys.DirectoryWalk;
-import edu.uw.apl.commons.sleuthkit.filesys.Meta;
-import edu.uw.apl.commons.sleuthkit.filesys.Name;
-import edu.uw.apl.commons.sleuthkit.filesys.Run;
-import edu.uw.apl.commons.sleuthkit.filesys.Walk;
-import edu.uw.apl.commons.sleuthkit.filesys.WalkFile;
-import edu.uw.apl.commons.sleuthkit.base.Utils;
+import edu.uw.apl.commons.tsk4j.filesys.Attribute;
+import edu.uw.apl.commons.tsk4j.filesys.FileSystem;
+import edu.uw.apl.commons.tsk4j.filesys.File;
+import edu.uw.apl.commons.tsk4j.filesys.DirectoryWalk;
+import edu.uw.apl.commons.tsk4j.filesys.Meta;
+import edu.uw.apl.commons.tsk4j.filesys.Name;
+import edu.uw.apl.commons.tsk4j.filesys.Run;
+import edu.uw.apl.commons.tsk4j.filesys.Walk;
+import edu.uw.apl.commons.tsk4j.filesys.WalkFile;
+import edu.uw.apl.commons.tsk4j.base.Utils;
 
 /**
+   @author Stuart Maclean
+   
    'Distances', in blocks, between the first run of the default
    attribute of each (regular, allocated) file in a file system.
 
    Gives a clue as to the 'fragmentation' or at least 'disk head
-   movement' needed to read the file content of all files.
+   movement' needed to read the file content of all files in the
+   filesystem.
 */
 
 public class AttrDis {
@@ -81,10 +58,12 @@ public class AttrDis {
 	
 	private void readArgs( String[] args ) throws Exception {
 		Options os = new Options();
-		os.addOption( "o", true, "offset (sectors)" );
-		os.addOption( "v", false, "verbose" );
+		os.addOption( "o", true, "sector offset in larger image (0)" );
+		os.addOption( "v", false, "verbose (false)" );
+		os.addOption( "h", false, "help" );
 
-		final String USAGE = "[-o offset] [-v] image";
+		final String USAGE = AttrDis.class.getName() +
+			" [-h] [-o offset] [-v] image";
 		final String HEADER = "";
 		final String FOOTER = "";
 		
@@ -96,6 +75,11 @@ public class AttrDis {
 			printUsage( os, USAGE, HEADER, FOOTER );
 			System.exit(1);
 		}
+		if( cl.hasOption( "h" ) ) {
+			printUsage( os, USAGE, HEADER, FOOTER );
+			System.exit(1);
+		}
+
 		verbose = cl.hasOption( "v" );
 		if( cl.hasOption( "o" ) ) {
 			String s = cl.getOptionValue( "o" );
@@ -153,6 +137,7 @@ public class AttrDis {
 		if( m.type() != Meta.TYPE_REG )
 			return;
 		Attribute a = f.getAttribute();
+
 		// Seen some weirdness where an allocated file has no attribute ??
 		if( a == null )
 			return;

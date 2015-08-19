@@ -56,6 +56,11 @@
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
     </dependency>
+    <dependency>
+      <groupId>jline</groupId>
+      <artifactId>jline</artifactId>
+      <version>1.0</version>
+    </dependency>
   </dependencies>
   
   <build>
@@ -70,7 +75,9 @@
 	  <archive>
 	    <manifest>
 	      <addClasspath>true</addClasspath>
-	      <mainClass>edu.uw.apl.commons.tsk4j.armour.Armour</mainClass>
+	      <mainClass>
+		edu.uw.apl.commons.tsk4j.armour.ConsoleRunner
+	      </mainClass>
 	    </manifest>
 	  </archive>
 	</configuration>
