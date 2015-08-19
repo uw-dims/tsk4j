@@ -34,6 +34,7 @@
 package edu.uw.apl.commons.tsk4j.digests;
 
 import java.io.File;
+import java.io.StringWriter;
 
 public class BodyFileCodecTest extends junit.framework.TestCase {
 
@@ -85,6 +86,27 @@ public class BodyFileCodecTest extends junit.framework.TestCase {
 		BodyFile bf = BodyFileCodec.parse( f );
 		System.out.println( f + " has " + bf.size() + " records" );
 	}
+
+	public void testRoundTripLiteral() throws Exception {
+		String s1 = 
+			"7939d19f093143da0fde503ccf0c5a28|/bin/aconnect|1441814|r/rrwxr-xr-x|0|0|18984|1301530138|1301525515|1301525515|1301525515\n";
+		System.out.println( s1 );
+
+		BodyFile bf = BodyFileCodec.parse( s1 );
+		assertTrue( bf.size() == 1 );
+		BodyFile.Record r0 = bf.records().get(0);
+		assertTrue( r0.size == 18984 );
+		assertTrue( r0.attrType == 0 );
+
+		StringWriter sw = new StringWriter();
+		BodyFileCodec.format( bf, sw );
+		String s2 = sw.toString();
+		System.out.println( s2 );
+
+		assertEquals( s1, s2 );
+	}
+
+
 }
 
 // eof

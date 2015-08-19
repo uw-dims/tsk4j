@@ -200,6 +200,9 @@ public class BodyFile {
 			this.attrId = (short)attrID;
 			this.nameType = (byte)nameType;
 			this.metaType = (byte)metaType;
+
+			//			System.out.println( this.nameType + " " + this.metaType );
+			
 			this.perms = perms;
 			this.uid = uid;
 			this.gid = gid;
@@ -216,8 +219,8 @@ public class BodyFile {
 		}
 
 		public String formatType() {
-			return formatNameType( nameType ) + "/" +
-				formatMetaType( metaType );
+			return BodyFileCodec.formatNameType( nameType ) + "/" +
+				BodyFileCodec.formatMetaType( metaType );
 		}
 		
 		public String formatPerms() {

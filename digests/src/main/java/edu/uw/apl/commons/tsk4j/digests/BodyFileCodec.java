@@ -46,12 +46,13 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.io.Reader;
 
 import org.apache.commons.codec.binary.Hex;
 
+import edu.uw.apl.commons.tsk4j.filesys.Name;
 import edu.uw.apl.commons.tsk4j.filesys.Meta;
 
 /**
@@ -207,7 +208,9 @@ public class BodyFileCodec {
 		*/
 		String modeS = m.group( 6 );
 		char ft1 = modeS.charAt(0);
+		int nt = parseNameType( ft1 );
 		char ft2 = modeS.charAt(2);
+		int mt = parseMetaType( ft2 );
 		String permsS = modeS.substring( 3 );
 		int perms = parsePerms( permsS );
 		int uid = Integer.parseInt( m.group( 7 ) );
@@ -221,12 +224,45 @@ public class BodyFileCodec {
 
 		BodyFile.Record r = new BodyFile.Record
 			( md5, name, address, attrType, attrID,
-			  ft1, ft2, perms, uid, gid, size,
+			  nt, mt, perms, uid, gid, size,
 			  atime, mtime, ctime, crtime );
 		return r;
 	}
 	
-			
+	static int parseNameType( char ch ) {
+		for( int i = 0; i < NAME_TYPE_CHARS.length; i++ ) {
+			if( ch == NAME_TYPE_CHARS[i] )
+				return NAME_TYPE_VALUES[i];
+		}
+		// LOOK: what value should this be ??
+		return 0;
+	}
+
+	static char formatNameType( int type ) {
+		for( int i = 0; i < NAME_TYPE_VALUES.length; i++ ) {
+			if( type == NAME_TYPE_VALUES[i] )
+				return NAME_TYPE_CHARS[i];
+		}
+		return '?';
+	}
+	
+	static int parseMetaType( char ch ) {
+		for( int i = 0; i < META_TYPE_CHARS.length; i++ ) {
+			if( ch == META_TYPE_CHARS[i] )
+				return META_TYPE_VALUES[i];
+		}
+		// LOOK: what value should this be ??
+		return 0;
+	}
+
+	static char formatMetaType( int type ) {
+		for( int i = 0; i < META_TYPE_VALUES.length; i++ ) {
+			if( type == META_TYPE_VALUES[i] )
+				return META_TYPE_CHARS[i];
+		}
+		return '?';
+	}
+	
 	static int parsePerms( String s ) {
 		int perms = 0;
 		for( int i = 0; i < PERM_CHARS.length; i++ ) {
@@ -235,7 +271,8 @@ public class BodyFileCodec {
 		}
 		return perms;
 	}
-		
+
+	
 	static String formatPerms( int perms ) {
 		StringBuilder sb = new StringBuilder( "---------" );
 		for( int i = 0; i < PERM_VALUES.length; i++ ) {
@@ -244,7 +281,30 @@ public class BodyFileCodec {
 		}
 		return sb.toString();
 	}
-	
+
+	/*
+	  LOOK: This is a identity mapping, since the constants are valued
+	  0 - 10.  Nevertheless, that may always hold, so a mapping is
+	  worthy.
+	*/
+	static private final int[] NAME_TYPE_VALUES = {
+		Name.TYPE_UNDEF, Name.TYPE_FIFO, Name.TYPE_CHR,
+		Name.TYPE_DIR, Name.TYPE_BLK, Name.TYPE_REG,
+		Name.TYPE_LNK, Name.TYPE_SOCK, Name.TYPE_SHAD,
+		Name.TYPE_WHT, Name.TYPE_VIRT };
+
+	static private final char[] NAME_TYPE_CHARS = {
+		'?', 'f', 'c', 'd', 'b', 'r', 'l', 's', '?', 'w', 'v' };
+
+	static private final int[] META_TYPE_VALUES = {
+		Meta.TYPE_REG, Meta.TYPE_DIR, Meta.TYPE_FIFO,
+		Meta.TYPE_CHR, Meta.TYPE_BLK, Meta.TYPE_LNK,
+		Meta.TYPE_SHAD, Meta.TYPE_SOCK, Meta.TYPE_WHT,
+		Meta.TYPE_VIRT };
+
+	static private final char[] META_TYPE_CHARS = {
+		'r', 'd', 'f', 'c', 'b', 'l', '?', 's', 'w', 'v' };
+
 	static private final int[] PERM_VALUES = {
 		Meta.MODE_IRUSR, Meta.MODE_IWUSR, Meta.MODE_IXUSR,
 		Meta.MODE_IRGRP, Meta.MODE_IWGRP, Meta.MODE_IXGRP,
@@ -281,6 +341,8 @@ public class BodyFileCodec {
 		UNIXTIMERE + "\\|" + UNIXTIMERE;
 
 	static Pattern REGEX = Pattern.compile( REGEXS );
+
+	static private final String LS = System.lineSeparator();
 }
 
 // eof
