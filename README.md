@@ -27,7 +27,7 @@ Why use these bindings?
 * You do not need/want to store your results in SQL.
 
 * You want a fast result to a simple task such as 'locate all PE
-  executables' (see this [sample](./samples/src/main/java/tsk4jsamples/PEFinder.java).
+  executables' (see this [sample](./samples/src/main/java/tsk4jsamples/PEFinder.java)).
 
 * The included 'digests' module is useful to you.
 
