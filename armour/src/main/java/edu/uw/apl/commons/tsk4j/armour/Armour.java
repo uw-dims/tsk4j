@@ -72,6 +72,20 @@ public class Armour extends Shell {
 			} );
 		commandHelp( "ls", "List bodyfiles" );
 		
+		addCommand( "cat", "(\\d+)", new Lambda() {
+				public void apply( String[] args ) throws IOException {
+					int sel = Integer.parseInt( args[1] );
+					if( sel < 1 || sel > bodyFiles.size() ) {
+						System.out.println( "Out-of-range: " + sel );
+						return;
+					}
+					BodyFile bf = bodyFiles.get(sel-1);
+					cat( bf );
+				}
+			} );
+		commandHelp( "cat", "n",
+					 "Cat selected bodyfile to stdout" );
+
 		addCommand( "tb", "(\\d+)", new Lambda() {
 				public void apply( String[] args ) throws IOException {
 					int sel = Integer.parseInt( args[1] );
@@ -179,6 +193,10 @@ public class Armour extends Shell {
 		}
 	}
 	
+	public void cat( BodyFile bf ) {
+		BodyFileCodec.format( bf, System.out );
+	}
+	
 	public void table( BodyFile bf, int num ) {
 		BodyFileTable t = new BodyFileTable( bf );
 		t.setAutoCreateRowSorter( true );
@@ -216,49 +234,6 @@ public class Armour extends Shell {
 		SwingUtilities.invokeLater( r );
 	}
 
-	/*				
-	private void differenceOLD( int i2, int i1 ) {
-		RecordList l1 = recordLists.get(i1-1);
-		List<BodyFile.Record> rs1 = l1.records;
-		BodyFile.Record max1 = Operations.maxMTime( rs1 );
-		System.out.println( l1.source + " " + max1 );
-		RecordList l2 = recordLists.get(i2-1);
-		List<BodyFile.Record> rs2 = l2.records;
-		List<BodyFile.Record> rsNew = Operations.filter
-			( rs2, new Operations.MCTimeGT( max1.mtime ) );
-		System.out.println( rsNew.size() );
-		String source = "difference(" + l2.source + "," + l1.source + ")";
-		RecordList l = new RecordList( rsNew, source );
-		recordLists.add(l);
-		list();
-	}
-
-	private void difference( int i2, int i1 ) {
-		RecordList l1 = recordLists.get(i1-1);
-		List<BodyFile.Record> rs1 = l1.records;
-		RecordList l2 = recordLists.get(i2-1);
-		List<BodyFile.Record> rs2 = l2.records;
-		List<BodyFile.Record> rsNew = Operations.difference( rs2, rs1 );
-		System.out.println( rsNew.size() );
-		String source = "difference(" + l2.source + "," + l1.source + ")";
-		RecordList l = new RecordList( rsNew, source );
-		recordLists.add(l);
-		list();
-	}
-	
-	private void new_( int i2, int i1 ) {
-		RecordList l1 = recordLists.get(i1-1);
-		List<BodyFile.Record> rs1 = l1.records;
-		RecordList l2 = recordLists.get(i2-1);
-		List<BodyFile.Record> rs2 = l2.records;
-		List<BodyFile.Record> rsNew = Operations.new_( rs2, rs1 );
-		System.out.println( rsNew.size() );
-		String source = "new(" + l2.source + "," + l1.source + ")";
-		RecordList l = new RecordList( rsNew, source );
-		recordLists.add(l);
-		list();
-	}
-	*/
 
 	public void readConfig() throws Exception {
 		String uhS = System.getProperty( "user.home" );
@@ -297,10 +272,36 @@ public class Armour extends Shell {
 	public void readArgs( String[] args ) throws Exception {
 		Options os = new Options();
 		os.addOption( "c", true, "command string" );
+		os.addOption( "f", true, "command file" );
+		os.addOption( "h", false, "help" );
+
+		final String USAGE = Armour.class.getName() +
+			" [-h] [-c cmdLiteral] [-f cmdFile] /path/to/bodyFile+";
+		final String HEADER = "";
+		final String FOOTER = "";
+
 		CommandLineParser clp = new PosixParser();
-		CommandLine cl = clp.parse( os, args );
+		CommandLine cl = null;
+		try {
+			cl = clp.parse( os, args );
+		} catch( ParseException pe ) {
+			printUsage( os, USAGE, HEADER, FOOTER );
+			System.exit(1);
+		}
+		if( cl.hasOption( "h" ) ) {
+			printUsage( os, USAGE, HEADER, FOOTER );
+			System.exit(1);
+		}
 		if( cl.hasOption( "c" ) ) {
 			cmdString = cl.getOptionValue( "c" );
+		}
+		if( cl.hasOption( "f" ) ) {
+			cmdFile = new File( cl.getOptionValue( "f" ) );
+			if( !cmdFile.canRead() ) {
+				// like bash would do, write to stderr...
+				System.err.println( cmdFile + ": No such file or directory" );
+				System.exit(-1);
+			}
 		}
 		args = cl.getArgs();
 		for( String arg : args ) {
@@ -309,6 +310,18 @@ public class Armour extends Shell {
 				continue;
 			bodyFileSources.add( bf );
 		}
+
+		if( bodyFileSources.isEmpty() ) {
+			printUsage( os, USAGE, HEADER, FOOTER );
+			System.exit(1);
+		}		
+	}
+
+	static private void printUsage( Options os, String usage,
+									String header, String footer ) {
+		HelpFormatter hf = new HelpFormatter();
+		hf.setWidth( 80 );
+		hf.printHelp( usage, header, os, footer );
 	}
 
    
