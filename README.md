@@ -178,9 +178,9 @@ TODO
 
 Armour is command shell (think bash) for bodyfile manipulation and
 visualization.  It centers on the idea of an algebra of unary and
-binary operations, where the operands are complete bodyfiles.
-Each operation produces a new bodyfile, which is added to available
-set for further processing.
+binary operations, where the operands are complete bodyfiles.  Each
+operation produces a new bodyfile, which is added to the available set
+for further processing.
 
 Basic command line help is available.  On Linux/MacOS, a shell script driver
 is included:
@@ -209,10 +209,10 @@ $ ./armour sda1.bf sda2.bf
 // List available operations
 > ops
 
-// Extract all files in sda1 that are not in sda2
+// Extract all files in sda1 that are not in sda2 (Newer Files)
 > op 2 1 2
 
-// And show this in a table
+// And show this new bodyfile in a table
 > tb 3
 ```
 
