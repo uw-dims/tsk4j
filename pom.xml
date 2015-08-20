@@ -7,7 +7,7 @@
   
   <groupId>edu.uw.apl.commons</groupId>
   <artifactId>tsk4j-parent</artifactId>
-  <version>413.2.0</version>
+  <version>413.3.0</version>
   <packaging>pom</packaging>
   
   <name>TSK4J: Parent</name>
@@ -15,7 +15,8 @@
     TSK4J is a Java binding to Sleuthkit, a C-based file system
     forensics toolset. See www.sleuthkit.org
   </description>
-  
+  <inceptionYear>2014</inceptionYear>
+
   <organization>
     <name>Applied Physics Laboratory, University of Washington.</name>
     <url>http://www.apl.uw.edu</url>
@@ -29,11 +30,22 @@
     </developer>
   </developers>
   
+  <licenses>
+    <license>
+      <name>BSD 3-Clause</name>
+      <url>http://opensource.org/licenses/BSD-3-Clause</url>
+      <comments>See LICENSE.txt</comments>
+      <distribution>manual</distribution>
+    </license>
+  </licenses>
+
+
   <modules>
     <module>core</module>
     <module>digests</module>
+    <module>samples</module> 
+    <module>armour</module> 
     <!--
-	<module>samples</module> 
 	<module>cli</module> 
     -->
   </modules>
@@ -59,6 +71,11 @@
 	<groupId>commons-logging</groupId>
 	<artifactId>commons-logging</artifactId>
 	<version>1.2</version>
+      </dependency>
+      <dependency>
+	<groupId>log4j</groupId>
+	<artifactId>log4j</artifactId>
+	<version>1.2.17</version>
       </dependency>
       <dependency>
 	<groupId>junit</groupId>
@@ -117,50 +134,89 @@
 	</plugin>     
       </plugins>
     </pluginManagement>
+    
+    <!--
+	<pluginManagement>
+	<plugins>
+	<plugin>
+	<artifactId>maven-source-plugin</artifactId>
+	<version>2.2.1</version>
+	<configuration>
+	<excludes>
+	<exclude>**/paste</exclude>
+	</excludes>
+	</configuration>
+	<executions>
+	<execution>
+	<goals>
+	<goal>jar</goal>
+	</goals>
+	</execution>
+	</executions>
+	</plugin>
+	</plugins>
+	</pluginManagement>
+    -->
+  </build>
+  <reporting>
+    <plugins>
+      <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.10.2</version>
+	<reportSets>
+	  <reportSet><!-- aggregate reportSet, to define in poms having modules -->
+	    <id>aggregate</id>
+	    <inherited>false</inherited><!-- don't run aggregate in child modules -->
+	    <reports>
+	      <report>aggregate</report>
+	    </reports>
+	  </reportSet>
+        </reportSets>
+      </plugin>
+    </plugins>
+  </reporting>
 
-<!--
-      <pluginManagement>
+  <profiles>
+    <profile>
+      <!-- We use the assembler profile to add licensing to the sources -->
+      <id>assembler</id>
+      <build>
+	<defaultGoal>process-sources</defaultGoal>
 	<plugins>
 	  <plugin>
-	    <artifactId>maven-source-plugin</artifactId>
-	    <version>2.2.1</version>
+	    <groupId>com.mycila</groupId>
+	    <artifactId>license-maven-plugin</artifactId>
+	    <version>2.5</version>
 	    <configuration>
-	      <excludes>
-		<exclude>**/paste</exclude>
-	      </excludes>
+	      <header>LICENSE.txt</header>
+	      <quiet>false</quiet>
+	      <strictCheck>true</strictCheck>
 	    </configuration>
 	    <executions>
 	      <execution>
+		<id>main</id>
+		<phase>process-sources</phase>
 		<goals>
-		  <goal>jar</goal>
+		  <goal>format</goal>
 		</goals>
+		<configuration>
+		  <includes>
+		    <include>src/main/java/**/*.java</include>
+		    <include>src/test/java/**/*.java</include>
+		    <include>src/main/native/**/*.c</include>
+		    <include>src/main/native/**/*.h</include>
+		    <!-- Seems unable to handle Makefiles -->
+		    <!--
+		    <include>src/main/native/**/Makefile</include>
+		    -->
+		  </includes>
+		</configuration>
 	      </execution>
 	    </executions>
 	  </plugin>
 	</plugins>
-      </pluginManagement>
--->
-
-<!--
-      <plugins>
-	<plugin>
-	  <artifactId>maven-compiler-plugin</artifactId>
-	  <version>2.3.2</version>
-	  <configuration>
-	    <source>1.6</source>
-	    <target>1.6</target>
-	  </configuration>
-	</plugin>
-
-
-	<plugin>
-	  <groupId>org.apache.maven.plugins</groupId>
-	  <artifactId>maven-surefire-plugin</artifactId>
-	  <version>2.12.4</version> 
-	</plugin>     
--->
-
-
-    </build>
-
+      </build>
+    </profile>
+  </profiles>
 </project>

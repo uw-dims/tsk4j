@@ -1,16 +1,20 @@
+# Stuart Maclean.  Building the TSK4J C sources on Linux.
+# Assumes use of GNU Make, and uses tricks/features from that tool.
+
 SHELL = /bin/bash
 
 ifndef ARCH
-    $(error ARCH var missing.  Define in subdir Makefile and include this file)
+    $(error ARCH var missing.  Define in subdir Makefile, or pass here from basedir pom.xml)
 endif
 
 OS = Linux
 
 PWD = $(shell pwd)
 
-ifndef JAVA_HOME
-$(error JAVA_HOME make variable missing.  Copy $(PWD)/Makefile.env.sample to $(PWD)/Makefile.env and edit)
+ifndef JDK_HOME
+$(error JDK_HOME make variable missing.  Define in $(PWD)/Makefile.env, or pass here from basedir pom.xml)
 endif
+
 ifndef TSK_CPPFLAGS
     $(error TSK_CPPFLAGS make variable missing.  Copy $(PWD)/Makefile.env.sample to $(PWD)/Makefile.env and edit)
 endif
@@ -18,11 +22,11 @@ ifndef TSK_LDLIBS
     $(error TSK_LDLIBS make variable missing.  Copy $(PWD)/Makefile.env.sample to $(PWD)/Makefile.env and edit)
 endif
 
-# The package and artifact name expected passed down by the Maven invocation of this
-# build. We supply some bogus ones if not aleady set.  This will
-# obviously lead to failure at runtime!
-PACKAGE  ?= P
-ARTIFACT ?= A
+# The prefix and libName expected passed down by the Maven invocation
+# of this build. We supply some bogus ones if not aleady set.  This
+# will obviously lead to failure at runtime!
+PREFIX  ?= P
+LIBNAME ?= L
 
 BASEDIR = $(abspath $(NATIVEHOME)/../../..)
 
@@ -32,7 +36,7 @@ CPPFLAGS += -I$(BASEDIR)/target/native/javah
 
 CPPFLAGS += $(TSK_CPPFLAGS)
 
-CPPFLAGS += -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux
+CPPFLAGS += -I$(JDK_HOME)/include -I$(JDK_HOME)/include/linux
 
 LDLIBS += $(TSK_LDLIBS)
 
@@ -49,15 +53,16 @@ VPATH = $(NATIVEHOME)
 LINK.so = $(CC) $(LDFLAGS) $(LDLIBS)
 
 # the name of the library to build
-LIB		= lib$(ARTIFACT).so
+LIB		= lib$(LIBNAME).so
 
 # link the C objects into a shared library
 $(LIB): $(MAINOBJS)
 	$(CC) $(LDFLAGS) $^ $(LDLIBS) $(OUTPUT_OPTION)
 
-PACKAGEASPATH = $(subst .,/,$(PACKAGE))
+PREFIXASPATH = $(subst .,/,$(PREFIX))
 
-TARGET_DIR = $(BASEDIR)/src/main/resources/$(PACKAGEASPATH)/native/$(OS)/$(ARCH)
+# This path matches what the NativeLoader class tries to locate...
+TARGET_DIR = $(BASEDIR)/src/main/resources/$(PREFIXASPATH)/native/$(OS)/$(ARCH)
 
 default: install
 
@@ -76,9 +81,12 @@ Makefile.env : Makefile.env.sample
 ############################## Test/debug targets #######################
 
 show-env:
-	@echo JAVA_HOME $(JAVA_HOME)
+	@echo ARCH $(ARCH)
+	@echo JDK_HOME $(JAVA_HOME)
 	@echo TSK_CPPFLAGS $(TSK_CPPFLAGS)
 	@echo TSK_LDLIBS  $(TSK_LDLIBS)
+	@echo PREFIX $(PREFIX)
+	@echo LIBNAME $(LIBNAME)
 
 show-srcs:
 	echo $(MAINSRCS)

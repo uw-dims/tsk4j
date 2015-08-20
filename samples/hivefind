@@ -1,11 +1,5 @@
 #!/bin/sh
 
-ARTIFACT=tsk4j-samples
-VERSION=413.0.0
-JAR=$ARTIFACT-$VERSION.jar
-
-CLAZZ=HiveFinder
-
-exec java -Xmx2g -cp target/$JAR $CLAZZ "$@"
+./samples.base HiveFinder "$@"
 
 # eof

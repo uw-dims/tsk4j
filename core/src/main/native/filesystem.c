@@ -1,12 +1,52 @@
-#include "edu_uw_apl_commons_sleuthkit_filesys_FileSystem.h"
+/**
+ * Copyright © 2015, University of Washington
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *
+ *     * Redistributions in binary form must reproduce the above
+ *       copyright notice, this list of conditions and the following
+ *       disclaimer in the documentation and/or other materials provided
+ *       with the distribution.
+ *
+ *     * Neither the name of the University of Washington nor the names
+ *       of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written
+ *       permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL UNIVERSITY OF
+ * WASHINGTON BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+#include "edu_uw_apl_commons_tsk4j_filesys_FileSystem.h"
 
 #include <tsk/libtsk.h>
+
+/**
+ * @author Stuart Maclean
+ *
+ * Various support routines plus implementations of filesys.FileSystem
+ * native methods.
+ */
 
 // native access to aspects of the Block class...
 static jclass BlockClass = NULL;
 static jmethodID BlockConstructor = NULL;
 static char* BlockConstructorSig = 
-  "(JLedu/uw/apl/commons/sleuthkit/filesys/FileSystem;)V";
+  "(JLedu/uw/apl/commons/tsk4j/filesys/FileSystem;)V";
 
 // native access to aspects of the BlockWalk class...
 static jmethodID BlockWalkCallbackApply = NULL;
@@ -60,12 +100,12 @@ static jobject createWalkFile( JNIEnv* env, TSK_FS_FILE* fsFile,
 // ******* Opening a File System and Accessing Core Properties *******
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_FileSystem
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_FileSystem
  * Method:    openImage
  * Signature: (JJ)J
  */
 JNIEXPORT jlong JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_openImage
+Java_edu_uw_apl_commons_tsk4j_filesys_FileSystem_openImage
 (JNIEnv *env, jobject thiz, jlong imgNativePtr, jlong offset ) {
 
   TSK_IMG_INFO* imgInfo = (TSK_IMG_INFO*)imgNativePtr;
@@ -74,12 +114,12 @@ Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_openImage
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_FileSystem
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_FileSystem
  * Method:    openPartition
  * Signature: (J)J
  */
 JNIEXPORT jlong JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_openPartition
+Java_edu_uw_apl_commons_tsk4j_filesys_FileSystem_openPartition
 ( JNIEnv *env, jobject thiz, jlong partitionNativePtr ) {
 
   TSK_VS_PART_INFO* partInfo = (TSK_VS_PART_INFO*)partitionNativePtr;
@@ -89,12 +129,12 @@ Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_openPartition
 
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_FileSystem
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_FileSystem
  * Method:    close
  * Signature: (J)V
  */
 JNIEXPORT void JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_close
+Java_edu_uw_apl_commons_tsk4j_filesys_FileSystem_close
 (JNIEnv * env, jobject thiz, jlong nativePtr ) {
   
   TSK_FS_INFO* info = (TSK_FS_INFO*)nativePtr;
@@ -102,12 +142,12 @@ Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_close
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_FileSystem
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_FileSystem
  * Method:    blockCount
  * Signature: (J)J
  */
 JNIEXPORT jlong JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_blockCount
+Java_edu_uw_apl_commons_tsk4j_filesys_FileSystem_blockCount
 (JNIEnv * env, jobject thiz, jlong nativePtr ) {
 
   TSK_FS_INFO* info = (TSK_FS_INFO*)nativePtr;
@@ -115,12 +155,12 @@ Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_blockCount
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_FileSystem
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_FileSystem
  * Method:    blockSize
  * Signature: (J)I
  */
 JNIEXPORT jint JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_blockSize
+Java_edu_uw_apl_commons_tsk4j_filesys_FileSystem_blockSize
 (JNIEnv * env, jobject thiz, jlong nativePtr ) {
 
   TSK_FS_INFO* info = (TSK_FS_INFO*)nativePtr;
@@ -128,12 +168,12 @@ Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_blockSize
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_FileSystem
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_FileSystem
  * Method:    firstBlock
  * Signature: (J)J
  */
 JNIEXPORT jlong JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_firstBlock
+Java_edu_uw_apl_commons_tsk4j_filesys_FileSystem_firstBlock
 (JNIEnv * env, jobject thiz, jlong nativePtr ) {
 
   TSK_FS_INFO* info = (TSK_FS_INFO*)nativePtr;
@@ -141,12 +181,12 @@ Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_firstBlock
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_FileSystem
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_FileSystem
  * Method:    lastBlock
  * Signature: (J)J
  */
 JNIEXPORT jlong JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_lastBlock
+Java_edu_uw_apl_commons_tsk4j_filesys_FileSystem_lastBlock
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_FS_INFO* info = (TSK_FS_INFO*)nativePtr;
@@ -155,12 +195,12 @@ Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_lastBlock
 
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_FileSystem
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_FileSystem
  * Method:    iNumCount
  * Signature: (J)J
  */
 JNIEXPORT jlong JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_iNumCount
+Java_edu_uw_apl_commons_tsk4j_filesys_FileSystem_iNumCount
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_FS_INFO* info = (TSK_FS_INFO*)nativePtr;
@@ -168,12 +208,12 @@ Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_iNumCount
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_FileSystem
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_FileSystem
  * Method:    firstINum
  * Signature: (J)J
  */
 JNIEXPORT jlong JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_firstINum
+Java_edu_uw_apl_commons_tsk4j_filesys_FileSystem_firstINum
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
   
   TSK_FS_INFO* info = (TSK_FS_INFO*)nativePtr;
@@ -182,12 +222,12 @@ Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_firstINum
 
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_FileSystem
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_FileSystem
  * Method:    lastINum
  * Signature: (J)J
  */
 JNIEXPORT jlong JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_lastINum
+Java_edu_uw_apl_commons_tsk4j_filesys_FileSystem_lastINum
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
   
   TSK_FS_INFO* info = (TSK_FS_INFO*)nativePtr;
@@ -195,12 +235,12 @@ Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_lastINum
 }
   
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_FileSystem
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_FileSystem
  * Method:    rootINum
  * Signature: (J)J
  */
 JNIEXPORT jlong JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_rootINum
+Java_edu_uw_apl_commons_tsk4j_filesys_FileSystem_rootINum
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_FS_INFO* info = (TSK_FS_INFO*)nativePtr;
@@ -209,12 +249,12 @@ Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_rootINum
 
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_FileSystem
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_FileSystem
  * Method:    flags
  * Signature: (J)I
  */
 JNIEXPORT jint JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_flags
+Java_edu_uw_apl_commons_tsk4j_filesys_FileSystem_flags
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
   
   TSK_FS_INFO* info = (TSK_FS_INFO*)nativePtr;
@@ -222,11 +262,11 @@ Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_flags
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_FileSystem
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_FileSystem
  * Method:    type
  * Signature: (J)I
  */
-JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_type
+JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_tsk4j_filesys_FileSystem_type
 (JNIEnv *env, jobject thiz, jlong nativePtr ) {
 
   TSK_FS_INFO* info = (TSK_FS_INFO*)nativePtr;
@@ -236,12 +276,12 @@ JNIEXPORT jint JNICALL Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_type
 // *************** Generic Read Methods ****************
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_FileSystem
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_FileSystem
  * Method:    read
  * Signature: (JJ[BIJ)I
  */
 JNIEXPORT jint JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_read
+Java_edu_uw_apl_commons_tsk4j_filesys_FileSystem_read
 (JNIEnv *env, jobject thiz, jlong nativePtr, jlong offset, 
  jbyteArray buf, jint len, jlong nativeHeapPtr ) {
 
@@ -259,12 +299,12 @@ Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_read
 // *************** Opening and Reading File System Blocks ****************
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_FileSystem
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_FileSystem
  * Method:    getBlock
- * Signature: (JJ)Ledu/uw/apl/commons/sleuthkit/filesys/Block;
+ * Signature: (JJ)Ledu/uw/apl/commons/tsk4j/filesys/Block;
  */
 JNIEXPORT jobject JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_getBlock
+Java_edu_uw_apl_commons_tsk4j_filesys_FileSystem_getBlock
 (JNIEnv *env, jobject thiz, jlong nativePtr, jlong addr ) {
 
   TSK_FS_INFO* info = (TSK_FS_INFO*)nativePtr;
@@ -276,12 +316,12 @@ Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_getBlock
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_FileSystem
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_FileSystem
  * Method:    readBlock
  * Signature: (JJ[BJ)I
  */
 JNIEXPORT jint JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_readBlock
+Java_edu_uw_apl_commons_tsk4j_filesys_FileSystem_readBlock
 (JNIEnv * env, jobject thiz, jlong nativePtr, jlong addr, jbyteArray buf,
  jlong nativeHeapPtr ) {
 
@@ -295,12 +335,12 @@ Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_readBlock
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_FileSystem
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_FileSystem
  * Method:    blockWalk
- * Signature: (JJJILedu/uw/apl/commons/sleuthkit/filesys/BlockWalk/Callback;)I
+ * Signature: (JJJILedu/uw/apl/commons/tsk4j/filesys/BlockWalk/Callback;)I
  */
 JNIEXPORT jint JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_blockWalk
+Java_edu_uw_apl_commons_tsk4j_filesys_FileSystem_blockWalk
 (JNIEnv *env, jobject thiz, jlong nativePtr, 
  jlong startBlk, jlong endBlk, jint flags, jobject callback ) {
 
@@ -314,6 +354,10 @@ Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_blockWalk
 }
 
 
+/*
+ * This is the callback passed to tsk_fs_block_walk, see above.  It
+ * locates and calls the corresponding Java callback.
+ */
 static TSK_WALK_RET_ENUM blockWalkCallback( const TSK_FS_BLOCK* block, 
 											void* aPtr ) {
   
@@ -374,12 +418,12 @@ static jobject createBlockWalkBlock( JNIEnv* env, const TSK_FS_BLOCK* b,
 // *************** Opening and Reading Files ****************
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_FileSystem
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_FileSystem
  * Method:    fileOpenMeta
- * Signature: (JJ)Ledu/uw/apl/commons/sleuthkit/filesys/File;
+ * Signature: (JJ)Ledu/uw/apl/commons/tsk4j/filesys/File;
  */
 JNIEXPORT jobject JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_fileOpenMeta
+Java_edu_uw_apl_commons_tsk4j_filesys_FileSystem_fileOpenMeta
 (JNIEnv * env, jobject thiz, jlong nativePtr, jlong metadataAddr ) {
 
   TSK_FS_INFO* info = (TSK_FS_INFO*)nativePtr;
@@ -405,12 +449,12 @@ Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_fileOpenMeta
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_FileSystem
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_FileSystem
  * Method:    fileOpen
- * Signature: (JLjava/lang/String;)Ledu/uw/apl/commons/sleuthkit/filesys/File;
+ * Signature: (JLjava/lang/String;)Ledu/uw/apl/commons/tsk4j/filesys/File;
  */
 JNIEXPORT jobject JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_fileOpen
+Java_edu_uw_apl_commons_tsk4j_filesys_FileSystem_fileOpen
 (JNIEnv *env, jobject thiz, jlong nativePtr, jstring path ) {
   
   const char* pathC = (*env)->GetStringUTFChars( env, path, NULL );
@@ -477,12 +521,12 @@ jobject createFile( JNIEnv* env, TSK_FS_FILE* fsFile,
 // *************** Opening and Reading a Directory ****************
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_FileSystem
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_FileSystem
  * Method:    dirOpenMeta
- * Signature: (JJ)Ledu/uw/apl/commons/sleuthkit/filesys/Directory;
+ * Signature: (JJ)Ledu/uw/apl/commons/tsk4j/filesys/Directory;
  */
 JNIEXPORT jobject JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_dirOpenMeta
+Java_edu_uw_apl_commons_tsk4j_filesys_FileSystem_dirOpenMeta
 (JNIEnv *env, jobject thiz, jlong nativePtr, jlong metadataAddr ) {
 
   TSK_FS_INFO* info = (TSK_FS_INFO*)nativePtr;
@@ -527,12 +571,12 @@ Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_dirOpenMeta
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_FileSystem
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_FileSystem
  * Method:    dirOpen
- * Signature: (JLjava/lang/String;)Ledu/uw/apl/commons/sleuthkit/filesys/Directory;
+ * Signature: (JLjava/lang/String;)Ledu/uw/apl/commons/tsk4j/filesys/Directory;
  */
 JNIEXPORT jobject JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_dirOpen
+Java_edu_uw_apl_commons_tsk4j_filesys_FileSystem_dirOpen
 (JNIEnv *env, jobject thiz, jlong nativePtr, jstring path ) {
 
   const char* pathC = (*env)->GetStringUTFChars( env, path, NULL );
@@ -601,12 +645,12 @@ static jobject createDirectory( JNIEnv* env, TSK_FS_DIR* fsDir,
 // ************ Walking the Filesystem, via both dir and meta ****************
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_FileSystem
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_FileSystem
  * Method:    dirWalk
- * Signature: (JJILedu/uw/apl/commons/sleuthkit/filesys/DirectoryWalk/Callback;)I
+ * Signature: (JJILedu/uw/apl/commons/tsk4j/filesys/DirectoryWalk/Callback;)I
  */
 JNIEXPORT jint JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_dirWalk
+Java_edu_uw_apl_commons_tsk4j_filesys_FileSystem_dirWalk
 (JNIEnv * env, jobject thiz, jlong nativePtr, jlong metadataAddr, 
  jint flags, jobject callback ) {
 
@@ -636,12 +680,12 @@ Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_dirWalk
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_FileSystem
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_FileSystem
  * Method:    metaWalk
- * Signature: (JJJILedu/uw/apl/commons/sleuthkit/filesys/MetaWalk/Callback;)I
+ * Signature: (JJJILedu/uw/apl/commons/tsk4j/filesys/MetaWalk/Callback;)I
  */
 JNIEXPORT jint JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_metaWalk
+Java_edu_uw_apl_commons_tsk4j_filesys_FileSystem_metaWalk
 (JNIEnv *env, jobject thiz, jlong id, jlong metaStart, jlong metaEnd, 
  jint flags, jobject callback ) {
   
@@ -707,8 +751,8 @@ static TSK_WALK_RET_ENUM dirWalkCallback( TSK_FS_FILE* fsFile,
 								  walkFile, pathJ );
   // exception in Java callback?
   if( (*env)->ExceptionCheck( env ) ) {
-	printf( "Java Exception in callback, result %d\n", i );
-	return TSK_WALK_STOP;
+	//	printf( "Java Exception in callback, result %d\n", i );
+	return TSK_WALK_ERROR;
   }
 
   /*
@@ -790,15 +834,12 @@ jobject createWalkFile( JNIEnv* env, TSK_FS_FILE* fsFile,
 }
 
 
-
-
-
 // ************************ Local Initialization *************************
 
 static jint initBlock( JNIEnv* env ) {
 
   jclass localRefClass = (*env)->FindClass
-	( env, "edu/uw/apl/commons/sleuthkit/filesys/Block" );
+	( env, "edu/uw/apl/commons/tsk4j/filesys/Block" );
   if( localRefClass == NULL )
 	return JNI_ERR;		// exception thrown...
   BlockClass = (*env)->NewGlobalRef( env, localRefClass );
@@ -820,11 +861,11 @@ static jint initBlockWalk( JNIEnv* env ) {
 	us to call the 'apply' method from native code
   */
   jclass cls = (*env)->FindClass
-	( env, "edu/uw/apl/commons/sleuthkit/filesys/BlockWalk$Callback" );
+	( env, "edu/uw/apl/commons/tsk4j/filesys/BlockWalk$Callback" );
   if( cls == NULL )
 	return JNI_ERR;		// exception thrown...
   char* BlockWalkCallbackApplySig = 
-	"(Ledu/uw/apl/commons/sleuthkit/filesys/BlockWalk$Block;)I";
+	"(Ledu/uw/apl/commons/tsk4j/filesys/BlockWalk$Block;)I";
   BlockWalkCallbackApply = (*env)->GetMethodID( env, cls, "apply", 
 												BlockWalkCallbackApplySig );
   if( BlockWalkCallbackApply == NULL )
@@ -837,7 +878,7 @@ static jint initBlockWalk( JNIEnv* env ) {
 	method
   */
   jclass localRefClass = (*env)->FindClass
-	( env, "edu/uw/apl/commons/sleuthkit/filesys/BlockWalk$Block" );
+	( env, "edu/uw/apl/commons/tsk4j/filesys/BlockWalk$Block" );
   if( localRefClass == NULL )
 	return JNI_ERR;		// exception thrown...
   BlockWalkBlockClass = (*env)->NewGlobalRef( env, localRefClass );
@@ -862,7 +903,7 @@ static jint initBlockWalk( JNIEnv* env ) {
 static jint initMeta( JNIEnv* env ) {
 
   jclass localRefClass = (*env)->FindClass
-	( env, "edu/uw/apl/commons/sleuthkit/filesys/Meta" );
+	( env, "edu/uw/apl/commons/tsk4j/filesys/Meta" );
   if( localRefClass == NULL )
 	return JNI_ERR;		// exception thrown...
   MetaClass = (*env)->NewGlobalRef( env, localRefClass );
@@ -870,7 +911,7 @@ static jint initMeta( JNIEnv* env ) {
   if( MetaClass == NULL )
 	return JNI_ERR;		// out of memory exception thrown...
   MetaConstructor = (*env)->GetMethodID( env, MetaClass, 
-										   "<init>", "(J)V" );
+										 "<init>", "(J)V" );
   if( MetaConstructor == NULL )
 	return JNI_ERR;		// exception thrown...
 
@@ -880,7 +921,7 @@ static jint initMeta( JNIEnv* env ) {
 static jint initName( JNIEnv* env ) {
 
   jclass localRefClass = (*env)->FindClass
-	( env, "edu/uw/apl/commons/sleuthkit/filesys/Name" );
+	( env, "edu/uw/apl/commons/tsk4j/filesys/Name" );
   if( localRefClass == NULL )
 	return JNI_ERR;		// exception thrown...
   NameClass = (*env)->NewGlobalRef( env, localRefClass );
@@ -898,7 +939,7 @@ static jint initName( JNIEnv* env ) {
 static jint initFile( JNIEnv* env ) {
 
   jclass localRefClass = (*env)->FindClass
-	( env, "edu/uw/apl/commons/sleuthkit/filesys/File" );
+	( env, "edu/uw/apl/commons/tsk4j/filesys/File" );
   if( localRefClass == NULL )
 	return JNI_ERR;		// exception thrown...
   FileClass = (*env)->NewGlobalRef( env, localRefClass );
@@ -906,9 +947,9 @@ static jint initFile( JNIEnv* env ) {
   if( FileClass == NULL )
 	return JNI_ERR;		// out of memory exception thrown...
   char* FileConstructorSig = 
-	"(JLedu/uw/apl/commons/sleuthkit/filesys/FileSystem;"
-	"Ledu/uw/apl/commons/sleuthkit/filesys/Meta;"
-	"Ledu/uw/apl/commons/sleuthkit/filesys/Name;)V";
+	"(JLedu/uw/apl/commons/tsk4j/filesys/FileSystem;"
+	"Ledu/uw/apl/commons/tsk4j/filesys/Meta;"
+	"Ledu/uw/apl/commons/tsk4j/filesys/Name;)V";
   FileConstructor = (*env)->GetMethodID( env, FileClass, "<init>",
 										 FileConstructorSig );
   if( FileConstructor == NULL )
@@ -920,7 +961,7 @@ static jint initFile( JNIEnv* env ) {
 static jint initWalkFile( JNIEnv* env ) {
 
   jclass localRefClass = (*env)->FindClass
-	( env, "edu/uw/apl/commons/sleuthkit/filesys/WalkFile" );
+	( env, "edu/uw/apl/commons/tsk4j/filesys/WalkFile" );
   if( localRefClass == NULL )
 	return JNI_ERR;		// exception thrown...
   WalkFileClass = (*env)->NewGlobalRef( env, localRefClass );
@@ -929,9 +970,9 @@ static jint initWalkFile( JNIEnv* env ) {
 	return JNI_ERR;		// out of memory exception thrown...
 
   char* WalkFileConstructorSig = 
-	"(JLedu/uw/apl/commons/sleuthkit/filesys/FileSystem;"
-	"Ledu/uw/apl/commons/sleuthkit/filesys/Meta;"
-	"Ledu/uw/apl/commons/sleuthkit/filesys/Name;)V";
+	"(JLedu/uw/apl/commons/tsk4j/filesys/FileSystem;"
+	"Ledu/uw/apl/commons/tsk4j/filesys/Meta;"
+	"Ledu/uw/apl/commons/tsk4j/filesys/Name;)V";
   WalkFileConstructor = (*env)->GetMethodID( env, WalkFileClass, "<init>",
 											 WalkFileConstructorSig );
   if( WalkFileConstructor == NULL )
@@ -949,7 +990,7 @@ static jint initWalkFile( JNIEnv* env ) {
 static jint initDirectory( JNIEnv* env ) {
   
   jclass localRefClass = (*env)->FindClass
-	( env, "edu/uw/apl/commons/sleuthkit/filesys/Directory" );
+	( env, "edu/uw/apl/commons/tsk4j/filesys/Directory" );
   if( localRefClass == NULL )
 	return JNI_ERR;		// exception thrown...
   DirectoryClass = (*env)->NewGlobalRef( env, localRefClass );
@@ -957,8 +998,8 @@ static jint initDirectory( JNIEnv* env ) {
   if( DirectoryClass == NULL )
 	return JNI_ERR;		// out of memory exception thrown...
   char* DirectoryConstructorSig = 
-	"(JLedu/uw/apl/commons/sleuthkit/filesys/FileSystem;"
-	"Ledu/uw/apl/commons/sleuthkit/filesys/File;)V";
+	"(JLedu/uw/apl/commons/tsk4j/filesys/FileSystem;"
+	"Ledu/uw/apl/commons/tsk4j/filesys/File;)V";
   DirectoryConstructor = (*env)->GetMethodID( env, DirectoryClass, "<init>",
 											  DirectoryConstructorSig );
   if( DirectoryConstructor == NULL )
@@ -970,12 +1011,12 @@ static jint initDirectory( JNIEnv* env ) {
 static jint initDirectoryWalk( JNIEnv* env ) {
 
   jclass cls = (*env)->FindClass
-	( env, "edu/uw/apl/commons/sleuthkit/filesys/DirectoryWalk$Callback" );
+	( env, "edu/uw/apl/commons/tsk4j/filesys/DirectoryWalk$Callback" );
   if( cls == NULL )
 	return JNI_ERR;		// exception thrown...
 
   char* DirWalkCallbackApplySig = 
-	"(Ledu/uw/apl/commons/sleuthkit/filesys/WalkFile;Ljava/lang/String;)I";
+	"(Ledu/uw/apl/commons/tsk4j/filesys/WalkFile;Ljava/lang/String;)I";
   DirectoryWalkCallbackApply = (*env)->GetMethodID( env, cls, "apply", 
 													DirWalkCallbackApplySig );
   if( DirectoryWalkCallbackApply == NULL )
@@ -987,12 +1028,12 @@ static jint initDirectoryWalk( JNIEnv* env ) {
 static jint initMetaWalk( JNIEnv* env ) {
 
   jclass cls = (*env)->FindClass
-	( env, "edu/uw/apl/commons/sleuthkit/filesys/MetaWalk$Callback" );
+	( env, "edu/uw/apl/commons/tsk4j/filesys/MetaWalk$Callback" );
   if( cls == NULL )
 	return JNI_ERR;		// exception thrown...
   
   char* MetaWalkCallbackApplySig = 
-	"(Ledu/uw/apl/commons/sleuthkit/filesys/WalkFile;)I";
+	"(Ledu/uw/apl/commons/tsk4j/filesys/WalkFile;)I";
   MetaWalkCallbackApply = (*env)->GetMethodID( env, cls, "apply", 
 											   MetaWalkCallbackApplySig );
   if( MetaWalkCallbackApply == NULL )
@@ -1002,12 +1043,12 @@ static jint initMetaWalk( JNIEnv* env ) {
 }
 
 /*
- * Class:     edu_uw_apl_commons_sleuthkit_filesys_FileSystem
+ * Class:     edu_uw_apl_commons_tsk4j_filesys_FileSystem
  * Method:    initNative
  * Signature: ()V
  */
 JNIEXPORT void JNICALL 
-Java_edu_uw_apl_commons_sleuthkit_filesys_FileSystem_initNative
+Java_edu_uw_apl_commons_tsk4j_filesys_FileSystem_initNative
 (JNIEnv *env, jclass clazz) {
 
   jint status;

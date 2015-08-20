@@ -1,58 +1,48 @@
 <?xml version="1.0"?>
 <project>
-    <modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-      <groupId>edu.uw.apl.commons</groupId>
-      <artifactId>tsk4j-parent</artifactId>
-      <version>413.0.0</version>
-    </parent>
+  <parent>
+    <groupId>edu.uw.apl.commons</groupId>
+    <artifactId>tsk4j-parent</artifactId>
+    <version>413.3.0</version>
+  </parent>
+  
+  <artifactId>tsk4j-samples</artifactId>
+  <name>TSK4J: Sample Programs</name>
+  <version>413.3.0</version>
+  
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>tsk4j-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
     
-    <artifactId>tsk4j-samples</artifactId>
-    <name>TSK4J: Sample Programs</name>
-    <version>413.0.0</version>
-      
-    <dependencies>
-      <dependency>
-	<groupId>${project.groupId}</groupId>
-	<artifactId>tsk4j-core</artifactId>
-	<version>${project.version}</version>
-      </dependency>
+    <dependency>
+      <groupId>commons-cli</groupId>
+      <artifactId>commons-cli</artifactId>
+      <version>1.2</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+    
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+    </dependency>
+  </dependencies>
 
-      <dependency>
-	<groupId>commons-cli</groupId>
-	<artifactId>commons-cli</artifactId>
-	<version>1.2</version>
-      </dependency>
-
-      <dependency>
-	<groupId>commons-io</groupId>
-	<artifactId>commons-io</artifactId>
-	<version>2.4</version>
-      </dependency>
-      <dependency>
-	<groupId>log4j</groupId>
-	<artifactId>log4j</artifactId>
-	<version>1.2.13</version>
-      </dependency>
-    </dependencies>
-
-    <build>
-      <defaultGoal>compile</defaultGoal>
-      <plugins>
-
-	<plugin>
-	  <artifactId>maven-compiler-plugin</artifactId>
-	  <configuration>
-	    <source>1.5</source>
-	    <target>1.5</target>
-	  </configuration>
-	</plugin>
+  <build>
+    <defaultGoal>compile</defaultGoal>
+    <plugins>
 
 	<plugin>
 	  <groupId>org.apache.maven.plugins</groupId>
 	  <artifactId>maven-jar-plugin</artifactId>
-	  <version>2.4</version>
 	  <configuration>
 	    <archive>
 	      <manifest>
@@ -68,11 +58,10 @@
 	    </archive>
 	  </configuration>
 	</plugin>
-
+	
 	<plugin>
 	  <groupId>org.apache.maven.plugins</groupId>
 	  <artifactId>maven-dependency-plugin</artifactId>
-	  <version>2.9</version>
 	  <executions>
 	    <execution>
 	      <id>copy-dependencies</id>
@@ -86,8 +75,6 @@
 	    </execution>
 	  </executions>
 	</plugin>
-	
-      </plugins>
-    </build>
-    
+    </plugins>
+  </build>
 </project>

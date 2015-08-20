@@ -5,33 +5,37 @@
   <modelVersion>4.0.0</modelVersion>
   
   <properties>
-    <!-- override this by activating the 'tester' profile -->
+    <!-- Override this by activating the 'tester' profile -->
     <skipTests>true</skipTests>
   </properties>
   
   <!--
-      We have native libraries (jni/C) bundles into our artifact but, due
-      to the composition of our Makefiles (see e.g.
-      src/main/native/Linux/Makefile) and the 'native-lib-loader' artifact
-      we use to load native stuff, we appear to be pure Java.  Cool or
-      what!
+      We have native libraries (JNI/C) bundled into our artifact but,
+      due to the composition of our Makefiles (see e.g.
+      src/main/native/Linux/Makefile) and the 'native-lib-loader'
+      artifact we use to load native stuff, we appear to be pure Java.
+      Cool or what!
   -->
 
   <parent>
     <groupId>edu.uw.apl.commons</groupId>
     <artifactId>tsk4j-parent</artifactId>
-    <version>413.2.0</version>
+    <version>413.3.0</version>
   </parent>
   
   <groupId>edu.uw.apl.commons</groupId>
   <artifactId>tsk4j-core</artifactId>
-  <version>413.2.0</version>
+  <version>413.3.0</version>
   <packaging>jar</packaging>
   <name>
     TSK4J: Core - JNI Bindings to Sleuthkit C library
   </name>
 
   <repositories>
+    <!-- 
+    To locate our dependent artifacts which are not (yet) available at
+    Maven Central, we bundle them into this project-local repo
+    -->
     <repository>
       <id>tsk4j.local</id>
       <name>tsk4j</name>
@@ -47,7 +51,7 @@
     <dependency>
       <groupId>edu.uw.apl.commons</groupId>
       <artifactId>native-lib-loader</artifactId>
-      <version>2.0.0</version>
+      <version>2.1.0</version>
     </dependency>
     <dependency>
       <groupId>commons-codec</groupId>
@@ -69,6 +73,59 @@
   </dependencies>
 
   <profiles>
+    <!-- Canonicalise all 32-bit arch names to 'x86' -->
+    <profile>
+      <id>x86</id>
+      <activation>
+	<os>
+	  <arch>x86</arch>
+	</os>
+      </activation>
+      <properties>
+	<arch>x86</arch>
+      </properties>
+    </profile>
+    <profile>
+      <id>i386</id>
+      <activation>
+	<os>
+	  <arch>i386</arch>
+	</os>
+      </activation>
+      <properties>
+	<arch>x86</arch>
+      </properties>
+    </profile>
+
+    <!-- Canonicalise all 64-bit arch names to 'x86_64' -->
+    <profile>
+      <id>x86_64</id>
+      <activation>
+	<os>
+	  <arch>x86_64</arch>
+	</os>
+      </activation>
+      <properties>
+	<arch>x86_64</arch>
+      </properties>
+    </profile>
+    <profile>
+      <id>amd64</id>
+      <activation>
+	<os>
+	  <arch>amd64</arch>
+	</os>
+      </activation>
+      <properties>
+	<arch>x86_64</arch>
+      </properties>
+    </profile>
+    <!--
+	The previous profile sets, to canonicalise arch names to that string
+	understood by java-native-loader, would be needed in ANY project
+	that uses java-native-loader, so might go in settings.xml ??
+    -->
+
     <profile>
       <id>tester</id>
       <properties>
@@ -130,43 +187,43 @@
 		  <configuration>
 		    <javahClassNames>
 		      <javahClassName>
-			edu.uw.apl.commons.sleuthkit.base.HeapBuffer
+			edu.uw.apl.commons.tsk4j.base.HeapBuffer
 		      </javahClassName>
 		      <javahClassName>
-			edu.uw.apl.commons.sleuthkit.base.Version
+			edu.uw.apl.commons.tsk4j.base.Version
 		      </javahClassName>
 		      <javahClassName>
-			edu.uw.apl.commons.sleuthkit.image.Image
+			edu.uw.apl.commons.tsk4j.filesys.FileSystem
 		      </javahClassName>
 		      <javahClassName>
-			edu.uw.apl.commons.sleuthkit.volsys.VolumeSystem
+			edu.uw.apl.commons.tsk4j.filesys.Block
 		      </javahClassName>
 		      <javahClassName>
-			edu.uw.apl.commons.sleuthkit.volsys.Partition
+			edu.uw.apl.commons.tsk4j.filesys.Meta
 		      </javahClassName>
 		      <javahClassName>
-			edu.uw.apl.commons.sleuthkit.filesys.FileSystem
+			edu.uw.apl.commons.tsk4j.filesys.Name
 		      </javahClassName>
 		      <javahClassName>
-			edu.uw.apl.commons.sleuthkit.filesys.Block
+			edu.uw.apl.commons.tsk4j.filesys.File
 		      </javahClassName>
 		      <javahClassName>
-			edu.uw.apl.commons.sleuthkit.filesys.Meta
+			edu.uw.apl.commons.tsk4j.filesys.Directory
 		      </javahClassName>
 		      <javahClassName>
-			edu.uw.apl.commons.sleuthkit.filesys.Name
+			edu.uw.apl.commons.tsk4j.filesys.Attribute
 		      </javahClassName>
 		      <javahClassName>
-			edu.uw.apl.commons.sleuthkit.filesys.File
+			edu.uw.apl.commons.tsk4j.filesys.Run
 		      </javahClassName>
 		      <javahClassName>
-			edu.uw.apl.commons.sleuthkit.filesys.Directory
+			edu.uw.apl.commons.tsk4j.image.Image
 		      </javahClassName>
 		      <javahClassName>
-			edu.uw.apl.commons.sleuthkit.filesys.Attribute
+			edu.uw.apl.commons.tsk4j.volsys.VolumeSystem
 		      </javahClassName>
 		      <javahClassName>
-			edu.uw.apl.commons.sleuthkit.filesys.Run
+			edu.uw.apl.commons.tsk4j.volsys.Partition
 		      </javahClassName>
 		    </javahClassNames>
 		  </configuration>
@@ -189,13 +246,16 @@
 		  </goals>
 		  <configuration>
 		    <workingDirectory>
-		      src/main/native/${os.name}/${os.arch}
+		      src/main/native/${os.name}/${arch}
 		    </workingDirectory>
 		    <executable>${make}</executable>
 		    <commandlineArgs>install</commandlineArgs>
 		    <environmentVariables>
-		      <PACKAGE>edu.uw.apl.commons.sleuthkit.base</PACKAGE>
-		      <ARTIFACT>${project.artifactId}</ARTIFACT>
+		      <ARCH>${arch}</ARCH>
+		      <!-- LOOK: Is this valid, using .. ? -->
+		      <JDK_HOME>${java.home}/..</JDK_HOME>
+		      <PREFIX>edu.uw.apl.commons.tsk4j</PREFIX>
+		      <LIBNAME>tsk4j-core</LIBNAME>
 		    </environmentVariables>
 		  </configuration>
 		</execution>
@@ -208,13 +268,16 @@
 		  </goals>
 		  <configuration>
 		    <workingDirectory>
-		      src/main/native/${os.name}/${os.arch}
+		      src/main/native/${os.name}/$arch}
 		    </workingDirectory>
 		    <executable>${make}</executable>
 		    <commandlineArgs>clean</commandlineArgs>
 		    <environmentVariables>
-		      <PACKAGE>edu.uw.apl.commons.sleuthkit.base</PACKAGE>
-		      <ARTIFACT>${project.artifactId}</ARTIFACT>
+		      <ARCH>${arch}</ARCH>
+		      <!-- LOOK: Is this valid, using .. ? -->
+		      <JDK_HOME>${java.home}/..</JDK_HOME>
+		      <PREFIX>edu.uw.apl.commons.tsk4j</PREFIX>
+		      <LIBNAME>tsk4j-core</LIBNAME>
 		    </environmentVariables>
 		  </configuration>
 		</execution>
