@@ -217,7 +217,8 @@ equality implementations are
 
 # Armour
 
-Armour is a command shell (think bash) for bodyfile manipulation and
+[Armour](./armour/src/main/java/edu/uw/apl/commons/tsk4j/armour/Armour.java)
+is a command shell (think bash) for bodyfile manipulation and
 visualization.  It lets the user execute operations within the
 bodyfile algebra mentioned above.  The user loads bodyfiles from disk,
 then applies transforming operations on them, always producing new
