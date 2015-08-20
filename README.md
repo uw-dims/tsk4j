@@ -178,7 +178,7 @@ FileSystem traversals in the form of [body files]
 tool 'fls' can produce this file format:
 
 ```
-fls -r -m / /dev/sda1 > sda1.bf
+$ fls -r -m / /dev/sda1 > sda1.bf
 ```
 
 tsk4j views such a file not as *being* the bodyfile, but as being the
@@ -195,11 +195,11 @@ as an algebra of bodyfile operations.  We define both unary and binary
 operands on bodyfiles.
 
 A unary operator, like
-(./digests/src/main/java/edu/uw/apl/commons/tsk4j/digests/WinPEOperator.java),
+[WinPEOperator](./digests/src/main/java/edu/uw/apl/commons/tsk4j/digests/WinPEOperator.java),
 simply filters one bodyfile A into a smaller one B by 'accepting' only
 those records which are deemed to be Windows executables.
 
-Binary operators, like those found in
+Binary operators, like those found in [BodyFileOperators]
 (./digests/src/main/java/edu/uw/apl/commons/tsk4j/digests/BodyFileOperators.java),
 take two bodyfiles as operands and perform set remove or retain logic
 based on some notion of bodyfile record equality.  Note how we do
@@ -212,7 +212,7 @@ record equality allows the set membership operations of the [algebra]
 to be concise and use standard Java Collections methods, even though
 the number of equality predicates is unlimited. Some sample record
 equality implementations are
-[supplied]((./digests/src/main/java/edu/uw/apl/commons/tsk4j/digests/BodyFileOperators.java).
+[supplied](./digests/src/main/java/edu/uw/apl/commons/tsk4j/digests/BodyFileOperators.java).
 
 
 # Armour
@@ -268,7 +268,9 @@ workflow.  An example might be its usage in a
 bodyfiles containing the 'before and after' disk contents associated
 with some malware sample run:
 
+```
 $ ./armour -c "op 2 1 2; cat 3" sda1.bf sda2.bf > diffs.bf
+```
 
 Local Repository
 ----------------
