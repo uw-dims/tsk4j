@@ -294,7 +294,6 @@ this:
 
 ```
 $ cd /path/to/tsk4j
-
 $ tree .repository/
 .repository/
 `-- edu
