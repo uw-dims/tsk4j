@@ -41,10 +41,7 @@ import edu.uw.apl.commons.tsk4j.filesys.Meta;
 
 /**
  * @author Stuart Maclean
- *
- */
 
-/**
    Some common BodyFile Record Operators.  Add more as needed, or define
    elsewhere.
 
@@ -57,22 +54,25 @@ import edu.uw.apl.commons.tsk4j.filesys.Meta;
    3. The content
 
    When comparing two sets of 'files', i.e two BodyFiles, if we want
-   to locate ones which are IN both (by inode) but somehow different in some
-   field, use set intersection (and retainAll).  If we want to locate
-   truly 'new' files, use complement (and removeAll).  In almost all cases,
-   to see a 'filesystem CHANGE' we use the intersection method.
+   to locate ones which are IN both (by inode) but somehow different
+   in some other field, use set intersection (and thus retainAll).  If
+   we want to locate truly 'new' files, use set complements (and thus
+   removeAll).  In almost all cases, to see a 'filesystem CHANGE' we
+   use the intersection method.  Only a NEW file or DELETED file
+   operation uses the complement logic.
+
 */
 
 public class BodyFileOperators {
 
 	/*
 	  Remember for ALL Equals implementations: equal objects MUST have
-	  equal hash codes
+	  equal hash codes.
 	*/
 	
 	/*
 	  To find all 'new' files at t2 c.f. t1 we define this equals
-	  and do removeAll which does asymmetric difference...
+	  and do removeAll which does asymmetric difference: A - B
 	*/
 	static final BodyFile.Record.Equals byInodePath =
 		new BodyFile.Record.Equals() {

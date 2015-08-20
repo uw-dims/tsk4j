@@ -48,6 +48,16 @@ import edu.uw.apl.commons.tsk4j.filesys.FileSystem;
 public class BodyFileUnaryOperator extends BodyFileOperator {
 
 	public interface Predicate {
+		/**
+		 * @param r - the particular BodyFile Record to test
+		 *
+		 * @param fs - the FileSystem from which the BodyFile
+		 * containing r was created.  Needed when we want to at file
+		 * content, since BodyFiles by themselves do not contain
+		 * content.  May be null, cases when the source FileSystem is
+		 * not available.
+		 */
+		
 		public boolean accepts( BodyFile.Record r, FileSystem fs );
 	}
 

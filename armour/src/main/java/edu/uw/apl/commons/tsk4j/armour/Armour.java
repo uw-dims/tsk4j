@@ -401,11 +401,12 @@ public class Armour extends Shell {
 	static final List<BodyFileOperator> OPERATORS =
 		new ArrayList<BodyFileOperator>();
 	static {
-		OPERATORS.add( new PathMatchBodyFileOperator( "/WINDOWS/.*" ) );
 		OPERATORS.add( BodyFileOperators.NEWFILES );
 		OPERATORS.add( BodyFileOperators.CHANGEDFILES );
 		OPERATORS.add( BodyFileOperators.DISGUISEDCHANGEDFILES );
 		OPERATORS.add( BodyFileOperators.ACCESSEDFILES );
+		OPERATORS.add( new PathMatchBodyFileOperator( "/WINDOWS/.*" ) );
+		OPERATORS.add( new WinPEOperator() );
 	}
 	
 				

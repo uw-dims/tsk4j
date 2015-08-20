@@ -208,6 +208,7 @@ public class PEFinder {
 		}
 	}
 
+	// LOOK: This is duplicated in our digests module, see WinPEOperator
 	boolean isWinPE( Attribute a ) {
 		// Recall tiny.exe, smallest possible PE file ??
 		if( a.size() < 97 )

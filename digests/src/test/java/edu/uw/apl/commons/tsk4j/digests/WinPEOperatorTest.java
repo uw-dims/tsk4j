@@ -40,13 +40,15 @@ public class WinPEOperatorTest extends junit.framework.TestCase {
 
 	public void testTiny97() throws Exception {
 		File f = new File( "data/tiny97.exe" );
-		if( !f.exists() )
+		if( !f.exists() ) {
+			System.err.println( "Test data missing: " + f );
 			return;
+		}
 		RandomAccessFile raf = new RandomAccessFile( f, "r" );
 		byte[] ba = new byte[(int)f.length()];
 		raf.readFully( ba );
 		raf.close();
-		boolean b = WinPEOperator.isWinPE( ba );
+		boolean b = WinUtils.isWinPE( ba );
 		assertTrue( b );
 	}
 }

@@ -33,54 +33,39 @@
  */
 package edu.uw.apl.commons.tsk4j;
 
-import java.io.IOException;
+import java.io.File;
 
-import edu.uw.apl.nativelibloader.NativeLoader;
+import edu.uw.apl.commons.tsk4j.image.Image;
 
 /**
  * @author Stuart Maclean
  *
+ * Unit tests which force the NativeLoader to <b>not</b> load the
+ * native tsk4j library.  We do this via setting the appropriate
+ * system property <em>before</em> loading the Native class.
  *
- * A dummy class used solely for the purposes on locating and loading
- * the JNI shared library.  To ensure that this class loads and
- * initialises before any of the 'real' entry points into the TSK4J
- * lib (e.g. Image, FileSystem), have those classes reference this
- * one, e.g.
- *
- *  class SomeClass {
- *    static {
- *	   Native n = new Native();
- *	   }
- *  }
+ * Needs its own test class, since if bundled as a test in a larger
+ * test class which does load the native library successfully, the
+ * native load may appear to have worked, since only loaded once per
+ * test class, and order of tests within any class unreliable.
  */
-   
-public class Native {
 
-	static final String ARTIFACT		= "tsk4j-core";
+import edu.uw.apl.commons.tsk4j.base.Version;
 
-	/**
-	 * To force this native load to be skipped (within
-	 * NativeLoader.load) define system property
-	 * 'edu.uw.apl.commons.tsk4j.tsk4j-core.disable', e.g.
-	 *
-	 * $ java -Dedu.uw.apl.commons.tsk4j.tsk4j-core.disable ....
-	 *
-	 * This trick can be used to test an environment in which the
-	 * native C library is unavailable and thus all native calls
-	 * within tsk4j Java classes will result in UnsatisfiedLinkError.
-	 *
-	 * This will then mimic the actual behaviour on platforms for
-	 * which the tsk4j C parts have not yet been built.
-	 */
-	
-	static {
+public class SkippedNativeLoadTest extends junit.framework.TestCase {
+
+	public void testSkipNativeLoad() throws Exception {
 		try {
-			NativeLoader.load( Native.class, ARTIFACT );
-		} catch( Throwable t ) {
-			throw new ExceptionInInitializerError( t );
+			System.setProperty
+				( "edu.uw.apl.commons.tsk4j.tsk4j-core.disabled", "" );
+
+			// Now make a Java call which uses a native call in its impl..
+			String s = Version.getVersion();
+
+			fail( "Native library should have NOT loaded" );
+		} catch( UnsatisfiedLinkError ule ) {
 		}
 	}
 }
 
 // eof
-

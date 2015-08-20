@@ -172,15 +172,57 @@ $ ./unallochash /dev/sda
 
 # Digests
 
-TODO
+The digests module contains Java classes that represent summaries of
+FileSystem traversals in the form of [body files]
+(http://wiki.sleuthkit.org/index.php?title=Body_file).  The Sleuthkit
+tool 'fls' can produce this file format:
+
+```
+fls -r -m / /dev/sda1 > sda1.bf
+```
+
+tsk4j views such a file not as *being* the bodyfile, but as being the
+external representation *of* a bodyfile.  A [codec class]
+(./digests/src/main/java/edu/uw/apl/commons/tsk4j/digests/BodyFileCodec.java)
+marshals and unmarshals bodyfiles.  The [object representation]
+(./digests/src/main/java/edu/uw/apl/commons/tsk4j/digests/BodyFile.java)
+is simply a list of 'records', one per line in the external
+representation.  A bodyfile record then corresponds to a single file in a
+filesystem.
+
+BodyFile objects are the unit of work (the operands) in what we view
+as an algebra of bodyfile operations.  We define both unary and binary
+operands on bodyfiles.
+
+A unary operator, like
+(./digests/src/main/java/edu/uw/apl/commons/tsk4j/digests/WinPEOperator.java),
+simply filters one bodyfile A into a smaller one B by 'accepting' only
+those records which are deemed to be Windows executables.
+
+Binary operators, like those found in
+(./digests/src/main/java/edu/uw/apl/commons/tsk4j/digests/BodyFileOperators.java),
+take two bodyfiles as operands and perform set remove or retain logic
+based on some notion of bodyfile record equality.  Note how we do
+**not** define record equality in the record class itself. Instead, we
+define an Equals interface, allowing the developer to create many
+implementations of this and thus to define many ways of asserting that
+one Bodyfile record is the same as another.  This 'postponement' of
+record equality allows the set membership operations of the [algebra]
+(./digests/src/main/java/edu/uw/apl/commons/tsk4j/digests/BodyFileAlgebra.java)
+to be concise and use standard Java Collections methods, even though
+the number of equality predicates is unlimited. Some sample record
+equality implementations are
+[supplied]((./digests/src/main/java/edu/uw/apl/commons/tsk4j/digests/BodyFileOperators.java).
+
 
 # Armour
 
-Armour is command shell (think bash) for bodyfile manipulation and
-visualization.  It centers on the idea of an algebra of unary and
-binary operations, where the operands are complete bodyfiles.  Each
-operation produces a new bodyfile, which is added to the available set
-for further processing.
+Armour is a command shell (think bash) for bodyfile manipulation and
+visualization.  It lets the user execute operations within the
+bodyfile algebra mentioned above.  The user loads bodyfiles from disk,
+then applies transforming operations on them, always producing new
+bodyfiles (in memory, not on disk).  Each new bodyfile is added to the
+available set for further processing.
 
 Basic command line help is available.  On Linux/MacOS, a shell script driver
 is included:
@@ -206,27 +248,27 @@ $ ./armour sda1.bf sda2.bf
 // List all loaded bodyfiles
 > ls
 
+// Print one of the loaded bodyfiles
+> cat 1
+
 // List available operations
 > ops
 
 // Extract all files in sda1 that are not in sda2 (Newer Files)
 > op 2 1 2
 
-// And show this new bodyfile in a table
+// And show this new bodyfile in a Swing table
 > tb 3
 ```
 
 Armour is not limited to interactive use.  Like any good shell, its
 invocation can be 'batch-driven', so might be placed in some larger
-workflow.  An example might be its usage in the
+workflow.  An example might be its usage in a
 [Cuckoo Sandbox](http://www.cuckoosandbox.org) workflow, with two
-bodyfiles containing the before and after disk contents associated
+bodyfiles containing the 'before and after' disk contents associated
 with some malware sample run:
 
 $ ./armour -c "op 2 1 2; cat 3" sda1.bf sda2.bf > diffs.bf
-
-
-TO FINISH
 
 Local Repository
 ----------------
@@ -265,6 +307,18 @@ $ tree .repository/
                         |-- shell-base-1.0.jar
                         `-- shell-base-1.0.pom
 ```
+
+# To Do
+
+* Core needs native C code builds for Windows (32-bit and 64-bit) and
+  MacOS (32, 64), plus any other platforms on which tsk4j might be
+  run.
+  
+* Armour should be able to read file systems directly, and not rely on
+fls for BodyFile creation.  That way, Armour's operator set could be
+enriched with operators that can read file content.  The current
+operators are limited to filtering on BodyFile record fields alone.
+
 
 # Video/Slides
 

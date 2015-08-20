@@ -137,6 +137,13 @@ public class BodyFileCodec {
 	}
 
 	static public BodyFile parse( Reader r ) throws IOException {
+
+		/*
+		  Note this constructor: BodyFile at this point
+		  has no 'name' property nor any parent FileSystem.
+		  A name could be added later, but unlikely a FileSystem
+		  could be.
+		*/
 		BodyFile result = new BodyFile();
 		LineNumberReader lnr = new LineNumberReader( r );
 		String line = null;
