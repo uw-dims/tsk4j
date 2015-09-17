@@ -20,7 +20,7 @@
   <parent>
     <groupId>edu.uw.apl.commons</groupId>
     <artifactId>tsk4j-parent</artifactId>
-    <version>413.0.0</version>
+    <version>413.0.2</version>
   </parent>
   
   <artifactId>tsk4j-core</artifactId>
@@ -36,7 +36,7 @@
     <dependency>
       <groupId>edu.uw.apl.commons</groupId>
       <artifactId>native-lib-loader</artifactId>
-      <version>2.0.0</version>
+      <version>2.1.0</version>
     </dependency>
     <dependency>
       <groupId>commons-codec</groupId>

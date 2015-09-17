@@ -5,7 +5,7 @@
     <parent>
       <groupId>edu.uw.apl.commons</groupId>
       <artifactId>tsk4j-parent</artifactId>
-      <version>413.0.0</version>
+      <version>413.0.2</version>
     </parent>
     
     <artifactId>tsk4j-samples</artifactId>
@@ -27,6 +27,11 @@
 	<groupId>commons-io</groupId>
 	<artifactId>commons-io</artifactId>
 	<version>2.4</version>
+      </dependency>
+      <dependency>
+	<groupId>log4j</groupId>
+	<artifactId>log4j</artifactId>
+	<version>1.2.13</version>
       </dependency>
     </dependencies>
 

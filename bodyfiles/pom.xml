@@ -5,7 +5,7 @@
     <parent>
       <groupId>edu.uw.apl.commons</groupId>
       <artifactId>tsk4j-parent</artifactId>
-      <version>413.0.0</version>
+      <version>413.0.2</version>
     </parent>
     
     <artifactId>tsk4j-bodyfiles</artifactId>
