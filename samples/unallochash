@@ -1,0 +1,5 @@
+#!/bin/sh
+
+./samples.base UnallocHash "$@"
+
+# eof

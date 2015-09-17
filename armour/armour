@@ -1,0 +1,27 @@
+#!/bin/bash                                                                     
+
+DIRNAME=`dirname $0`
+JARSHOME=$DIRNAME/target
+
+ARTIFACT=tsk4j-armour
+
+# The Maven <version> becomes part of the final artifact name (the
+# jar).  Rather than hard-coding it here, we locate the jar with the
+# LATEST version. Thus we always run the LATEST code, should many
+# (stale) versions be present.
+
+JAR=`ls $JARSHOME | grep $ARTIFACT | sort -n -r | head -1`
+
+# By defining the following system property, we can force loading of
+# the tsk4j-core native library to be skipped.  With all native
+# methods then rendered unavailable, if Armour continues to work, this
+# proves that Armour is not relying on any native calls, which it
+# should not be if dealing with BodyFiles only.  If/when Armour gets
+# into the business of walking FileSystems, it will need the C
+# library, and we would/must not define this property!
+
+JAVA_OPTS="-Dedu.uw.apl.commons.tsk4j.tsk4j-core.disabled"
+
+exec java $JAVA_OPTS -jar target/$JAR "$@"
+
+# eof

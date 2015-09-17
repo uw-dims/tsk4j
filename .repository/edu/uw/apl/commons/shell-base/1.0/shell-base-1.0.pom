@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<project>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>edu.uw.apl.commons</groupId>
+    <artifactId>shell-base</artifactId>
+    <version>1.0</version>
+    <name>Base Class for Unix-like Shells</name>
+
+    <dependencies>
+      <dependency>
+	<groupId>log4j</groupId>
+	<artifactId>log4j</artifactId>
+	<version>1.2.17</version>
+      </dependency>
+      <dependency>
+	<groupId>junit</groupId>
+	<artifactId>junit</artifactId>
+	<version>3.8.1</version>
+	<scope>test</scope>
+      </dependency>
+    </dependencies>
+
+    <build>
+      <defaultGoal>compile</defaultGoal>
+      <plugins>
+	<plugin>
+	  <artifactId>maven-compiler-plugin</artifactId>
+	  <version>3.3</version>
+	  <configuration>
+	    <source>1.5</source>
+	    <target>1.5</target>
+	  </configuration>
+	</plugin>
+      </plugins>
+    </build>
+
+</project>

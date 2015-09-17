@@ -1,10 +1,6 @@
-.svn
-*.class
-*~
-paste
 target
+pom.xml.versionsBackup
 
 .project
 .classpath
 .settings
-

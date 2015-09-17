@@ -1,86 +1,221 @@
-<?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+			     http://maven.apache.org/maven-v4_0_0.xsd">
+  
+  <modelVersion>4.0.0</modelVersion>
+  
+  <groupId>edu.uw.apl.commons</groupId>
+  <artifactId>tsk4j-parent</artifactId>
+  <version>413.3.0</version>
+  <packaging>pom</packaging>
+  
+  <name>TSK4J: Parent</name>
+  <description>
+    TSK4J is a Java binding to Sleuthkit, a C-based file system
+    forensics toolset. See www.sleuthkit.org
+  </description>
+  <inceptionYear>2014</inceptionYear>
 
-    <groupId>edu.uw.apl.commons</groupId>
-    <artifactId>tsk4j-parent</artifactId>
-    <version>413.0.2</version>
-    <packaging>pom</packaging>
+  <organization>
+    <name>Applied Physics Laboratory, University of Washington.</name>
+    <url>http://www.apl.uw.edu</url>
+  </organization>
+  
+  <developers>
+    <developer>
+      <id>stuart</id>
+      <name>Stuart Maclean</name>
+      <email>stuart@apl.uw.edu</email>
+    </developer>
+  </developers>
+  
+  <licenses>
+    <license>
+      <name>BSD 3-Clause</name>
+      <url>http://opensource.org/licenses/BSD-3-Clause</url>
+      <comments>See LICENSE.txt</comments>
+      <distribution>manual</distribution>
+    </license>
+  </licenses>
 
-    <name>TSK4J: Java/JNI Bindings to Sleuthkit</name>
-    <description>
-      TSK4J is a Java binding to Sleuthkit, a C-based file system
-      forensics toolset. See www.sleuthkit.org
-    </description>
+  <modules>
+    <module>core</module>
+    <module>digests</module>
+    <module>samples</module> 
+    <module>armour</module> 
+    <!--
+	<module>cli</module> 
+    -->
+  </modules>
+  
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+	<groupId>commons-cli</groupId>
+	<artifactId>commons-cli</artifactId>
+	<version>1.2</version>
+      </dependency>
+      <dependency>
+	<groupId>commons-codec</groupId>
+	<artifactId>commons-codec</artifactId>
+	<version>1.9</version>
+      </dependency>
+      <dependency>
+	<groupId>commons-io</groupId>
+	<artifactId>commons-io</artifactId>
+	<version>2.4</version>
+      </dependency>
+      <dependency>
+	<groupId>commons-logging</groupId>
+	<artifactId>commons-logging</artifactId>
+	<version>1.2</version>
+      </dependency>
+      <dependency>
+	<groupId>log4j</groupId>
+	<artifactId>log4j</artifactId>
+	<version>1.2.17</version>
+      </dependency>
+      <dependency>
+	<groupId>junit</groupId>
+	<artifactId>junit</artifactId>
+	<version>4.11</version>
+	<scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
-    <organization>
-      <name>Applied Physics Laboratory, University of Washington.</name>
-      <url>http://www.apl.uw.edu</url>
-    </organization>
-
-    <developers>
-      <developer>
-	<id>stuart</id>
-	<name>Stuart Maclean</name>
-	<email>stuart@apl.uw.edu</email>
-      </developer>
-    </developers>
-
-    <modules>
-      <module>core</module>
-      <module>bodyfiles</module>
-      <module>samples</module> 
-      <module>cli</module> 
-    </modules>
-
-    <build>
-      <defaultGoal>compile</defaultGoal>
-
-<!--
-
-      <pluginManagement>
-	<plugins>
-	  <plugin>
-	    <artifactId>maven-source-plugin</artifactId>
-	    <version>2.2.1</version>
-	    <configuration>
-	      <excludes>
-		<exclude>**/paste</exclude>
-	      </excludes>
-	    </configuration>
-	    <executions>
-	      <execution>
-		<goals>
-		  <goal>jar</goal>
-		</goals>
-	      </execution>
-	    </executions>
-	  </plugin>
-	</plugins>
-      </pluginManagement>
--->
-
+  <dependencies>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  
+  <build>
+    <defaultGoal>compile</defaultGoal>
+    
+    <pluginManagement>
       <plugins>
 	<plugin>
+	  <groupId>org.apache.maven.plugins</groupId>
 	  <artifactId>maven-compiler-plugin</artifactId>
-	  <version>2.3.2</version>
+	  <version>2.5</version>
 	  <configuration>
-	    <source>1.6</source>
-	    <target>1.6</target>
+	    <source>1.7</source>
+	    <target>1.7</target>
 	  </configuration>
 	</plugin>
-
-
+	<plugin>
+	  <groupId>org.apache.maven.plugins</groupId>
+	  <artifactId>maven-jar-plugin</artifactId>
+	  <version>2.5</version>
+	</plugin>
+	<plugin>
+	  <groupId>org.apache.maven.plugins</groupId>
+	  <artifactId>maven-dependency-plugin</artifactId>
+	  <version>2.9</version>
+	</plugin>
+	<plugin>
+	  <groupId>org.apache.maven.plugins</groupId>
+	  <artifactId>maven-install-plugin</artifactId>
+	  <version>2.5.2</version>
+	</plugin>
 	<plugin>
 	  <groupId>org.apache.maven.plugins</groupId>
 	  <artifactId>maven-surefire-plugin</artifactId>
 	  <version>2.12.4</version> 
-	  <!--	  <version>2.4.3</version> -->
 	</plugin>     
-
-
       </plugins>
-    </build>
+    </pluginManagement>
+    
+    <!--
+	<pluginManagement>
+	<plugins>
+	<plugin>
+	<artifactId>maven-source-plugin</artifactId>
+	<version>2.2.1</version>
+	<configuration>
+	<excludes>
+	<exclude>**/paste</exclude>
+	</excludes>
+	</configuration>
+	<executions>
+	<execution>
+	<goals>
+	<goal>jar</goal>
+	</goals>
+	</execution>
+	</executions>
+	</plugin>
+	</plugins>
+	</pluginManagement>
+    -->
+  </build>
+  <reporting>
+    <plugins>
+      <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.10.2</version>
+	<reportSets>
+	  <reportSet><!-- aggregate reportSet, to define in poms having modules -->
+	    <id>aggregate</id>
+	    <inherited>false</inherited><!-- don't run aggregate in child modules -->
+	    <reports>
+	      <report>aggregate</report>
+	    </reports>
+	  </reportSet>
+        </reportSets>
+      </plugin>
+    </plugins>
+  </reporting>
 
+  <profiles>
+    <profile>
+      <!-- We use the assembler profile to add licensing to the sources -->
+      <id>assembler</id>
+      <build>
+	<defaultGoal>process-sources</defaultGoal>
+	<plugins>
+	  <plugin>
+	    <groupId>com.mycila</groupId>
+	    <artifactId>license-maven-plugin</artifactId>
+	    <version>2.5</version>
+	    <configuration>
+	      <header>LICENSE.txt</header>
+	      <quiet>false</quiet>
+	      <strictCheck>true</strictCheck>
+	    </configuration>
+	    <executions>
+	      <execution>
+		<id>main</id>
+		<phase>process-sources</phase>
+		<goals>
+		  <goal>format</goal>
+		</goals>
+		<configuration>
+		  <includes>
+		    <include>src/main/java/**/*.java</include>
+		    <include>src/test/java/**/*.java</include>
+		    <include>src/main/native/**/*.c</include>
+		    <include>src/main/native/**/*.h</include>
+		    <!-- Seems unable to handle Makefiles -->
+		    <!--
+		    <include>src/main/native/**/Makefile</include>
+		    -->
+		  </includes>
+		</configuration>
+	      </execution>
+	    </executions>
+	  </plugin>
+	</plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

@@ -1,12 +1,5 @@
 #!/bin/sh
 
-AOL=amd64-Linux
-ARTIFACT=tsk4j-samples
-VERSION=413.0.0
-JAR=$ARTIFACT-$AOL-$VERSION.jar
-
-CLAZZ=WalkCost
-
-exec java -Xmx2g -cp target/$JAR $CLAZZ "$@"
+./samples.base WalkCost "$@"
 
 # eof
