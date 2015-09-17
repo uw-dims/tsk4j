@@ -4,5 +4,7 @@
 paste
 target
 
-# eof
+.project
+.classpath
+.settings
 
