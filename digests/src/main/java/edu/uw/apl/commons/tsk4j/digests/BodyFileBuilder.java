@@ -98,8 +98,7 @@ public class BodyFileBuilder {
 
             @Override
             public void gotRecords(List<Record> records) {
-                // LOG.debug("CALLBACK: Got "+records.size()+" records");
-                System.out.println("CALLBACK: Got " + records.size() + " records");
+                LOG.debug("CALLBACK: Got "+records.size()+" records");
                 result.addAll(records);
             }
         };
