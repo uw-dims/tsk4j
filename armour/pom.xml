@@ -5,11 +5,11 @@
   <parent>
     <groupId>edu.uw.apl.commons</groupId>
     <artifactId>tsk4j-parent</artifactId>
-    <version>413.3.0</version>
+    <version>413.3.1-SNAPSHOT</version>
   </parent>
     
   <artifactId>tsk4j-armour</artifactId>
-  <version>413.3.0</version>
+  <version>413.3.1-SNAPSHOT</version>
   <name>TSK4J: Armour Shell for BodyFile Manipulation/Visualization</name>
   
   <repositories>
