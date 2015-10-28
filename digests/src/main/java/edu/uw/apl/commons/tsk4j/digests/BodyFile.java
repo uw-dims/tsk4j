@@ -191,7 +191,7 @@ public class BodyFile {
 		   or perms change
 		   
 		*/
-		Record( byte[] md5, String path,
+		public Record( byte[] md5, String path,
 				long inode, int attrType, int attrID,
 				int nameType, int metaType,	int perms,
 				int uid, int gid,
