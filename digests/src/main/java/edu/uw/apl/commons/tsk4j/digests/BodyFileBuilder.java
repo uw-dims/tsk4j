@@ -140,7 +140,8 @@ public class BodyFileBuilder {
                     return DirectoryWalk.WALK_CONT;
                 } catch (IOException ioe) {
                     System.err.println(ioe);
-                    LOG.warn(ioe);
+                    ioe.printStackTrace();
+                    LOG.error("IOException creating file records", ioe);
                     return DirectoryWalk.WALK_STOP;
                 }
             }
