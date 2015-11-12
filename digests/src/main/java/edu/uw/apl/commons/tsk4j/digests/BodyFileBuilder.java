@@ -76,8 +76,24 @@ public class BodyFileBuilder {
      * such that each Record summarizes one file in the Filesystem. Will only
      * inspect allocated files. For other flag combinations, see below.
      */
-    static public void create(FileSystem fs, BuilderCallback callback) {
-        create(fs, DirectoryWalk.FLAG_ALLOC, callback);
+    static public BodyFile create(FileSystem fs, final BuilderCallback callback) {
+        final BodyFile result = new BodyFile(fs);
+        // Wrap the provided callback in our own
+        final BuilderCallback ourCallback = new BuilderCallback() {
+            @Override
+            public int getUpdateInterval() {
+                return callback.getUpdateInterval();
+            }
+
+            @Override
+            public void gotRecords(List<Record> records) {
+                result.addAll(records);
+                callback.gotRecords(records);
+            }
+        };
+        create(fs, DirectoryWalk.FLAG_ALLOC, ourCallback);
+
+        return result;
     }
 
     /**
