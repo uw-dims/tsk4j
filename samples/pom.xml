@@ -5,12 +5,12 @@
   <parent>
     <groupId>edu.uw.apl.commons</groupId>
     <artifactId>tsk4j-parent</artifactId>
-    <version>413.3.1-SNAPSHOT</version>
+    <version>413.3.1</version>
   </parent>
   
   <artifactId>tsk4j-samples</artifactId>
   <name>TSK4J: Sample Programs</name>
-  <version>413.3.1-SNAPSHOT</version>
+  <version>413.3.1</version>
   
   <dependencies>
     <dependency>
