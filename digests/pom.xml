@@ -5,11 +5,11 @@
     <parent>
       <groupId>edu.uw.apl.commons</groupId>
       <artifactId>tsk4j-parent</artifactId>
-      <version>413.3.1</version>
+      <version>413.3.2-SNAPSHOT</version>
     </parent>
     
     <artifactId>tsk4j-digests</artifactId>
-    <version>413.3.1</version>
+    <version>413.3.2-SNAPSHOT</version>
     <name>TSK4J: Digests for Volume/File Systems</name>
 
     <dependencies>
