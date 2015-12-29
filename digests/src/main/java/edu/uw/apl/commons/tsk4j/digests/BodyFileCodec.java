@@ -46,7 +46,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -230,7 +229,7 @@ public class BodyFileCodec {
 		int crtime = Integer.parseInt( m.group( 13 ) );
 
 		BodyFile.Record r = new BodyFile.Record
-			( md5, name, address, attrType, attrID,
+			( md5, null, null, name, address, attrType, attrID,
 			  nt, mt, perms, uid, gid, size,
 			  atime, mtime, ctime, crtime );
 		return r;
@@ -348,8 +347,6 @@ public class BodyFileCodec {
 		UNIXTIMERE + "\\|" + UNIXTIMERE;
 
 	static Pattern REGEX = Pattern.compile( REGEXS );
-
-	static private final String LS = System.lineSeparator();
 }
 
 // eof

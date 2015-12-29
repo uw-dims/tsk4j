@@ -124,6 +124,9 @@ public class BodyFile {
 	   are too many variants and the choice is a dynamic one.
 	   Instead, we use our EqualityWrapper idiom, where a supplied
 	   lambda defines the predicate.
+	   
+	   When generating a BodyFile, the SHA-1 and SHA-256 hashes are also generated,
+	   but these are not written to a body file.
 	*/
 	static public class Record {
 
@@ -144,9 +147,13 @@ public class BodyFile {
 		}
 		
 		/**
-		   @param hash - MD5 hash, or null if no hash available.  Note that
+		   @param md5 - MD5 hash, or null if no hash available.  Note that
 		   this is the actual 16-byte value, NOT the 32 char hexstring. We'll
 		   convert where necessary.
+		   
+		   @param sha1 - SHA-1 hash, or null. This is the byte value, not hex
+		   
+		   @param sha256 - SHA-256 hash, or null. This is the byte value, not hex
 
 		   @param path - e.g. the file name in a directory entry (extN) or
 		   MFT entry (NFTS)
@@ -191,13 +198,15 @@ public class BodyFile {
 		   or perms change
 		   
 		*/
-		public Record( byte[] md5, String path,
+		public Record( byte[] md5, byte[] sha1, byte[] sha256, String path,
 				long inode, int attrType, int attrID,
 				int nameType, int metaType,	int perms,
 				int uid, int gid,
 				long size,
 				int atime, int mtime, int ctime, int crtime) {
 			this.md5 = md5;
+			this.sha1 = sha1;
+			this.sha256 = sha256;
 			this.path = path;
 			this.inode = inode;
 			this.attrType = (short)attrType;
@@ -307,6 +316,8 @@ public class BodyFile {
 		}
 
 		final public byte[] md5;
+		final public byte[] sha1;
+		final public byte[] sha256;
 		final public String path;
 		final public long inode;
 

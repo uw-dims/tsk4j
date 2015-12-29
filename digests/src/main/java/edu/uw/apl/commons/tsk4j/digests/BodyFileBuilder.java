@@ -187,59 +187,85 @@ public class BodyFileBuilder {
      * (NTFS)
      */
     static private BodyFile.Record processWalk(WalkFile f, String path) throws IOException {
-        String name = f.getName();
-        if ("..".equals(name) || ".".equals(name)) {
+        String fileName = f.getName();
+        if ("..".equals(fileName) || ".".equals(fileName)) {
             return null;
         }
-        String fullPath = "/" + path + name;
+        String fullPath = "/" + path + fileName;
         if (LOG.isDebugEnabled())
             LOG.debug(fullPath);
-        Meta m = f.meta();
-        Name n = f.name();
-        Attribute a = f.getAttribute();
-        if (a == null) {
-            LOG.warn("No default attribute " + name);
+        Meta meta = f.meta();
+        Name name = f.name();
+        Attribute attribute = f.getAttribute();
+        if (attribute == null) {
+            LOG.warn("No default attribute " + fileName);
             // To do, as fls does, locate some other attrs....
             List<Attribute> as = f.getAttributes();
             if (as.isEmpty()) {
                 LOG.warn("No attrs? " + fullPath);
                 return null;
             }
-            a = as.get(0);
-            fullPath += ":" + a.name();
+            attribute = as.get(0);
+            fullPath += ":" + attribute.name();
         }
-        byte[] md5 = md5(a);
-        long sz = a.size();
+        HashContainer hashes = getHashes(attribute);
+        // Prevent NPEs. If null was returned, just use an empty container
+        if(hashes == null){
+            hashes = new HashContainer();
+        }
+        long size = attribute.size();
         /*
          * LOOK: Too many parameters to the Record constructor, easy to get the
          * actual and expected parameters mixed up!
          */
         /*
-         * Record( byte[] md5, String path, long inode, int nameType, int
+         * Record( byte[] md5, byte[] sha1, byte[] sha256, String path, long inode, int nameType, int
          * metaType, int mode, int uid, int gid, long size, int atime, int
          * mtime, int ctime, int crtime) {
          */
-        return new BodyFile.Record(md5, fullPath, m.addr(), a.type(), a.id(), n.type(), m.type(), m.mode(), m.uid(),
-                m.gid(), sz, m.atime(), m.mtime(), m.ctime(), m.crtime());
+        return new BodyFile.Record(hashes.md5, hashes.sha1, hashes.sha256, fullPath, meta.addr(), attribute.type(),
+                attribute.id(), name.type(), meta.type(), meta.mode(), meta.uid(), meta.gid(), size, meta.atime(),
+                meta.mtime(), meta.ctime(), meta.crtime());
     }
 
-    static byte[] md5(Attribute a) throws IOException {
-        MessageDigest md = null;
+    static HashContainer getHashes(Attribute a) throws IOException {
+        MessageDigest md5 = null;
+        MessageDigest sha1 = null;
+        MessageDigest sha256 = null;
         try {
-            md = MessageDigest.getInstance("md5");
-        } catch (Exception neverForMD5) {
+            md5 = MessageDigest.getInstance("md5");
+            sha1 = MessageDigest.getInstance("SHA-1");
+            sha256 = MessageDigest.getInstance("SHA-256");
+        } catch (Exception shouldNeverHappen) {
         }
         InputStream is = a.getInputStream();
-        try (DigestInputStream dis = new DigestInputStream(is, md)) {
+        try {
+            DigestInputStream md5Input = new DigestInputStream(is, md5);
+            DigestInputStream sha1Input = new DigestInputStream(md5Input, sha1);
+            DigestInputStream sha256Input = new DigestInputStream(sha1Input, sha256);
             byte[] ba = new byte[1024 * 1024];
             while (true) {
-                int nin = dis.read(ba);
+                int nin = sha256Input.read(ba);
                 if (nin < 0)
                     break;
             }
-            byte[] hash = md.digest();
-            return hash;
+            HashContainer container = new HashContainer();
+            container.md5 = md5.digest();
+            container.sha1 = sha1.digest();
+            container.sha256 = sha256.digest();
+            return container;
+        } catch(Exception e){
+            return null;
         }
+    }
+
+    /**
+     * A simple container for holding MD5, SHA-1, and SHA-256 hashes
+     */
+    private static class HashContainer {
+        public byte[] md5;
+        public byte[] sha1;
+        public byte[] sha256;
     }
 
     /**
