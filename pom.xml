@@ -7,7 +7,7 @@
   
   <groupId>edu.uw.apl.commons</groupId>
   <artifactId>tsk4j-parent</artifactId>
-  <version>413.3.2-SNAPSHOT</version>
+  <version>413.3.2</version>
   <packaging>pom</packaging>
   
   <name>TSK4J: Parent</name>
