@@ -231,6 +231,16 @@ public class BodyFile {
 				Hex.encodeHexString( md5 );
 		}
 
+        public String sha1String() {
+            return sha1 == null ? "0" :
+                Hex.encodeHexString( sha1 );
+        }
+
+        public String sha256String() {
+            return sha256 == null ? "0" :
+                Hex.encodeHexString( sha256 );
+        }
+
 		public String formatType() {
 			return BodyFileCodec.formatNameType( nameType ) + "/" +
 				BodyFileCodec.formatMetaType( metaType );
