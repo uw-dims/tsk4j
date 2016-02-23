@@ -42,13 +42,6 @@
   </name>
 
   <dependencies>
-    <!-- Our core module depends on this -->
-    <dependency>
-      <groupId>edu.uw.apl.commons</groupId>
-      <artifactId>native-lib-loader</artifactId>
-      <version>2.1.0</version>
-    </dependency>
-
     <!-- Our armour module depends on this -->
     <dependency>
       <groupId>edu.uw.apl.commons</groupId>
